@@ -13,3 +13,17 @@ make slug='relative/path/to/wiki'
 ```
 
 * The 'download' target requires the token and slug
+
+# Syntax
+
+## Links
+
+For links use this approach
+```
+[name](http://example.com)
+```
+
+something like the following would require a converter...
+```
+[[ http://example.com | name ]]
+```
