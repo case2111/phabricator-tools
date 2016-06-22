@@ -1,0 +1,7 @@
+[Unit]
+Description=Perform scheduled backup of phabricator
+
+[Service]
+Type=oneshot
+ExecStart=/opt/phab/backup.sh
+
