@@ -28,8 +28,9 @@ def main():
             color_out[job_color].append(job['name'])
     for key in color_out:
         print(key)
+        print('---')
         for item in color_out[key]:
-            print('\t{0}'.format(item))
+            print('{0}'.format(item))
         print('\n')
 
 if __name__ == '__main__':
