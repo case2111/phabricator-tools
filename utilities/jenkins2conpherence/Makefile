@@ -1,5 +1,5 @@
 token = $(PHAB_API_TOKEN)
-host =
+host = $(PHAB_HOST)
 jenkins =
 user =
 pass =

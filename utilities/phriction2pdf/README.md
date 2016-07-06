@@ -6,7 +6,7 @@ Convert a phriction page to a pdf
 make token='your-conduit-token' slug='relative/path/to/wiki' host='http://phab/host/url'
 ```
 
-alternatively set an environment variable PHAB_API_TOKEN
+alternatively set an environment variable PHAB_API_TOKEN and PHAB_HOST to only require the slug
 
 ```
 make slug='relative/path/to/wiki'

@@ -1,6 +1,6 @@
 token = $(PHAB_API_TOKEN)
 slug =
-host = 
+host = $(PHAB_HOST)
 bin = build
 name = $(shell echo ${slug} | sed "s/\//-/g")
 raw = $(bin)/$(name).json
