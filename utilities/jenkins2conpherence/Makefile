@@ -6,6 +6,7 @@ pass =
 room =
 timeout = 10
 colors = red
+ignores = "" 
 outputs = artifacts/
 results = $(outputs)output
 
@@ -47,6 +48,6 @@ ifeq ($(strip $(room)),)
 		echo "room is empty"
 		exit -1
 endif
-	python jobs_by_color.py --host $(jenkins) --user $(user) --pwd $(pass) --colors $(colors) > $(results)
+	python jobs_by_color.py --host $(jenkins) --user $(user) --pwd $(pass) --colors $(colors) --ignore $(ignores) > $(results)
 	./post.sh "$(host)" "$(token)" "$(results)" "$(room)" "$(timeout)"
 
