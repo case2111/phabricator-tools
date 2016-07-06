@@ -9,7 +9,10 @@ colors = red
 outputs = artifacts/
 results = $(outputs)output
 
-all: clean run
+all: install clean run
+
+install:
+	pip install python-jenkins
 
 clean:
 	rm -f $(results)
