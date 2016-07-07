@@ -24,7 +24,9 @@ def main():
     color_out = {}
     ignores = None
     if args.ignore is not None:
-        ignores = re.compile(args.ignore)
+        ignore_str = args.ignore
+        if ignore_str.strip():
+            ignores = re.compile(args.ignore)
     for job in server.get_jobs():
         job_color = job['color']
         job_name = job['name']
