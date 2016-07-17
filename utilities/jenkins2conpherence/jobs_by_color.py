@@ -37,7 +37,7 @@ def main():
             if job_color not in color_out:
                 color_out[job_color] = []
             color_out[job_color].append(job_name)
-    for key in color_out:
+    for key in sorted(color_out.keys()):
         print(key)
         print('---')
         for item in color_out[key]:
