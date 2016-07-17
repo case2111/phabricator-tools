@@ -40,7 +40,7 @@ def main():
     for key in sorted(color_out.keys()):
         print(key)
         print('---')
-        for item in color_out[key]:
+        for item in sorted(color_out[key]):
             print('{0}'.format(item))
         print('\n')
 
