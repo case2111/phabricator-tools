@@ -3,7 +3,7 @@ Description=Phabricator Content Backup
 
 [Timer]
 Unit=phabricator-backup.service
-OnCalendar=*-*-* 03:00:00
+OnCalendar=*-*-* 01:00:00
 
 [Install]
 WantedBy=timers.target
