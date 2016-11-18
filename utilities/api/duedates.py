@@ -33,7 +33,6 @@ def _process(host, token, room):
                         if owner is not None:
                             users = owner
                         outdated[name] = [users]
-                        #outdated.append(res[item]["objectName"])
     if len(outdated) > 0:
         user_phids = []
         for task in outdated:
