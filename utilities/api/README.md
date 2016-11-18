@@ -12,7 +12,7 @@ The API implementation, via libcurl/pycurl
 Using a custom duedates field, will report to a room when open tasks are in the past
 
 ```
-python duedates.py --host "http://phabricator.url/api/" --token "api-token" --room "1"
+python duedates.py --host "http://phabricator.url" --token "api-token" --room "1"
 ```
 
 # unmodified.py
@@ -20,5 +20,5 @@ python duedates.py --host "http://phabricator.url/api/" --token "api-token" --ro
 Reports when tasks are not updated in a timely fashion
 
 ```
-python unmodified.py --host "http://phabricator.url/api/" --token "api-token" --room "1" --report 30 --close 45
+python unmodified.py --host "http://phabricator.url" --token "api-token" --room "1" --report 30 --close 45
 ```

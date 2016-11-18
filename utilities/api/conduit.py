@@ -40,7 +40,7 @@ class ConduitBase(object):
         if self.host is None:
             raise Exception("no host given...")
         curl = pycurl.Curl()
-        curl.setopt(curl.URL, self.host + "/" + endpoint)
+        curl.setopt(curl.URL, self.host + "/api/" + endpoint)
         # post-data
         fields = []
         fields.append(self._build("api.token", self.token))
@@ -113,23 +113,32 @@ class Maniphest(ConduitBase):
 
     def comment_by_id(self, task_id, message):
         """comment on a task by using the id."""
-        return self._update({"id": task_id, "comments": message})
+        params = self._comment_params(task_id, message)
+        return self._update(params)
 
     def open(self):
         """Open tasks."""
         return self._query(self._open_params())
-    
+
+    def invalid_by_id(self, task_id):
+        """close as invalid by id."""
+        params = self._comment_params(task_id, message)
+        params["status"] = "invalid"
+        return self._update(params)
+
     def open_by_project_phid(self, project_phid):
         """Open by project phid."""
-        return self._query(self._open_params({"projectPHIDs": [project_phid]}))
+        params = self._open_params()
+        params["projectPHIDs"] = [project_phid]
+        return self._query(params)
 
-    def _open_params(self, added=None):
+    def _comment_params(self, task_id, message):
+        """Comment parameters."""
+        return {"id": task_id, "comments": message}
+
+    def _open_params(self):
         """Open status parameter building."""
-        obj = {"status": "status-open"}
-        if added:
-            for k in added:
-                obj[k] = added[k]
-        return obj
+        return {"status": "status-open"}
 
     def _update(self, params=None):
         """task updates."""
