@@ -27,6 +27,7 @@ def _process(host, token):
                 due = aux[DUE_KEY]
                 if due is not None:
                     if due < now:
+                        name = datum["objectName"]
                         m.comment_by_id(name[1:], "this task is overdue")
 
 def main():
