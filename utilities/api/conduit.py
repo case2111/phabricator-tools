@@ -119,9 +119,9 @@ class Maniphest(ConduitBase):
         """Open tasks."""
         return self._query(self._open_params())
     
-    def open_by_project_phids(self, project_phids):
+    def open_by_project_phid(self, project_phid):
         """Open by project phid."""
-        return self._query(self._open_params({"projectPHIDs": project_phids}))
+        return self._query(self._open_params({"projectPHIDs": [project_phid]}))
 
     def _open_params(self, added=None):
         """Open status parameter building."""

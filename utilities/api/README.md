@@ -22,7 +22,3 @@ Reports when tasks are not updated in a timely fashion
 ```
 python unmodified.py --host "http://phabricator.url/api/" --token "api-token" --room "1" --report 30 --close 45
 ```
-
-# common.py
-
-Helpers

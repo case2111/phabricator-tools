@@ -2,7 +2,6 @@
 """Handles reporting on open, deprecated due dates."""
 
 import argparse
-import common
 import conduit
 import time
 import calendar
