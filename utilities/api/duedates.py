@@ -2,6 +2,7 @@
 """Handles reporting on open, deprecated due dates."""
 
 import argparse
+import common
 import conduit
 import time
 import calendar
@@ -39,11 +40,7 @@ def _process(host, token, room):
             for user in outdated[task]:
                 if user not in user_phids:
                     user_phids.append(user)
-        u = factory.create(conduit.User)
-        users = u.by_phids(user_phids)
-        resolved_users = {}
-        for user in users:
-            resolved_users[user["phid"]] = "@" + user["userName"]
+        resolved_users = common.resolve_users(factory, user_phids)
         outputs = []
         for old in outdated:
             user_set = []
