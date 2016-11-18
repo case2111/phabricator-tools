@@ -12,7 +12,7 @@ The API implementation, via libcurl/pycurl
 Using a custom duedates field, will report to a room when open tasks are in the past
 
 ```
-python duedates.py --host "http://phabricator.url" --token "api-token" --room "1"
+python duedates.py --host "http://phabricator.url" --token "api-token"
 ```
 
 # unmodified.py
