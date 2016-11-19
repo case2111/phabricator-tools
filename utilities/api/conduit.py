@@ -105,6 +105,18 @@ class Conpherence(ConduitBase):
         """Update a conpherence thread."""
         return self._go("updatethread", {"id": room, "message": message})
 
+
+class Phriction(ConduitBase):
+    """Phriction implementation."""
+    def __init__(self):
+        """init the instance."""
+        self.prefix = "phriction"
+
+    def info(self, slug):
+        """get information for a page/slug."""
+        return self._go("info", {"slug": slug})
+
+
 class Maniphest(ConduitBase):
     """Maniphest implementation."""
     def __init__(self):

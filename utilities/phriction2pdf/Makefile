@@ -1,9 +1,8 @@
-token = $(PHAB_API_TOKEN)
+token = $(PHAB_TOKEN)
 slug =
 host = $(PHAB_HOST)
 bin = build
 name = $(shell echo ${slug} | sed "s/\//-/g")
-raw = $(bin)/$(name).json
 markdown = $(bin)/$(name).md
 
 define build-out =
@@ -15,9 +14,9 @@ endef
 
 $(shell mkdir -p $(bin))
 
-all: clean download md pdf
+all: clean md pdf
 
-download:
+md:
 ifeq ($(strip $(host)),)
 		echo "host is empty"
 		exit -1
@@ -30,12 +29,7 @@ ifeq ($(strip $(token)),)
 		echo "token is empty"
 		exit -1
 endif
-	curl -s $(host)/api/phriction.info \
-		    -d api.token=$(token) \
-			    -d slug='$(slug)' > $(raw)
-
-md:
-	python wiki.py --input $(raw) --output $(markdown)
+	python getmd.py --host "$(host)" --token "$(token)" --slug "$(slug)" --output "$(markdown)"
 
 pdf:
 	$(call build-out,pdf)
