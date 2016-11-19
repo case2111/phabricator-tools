@@ -1,10 +1,9 @@
-token = $(PHAB_API_TOKEN)
+token = $(PHAB_TOKEN)
 host = $(PHAB_HOST)
 jenkins =
 user =
 pass =
 room =
-timeout = 10
 colors = red
 ignores = "" 
 outputs = artifacts/
@@ -48,6 +47,5 @@ ifeq ($(strip $(room)),)
 		echo "room is empty"
 		exit -1
 endif
-	python jobs_by_color.py --host $(jenkins) --user $(user) --pwd $(pass) --colors $(colors) --ignore $(ignores) > $(results)
-	./post.sh "$(host)" "$(token)" "$(results)" "$(room)" "$(timeout)"
+	python jobs_by_color.py --host $(host) --token $(token) --room $(room) --jenkins $(jenkins) --user $(user) --pwd $(pass) --colors $(colors) --ignore $(ignores) > $(results)
 
