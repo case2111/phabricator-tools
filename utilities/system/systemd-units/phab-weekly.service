@@ -3,4 +3,4 @@ Description=Phab Weekly Service
 
 [Service]
 Type=oneshot
-ExecStart=/opt/phabricator-tools/utilities/system/scripts/weekly.sh
+ExecStart=/opt/phabricator-tools/utilities/system/scripts/wrapper.sh weekly
