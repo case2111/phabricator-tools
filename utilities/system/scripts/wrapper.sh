@@ -1,26 +1,34 @@
 #!/bin/bash
 source /etc/environment
 LOCATION=/opt/phabricator-tools/utilities/
-TASKS="tasks"
-CALENDAR="calendar"
 
 function run-item()
 {
-    python ${LOCATION}$1 --host $PHAB_HOST --token $PHAB_TOKEN $2
+    python ${LOCATION}$1/$2.py --host $PHAB_HOST --token $3 $4
+}
+
+function run-task()
+{
+    run-item "tasks" "$1" "$PHAB_TASK_TOKEN" "$2"
+}
+
+function run-mon()
+{
+    run-item "calendar" "$1" "$PHAB_MON_TOKEN" "$2"
 }
 
 function do-duedates()
 {
-    run-item "$TASKS/duedates.py" "--mode $1"
+    run-task "duedates" "--mode $1"
 }
 
 case $1 in
     "weekly")
     do-duedates 1
-    run-item "$TASKS/unmodified.py" "--room $PHAB_COMMON_ROOM --report 30 --close 45"
+    run-task "unmodified" "--room $PHAB_COMMON_ROOM --report 30 --close 45"
     ;;
     "daily")
     do-duedates 2
-    run-item "$CALENDAR/today.py" "--room $PHAB_BOT_ROOM"
+    run-mon "today.py" "--room $PHAB_BOT_ROOM"
     ;;
 esac
