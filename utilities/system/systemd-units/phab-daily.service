@@ -1,0 +1,6 @@
+[Unit]
+Description=Phab Daily Service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/phabricator-tools/utilities/system/scripts/daily.sh
