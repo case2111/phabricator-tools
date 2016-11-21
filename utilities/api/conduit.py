@@ -90,6 +90,10 @@ class User(ConduitBase):
         """user by phid."""
         return self._query({"phids": phids})
 
+    def whoami(self):
+        """get user information."""
+        return self._go("whoami")
+
     def _query(self, params=None):
         """Query users."""
         return self._go("query", params)
@@ -134,9 +138,17 @@ class Maniphest(ConduitBase):
 
     def invalid_by_id(self, task_id):
         """close as invalid by id."""
-        params = self._comment_params(task_id, message)
-        params["status"] = "invalid"
-        return self._update(params)
+        return self._close_by_id(task_id, "invalid")
+
+    def resolve_by_id(self, task_id):
+        """resolve as closed by id."""
+        return self._close_by_id(task_id, "resolved")
+
+    def _close_by_id(self, task_id, status):
+        """close a task by id."""
+        params = self._comment_params(task_id, "marking closed")
+        params["status"] = status
+        return self._update(params) 
 
     def open_by_project_phid(self, project_phid):
         """Open by project phid."""
