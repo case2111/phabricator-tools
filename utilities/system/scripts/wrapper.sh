@@ -38,4 +38,4 @@ case $1 in
     ;;
 esac
 
-run-status "ping" "--room $PHAB_BOT_ROOM"
+run-status "ping" "--room $PHAB_BOT_ROOM --flavor $1"
