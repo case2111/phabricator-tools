@@ -29,6 +29,6 @@ case $1 in
     ;;
     "daily")
     do-duedates 2
-    run-mon "today.py" "--room $PHAB_BOT_ROOM"
+    run-mon "today" "--room $PHAB_BOT_ROOM"
     ;;
 esac
