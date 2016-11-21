@@ -18,12 +18,12 @@ def _process(host, token, room):
     now_end = now + 86400
     conph = factory.create(conduit.Conpherence)
     for item in e:
-        start = item["fields"]["startDateTime"]["epoch"]
-        end = item["fields"]["endDateTime"]["epoch"]
-        if start >= now:
-            if end <= now_end:
-                msg = "E{0} is today".format(item["id"])
-                conph.updatethread(room, msg)
+        fields = item["fields"]
+        start = fields["startDateTime"]["epoch"]
+        end = fields["endDateTime"]["epoch"]
+        if start >= now and end <= now_end:
+            msg = "E{0} is today".format(item["id"])
+            conph.updatethread(room, msg)
 
 
 
