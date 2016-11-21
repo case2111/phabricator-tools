@@ -22,6 +22,11 @@ function do-duedates()
     run-task "duedates" "--mode $1"
 }
 
+function run-status()
+{
+    run-item "status" "$1" "$PHAB_STATUS_TOKEN" "$2"
+}
+
 case $1 in
     "weekly")
     do-duedates 1
@@ -32,3 +37,5 @@ case $1 in
     run-mon "today" "--room $PHAB_BOT_ROOM"
     ;;
 esac
+
+run-status "ping" "--room $PHAB_BOT_ROOM"
