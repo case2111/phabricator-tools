@@ -28,7 +28,10 @@ done
 output_mods=$WRITE_TO/components.md
 for mod in $(ls $PHACILITY | grep -E "^(phabricator|arcanist|libphutil)$"); do 
     echo $mod >> $output_mods
-    cd $PHACILITY/$mod && git log -n 1 | grep "^commit" >> $output_mods
+    cd $PHACILITY/$mod
+    git log -n 1 | grep "^commit" >> $output_mods
+    git branch >> $output_mods
+    echo >> $output_mods
 done
 
 #config file
