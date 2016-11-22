@@ -25,6 +25,12 @@ for repo in $(ls $GIT_LOCATION); do
 	cd $GIT_LOCATION && tar -zcf $repo_path $repo
 done
 
+output_mods=$WRITE_TO/components.md
+for mod in $(ls /opt/phacility | grep -E "^(phabricator|arcanist|libphutil)$"); do 
+    echo $mod >> $output_mods
+    cd $mod && git log -n 1 | grep "^commit" >> $output_mods
+done
+
 #config file
 cd $PHAB && tar -zcf $WRITE_TO/config.tar.gz $CONF_FILES
 
