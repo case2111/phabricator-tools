@@ -1,6 +1,6 @@
 #!/bin/bash
 source /etc/environment
-LOCATION=/opt/phabricator-tools/utilities/
+LOCATION=$PHAB_TOOLS/utilities/
 
 function run-item()
 {
