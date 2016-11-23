@@ -1,7 +1,6 @@
 #!/usr/bin/python
 """Handles reporting on open, deprecated due dates."""
 
-import argparse
 import conduit
 import calendar
 import time
@@ -44,11 +43,8 @@ def _execute(factory, room, host, values, message, is_closing):
     c.updatethread(room, "\n".join(sorted(msgs)))
 
 
-def _process(host, token, room, report, close):
+def process(factory, host, room, report, close):
     """Process unmodified tasks."""
-    factory = conduit.Factory()
-    factory.token = token
-    factory.host = host
     p = factory.create(conduit.Project)
     m = factory.create(conduit.Maniphest)
     res = p.open()["data"]
@@ -99,19 +95,3 @@ def _process(host, token, room, report, close):
     for sets in super_sets:
         use_set = _convert_user_phid(sets[0], resolved)
         _execute(factory, room, host, use_set, sets[1], sets[2])
-
-
-def main():
-    """Entry point."""
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--host", required=True, type=str)
-    parser.add_argument("--room", required=True, type=str)
-    parser.add_argument("--token", required=True, type=str)
-    parser.add_argument("--report", required=True, type=int)
-    parser.add_argument("--close", required=True, type=int)
-    args = parser.parse_args()
-    _process(args.host, args.token, args.room, args.report, args.close)
-
-
-if __name__ == '__main__':
-    main()

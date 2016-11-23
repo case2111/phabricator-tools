@@ -1,15 +1,11 @@
 #!/usr/bin/python
 """Reports open issues when subscribed."""
 
-import argparse
 import conduit
 
 
-def _process(host, token, room, project):
+def process(factory, room, project):
     """Process event dates."""
-    factory = conduit.Factory()
-    factory.token = token
-    factory.host = host
     who = factory.create(conduit.User).whoami()["phid"]
     project_phid = None
     for item in factory.create(conduit.Project).by_name(project)["data"]:
@@ -26,18 +22,3 @@ def _process(host, token, room, project):
             continue
         msg = "{0} needs action from an admin".format(datum["objectName"])
         conph.updatethread(room, msg)
-
-
-def main():
-    """Entry point."""
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--host", required=True, type=str)
-    parser.add_argument("--token", required=True, type=str)
-    parser.add_argument("--room", required=True, type=str)
-    parser.add_argument("--project", required=True, type=str)
-    args = parser.parse_args()
-    _process(args.host, args.token, args.room, args.project)
-
-
-if __name__ == '__main__':
-    main()
