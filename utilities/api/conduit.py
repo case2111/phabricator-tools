@@ -8,6 +8,7 @@ import pycurl
 
 class Factory:
     """Common case to create conduit-derived classes."""
+
     token = None
     host = None
 
@@ -21,6 +22,7 @@ class Factory:
 
 class ConduitBase(object):
     """Conduit common operations."""
+
     token = None
     host = None
     prefix = None
@@ -93,6 +95,7 @@ class ConduitBase(object):
 
 class Project(ConduitBase):
     """Project queries."""
+
     def __init__(self):
         """init the instance."""
         self.prefix = "project"
@@ -105,6 +108,7 @@ class Project(ConduitBase):
 
 class User(ConduitBase):
     """User implementation."""
+
     def __init__(self):
         """init the instance."""
         self.prefix = "user"
@@ -124,6 +128,7 @@ class User(ConduitBase):
 
 class CalendarEvent(ConduitBase):
     """Calendar implementation."""
+
     def __init__(self):
         """init the instance."""
         self.prefix = "calendar.event"
@@ -145,6 +150,7 @@ class CalendarEvent(ConduitBase):
 
 class Conpherence(ConduitBase):
     """Conpherence implementation."""
+
     def __init__(self):
         """init the instance."""
         self.prefix = "conpherence"
@@ -156,6 +162,7 @@ class Conpherence(ConduitBase):
 
 class Phriction(ConduitBase):
     """Phriction implementation."""
+
     def __init__(self):
         """init the instance."""
         self.prefix = "phriction"
@@ -167,6 +174,7 @@ class Phriction(ConduitBase):
 
 class Maniphest(ConduitBase):
     """Maniphest implementation."""
+
     def __init__(self):
         """init the instance."""
         self.prefix = "maniphest"
