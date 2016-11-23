@@ -43,7 +43,7 @@ function ping-host()
 
 function ping-hosts()
 {
-    domain=$PHAB_CHECK_DOMAIN"d"
+    domain=$PHAB_CHECK_DOMAIN
     ping-host $domain
     for d in $(echo $PHAB_CHECK_HOSTS); do
         ping-host $d.$domain
