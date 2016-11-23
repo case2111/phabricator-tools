@@ -5,12 +5,11 @@ import argparse
 import conduit
 
 
-def _process(host, token, room, flavor):
+def _process(host, token, room, msg):
     """Ping alive."""
     factory = conduit.Factory()
     factory.token = token
     factory.host = host
-    msg = "{0} timer executed".format(flavor)
     factory.create(conduit.Conpherence).updatethread(room, msg)
 
 
