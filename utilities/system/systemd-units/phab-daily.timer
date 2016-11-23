@@ -3,7 +3,7 @@ Description=Phab Daily Tasks
 
 [Timer]
 Unit=phab-daily.service
-OnCalendar=*-*-* 08:00:00
+OnCalendar=*-*-* 00:00:00
 
 [Install]
 WantedBy=timers.target
