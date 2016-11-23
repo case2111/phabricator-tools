@@ -43,6 +43,7 @@ def _execute(factory, room, host, values, message, is_closing):
             m.invalid_by_id(val[1:])
     c.updatethread(room, "\n".join(sorted(msgs)))
 
+
 def _process(host, token, room, report, close):
     """Process unmodified tasks."""
     factory = conduit.Factory()
@@ -90,7 +91,9 @@ def _process(host, token, room, report, close):
     resolved = resolve_users(factory, all_users)
     super_sets = []
     if len(reporting) > 0:
-        super_sets.append((reporting, "will be closed if not updated soon", False))
+        super_sets.append((reporting,
+                           "will be closed if not updated soon",
+                           False))
     if len(closing) > 0:
         super_sets.append((closing, "was closed, no recent activity", True))
     for sets in super_sets:

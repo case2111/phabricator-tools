@@ -5,6 +5,7 @@ import argparse
 import os
 import conduit
 
+
 def asterisk_lists(content):
     """Convert asterisk pairs to tab asterisk."""
     working = content
@@ -16,6 +17,7 @@ converters = []
 converters.append(asterisk_lists)
 result_key = 'result'
 content_key = 'content'
+
 
 def _process(host, token, slug, output):
     """process the input file."""
@@ -34,6 +36,7 @@ def _process(host, token, slug, output):
         exit(-1)
     with open(output, 'w') as f:
         f.write(result)
+
 
 def main():
     """Main entry."""

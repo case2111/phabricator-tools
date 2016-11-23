@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Reports open issues when subscribed.""" 
+"""Reports open issues when subscribed."""
 
 import argparse
 import conduit

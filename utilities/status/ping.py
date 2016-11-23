@@ -4,6 +4,7 @@
 import argparse
 import conduit
 
+
 def _process(host, token, room, flavor):
     """Ping alive."""
     factory = conduit.Factory()

@@ -22,7 +22,9 @@ def main():
     parser.add_argument("--token", required=True, type=str)
     parser.add_argument("--room", required=True, type=int)
     args = parser.parse_args()
-    server = jenkins.Jenkins(args.jenkins, username=args.user, password=args.pwd)
+    server = jenkins.Jenkins(args.jenkins,
+                             username=args.user,
+                             password=args.pwd)
     colors = args.colors.split(',')
     do_all = args.colors == ALL_COLORS
     color_out = {}

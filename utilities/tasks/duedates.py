@@ -12,6 +12,7 @@ AUX_KEY = "auxiliary"
 COMMENT_OVER = 1
 RESOLVE_OVER = 2
 
+
 def _process(host, token, op):
     """Process due dates."""
     factory = conduit.Factory()
@@ -36,6 +37,7 @@ def _process(host, token, op):
                             if op == RESOLVE_OVER:
                                 if datum["ownerPHID"] == who:
                                     m.resolve_by_id(name)
+
 
 def main():
     """Entry point."""
