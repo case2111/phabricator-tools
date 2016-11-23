@@ -100,10 +100,17 @@ class Project(ConduitBase):
         """init the instance."""
         self.prefix = "project"
 
-    """Project implementation."""
     def open(self):
         """Open projects."""
-        return self._go("query", {"status": "status-open"})
+        return self._query({"status": "status-open"})
+
+    def by_name(self, name):
+        """get projects by name."""
+        return self._query({"names": [name]})
+
+    def _query(self, params=None):
+        """Query projects."""
+        return self._go("query", params)
 
 
 class User(ConduitBase):
@@ -201,6 +208,12 @@ class Maniphest(ConduitBase):
         params = self._comment_params(task_id, "marking closed")
         params["status"] = status
         return self._update(params)
+
+    def open_and_subscribed(self, user_phid):
+        """Open by project phid."""
+        params = self._open_params()
+        params["ccPHIDs"] = [user_phid]
+        return self._query(params)
 
     def open_by_project_phid(self, project_phid):
         """Open by project phid."""

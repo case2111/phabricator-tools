@@ -1,6 +1,7 @@
 #!/bin/bash
 source /etc/environment
 LOCATION=$PHAB_TOOLS/utilities/
+TASKS="tasks"
 
 function run-item()
 {
@@ -9,12 +10,12 @@ function run-item()
 
 function run-task()
 {
-    run-item "tasks" "$1" "$PHAB_TASK_TOKEN" "$2"
+    run-item "$TASKS" "$1" "$PHAB_TASK_TOKEN" "$2"
 }
 
 function run-mon()
 {
-    run-item "calendar" "$1" "$PHAB_MON_TOKEN" "$2"
+    run-item "$1" "$2" "$PHAB_MON_TOKEN" "$3"
 }
 
 function do-duedates()
@@ -34,7 +35,8 @@ case $1 in
     ;;
     "daily")
     do-duedates 2
-    run-mon "today" "--room $PHAB_BOT_ROOM"
+    run-mon "calendar" "today" "--room $PHAB_BOT_ROOM"
+    run-mon "$TASKS" "onsubscribe" "--room $PHAB_BOT_ROOM --project $PHAB_ADMIN_PROJ"
     ;;
 esac
 
