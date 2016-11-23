@@ -10,6 +10,7 @@ class Factory:
     """Common case to create conduit-derived classes."""
     token = None
     host = None
+
     def create(self, obj_type):
         """Create an instance."""
         obj = obj_type()
@@ -23,6 +24,7 @@ class ConduitBase(object):
     token = None
     host = None
     prefix = None
+
     def _build(self, name, value):
         """build a parameter for posting."""
         return name + "=" + value
@@ -59,7 +61,7 @@ class ConduitBase(object):
                     yield d
             else:
                 for l in self._encode_list(prefix, vals):
-                   yield l
+                    yield l
 
     def _execute(self, endpoint, parameters=None):
         """Execute a conduit query."""
@@ -77,7 +79,7 @@ class ConduitBase(object):
                 fields.append(f)
         posting = "&".join(fields)
         buf = BytesIO()
-        curl.setopt(curl.POSTFIELDS, posting);
+        curl.setopt(curl.POSTFIELDS, posting)
         curl.setopt(curl.WRITEDATA, buf)
         curl.perform()
         # and data back
@@ -100,6 +102,7 @@ class Project(ConduitBase):
         """Open projects."""
         return self._go("query", {"status": "status-open"})
 
+
 class User(ConduitBase):
     """User implementation."""
     def __init__(self):
@@ -118,6 +121,7 @@ class User(ConduitBase):
         """Query users."""
         return self._go("query", params)
 
+
 class CalendarEvent(ConduitBase):
     """Calendar implementation."""
     def __init__(self):
@@ -126,7 +130,9 @@ class CalendarEvent(ConduitBase):
 
     def upcoming_by_subscriber(self, user_phid):
         """get upcoming events."""
-        return self._search_by_query("upcoming", {"constraints": {"subscribers":[user_phid]}})
+        return self._search_by_query("upcoming",
+                                     {"constraints":
+                                      {"subscribers": [user_phid]}})
 
     def _search_by_query(self, query, params=None):
         """search the calendar."""
@@ -135,6 +141,7 @@ class CalendarEvent(ConduitBase):
             for p in params:
                 vals[p] = params[p]
         return self._go("search", vals)
+
 
 class Conpherence(ConduitBase):
     """Conpherence implementation."""
@@ -185,7 +192,7 @@ class Maniphest(ConduitBase):
         """close a task by id."""
         params = self._comment_params(task_id, "marking closed")
         params["status"] = status
-        return self._update(params) 
+        return self._update(params)
 
     def open_by_project_phid(self, project_phid):
         """Open by project phid."""

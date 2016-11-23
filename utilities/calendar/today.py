@@ -29,7 +29,6 @@ def _process(host, token, room):
             conph.updatethread(room, msg)
 
 
-
 def main():
     """Entry point."""
     parser = argparse.ArgumentParser()
