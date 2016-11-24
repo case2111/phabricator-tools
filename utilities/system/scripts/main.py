@@ -3,7 +3,6 @@
 
 import argparse
 import conduit
-import os
 import today
 import ping
 import onsubscribe
@@ -14,12 +13,15 @@ import unmodified
 WEEKLY = "weekly"
 DAILY = "daily"
 
+PHAB_ENV = "PHAB_"
+
 
 class Settings(object):
     """Settings object."""
 
     def __init__(self):
         """Init instance."""
+        self._environ = self._init_env()
         self.host = self._env("HOST")
         self.common_room = self._env("COMMON_ROOM")
         self.task_factory = self._create_factory(self._env("TASK_TOKEN"))
@@ -30,6 +32,22 @@ class Settings(object):
         self.domain = self._env("CHECK_DOMAIN")
         self.hosts = self._env("CHECK_HOSTS").split(' ')
 
+    def _init_env(self):
+        """init env variables."""
+        res = {}
+        with open("/etc/environment", 'r') as f:
+            for line in f.readlines():
+                if line.startswith(PHAB_ENV):
+                    idx = line.index("=")
+                    name = line[0:idx]
+                    val = line[idx + 1:].strip()
+                    if val.startswith("\""):
+                        val = val[1:]
+                    if val.endswith("\""):
+                        val = val[:len(val) - 1]
+                    res[name] = val
+        return res
+
     def check_hosts(self):
         """Host(s) to check for being up."""
         yield self.domain
@@ -38,7 +56,7 @@ class Settings(object):
 
     def _env(self, name):
         """Get an environment variable."""
-        return os.environ["PHAB_" + name]
+        return self._environ[PHAB_ENV + name]
 
     def _create_factory(self, token):
         """Create a factory."""
