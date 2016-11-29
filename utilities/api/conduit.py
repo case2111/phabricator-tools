@@ -166,6 +166,15 @@ class Conpherence(ConduitBase):
         """Update a conpherence thread."""
         return self._go("updatethread", {"id": room, "message": message})
 
+    def querythread_by_id(self, room_id):
+        """query a thread by id."""
+        return self._go("querythread", {"ids": [room_id]})
+
+    def querytransaction_by_phid_last(self, room_phid, last):
+        """get a transaction by room and last count."""
+        return self._go("querytransaction", {"roomPHID": room_phid,
+                                             "limit": last})
+
 
 class Phriction(ConduitBase):
     """Phriction implementation."""
