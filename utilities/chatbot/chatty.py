@@ -10,9 +10,11 @@ import commands
 import os
 import time
 from multiprocessing import Process, Queue
+import threading
 
 async def _proc(ws_socket, ctx, q, debug):
     """Support websockets connection to handle chat in and command exec."""
+    rlock = threading.RLock()
     async with websockets.connect(ws_socket) as websocket:
         conph = ctx.get(commands.Context.CONPH)
         room_phid = ctx.get(commands.Context.ROOM_PHID)
@@ -27,20 +29,21 @@ async def _proc(ws_socket, ctx, q, debug):
             raw = await websocket.recv()
             msg = json.loads(raw)
             msg_id = msg["messageID"]
-            all_msgs = conph.querytransaction_by_phid_last(room_phid, last)
-            for m in all_msgs:
-                if str(m) == str(msg_id):
-                    selected = all_msgs[m]
-                    if selected["authorPHID"] == user_phid:
-                        continue
-                    comment = selected["transactionComment"]
-                    parts = comment.split(" ")
-                    if parts[0] == user:
-                        commands.execute(parts[1],
-                                         parts[2:],
-                                         selected["roomID"],
-                                         ctx,
-                                         debug)
+            with rlock:
+                all_msgs = conph.querytransaction_by_phid_last(room_phid, last)
+                for m in all_msgs:
+                    if str(m) == str(msg_id):
+                        selected = all_msgs[m]
+                        if selected["authorPHID"] == user_phid:
+                            continue
+                        comment = selected["transactionComment"]
+                        parts = comment.split(" ")
+                        if parts[0] == user:
+                            commands.execute(parts[1],
+                                             parts[2:],
+                                             selected["roomID"],
+                                             ctx,
+                                             debug)
 
 
 def _bot(host, token, last, lock, debug):
