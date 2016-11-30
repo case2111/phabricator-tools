@@ -62,8 +62,7 @@ def _bot(host, token, last, lock, debug):
     procs = []
     for room in rooms:
         r = rooms[room]
-        ctx = commands.Context()
-        ctx.set(commands.Context.CONPH, factory.create(conduit.Conpherence))
+        ctx = commands.Context(factory)
         ctx.set(commands.Context.ROOM_PHID, r["conpherencePHID"])
         ctx.set(commands.Context.BOT_USER_PHID, u_phid)
         ctx.set(commands.Context.BOT_USER, "@" + user)

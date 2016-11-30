@@ -1,5 +1,6 @@
 #!/usr/bin/python
 """Commands for bot."""
+import conduit
 
 ECHO_CMD = "echo"
 HELP_CMD = "help"
@@ -19,11 +20,14 @@ class Context(object):
     LAST_TRANS = "last_transactions."
     CHATBOT = "chatbot"
     DEBUG = "debug"
+    FACTORY = "factory"
 
-    def __init__(self):
+    def __init__(self, factory):
         """init instance."""
         self.cache = {}
         self.cache[Context.DEBUG] = False
+        self.cache[Context.FACTORY] = factory
+        self.factory_obj(Context.CONPH, conduit.Conpherence)
 
     def get(self, key):
         """get a value."""
@@ -32,13 +36,17 @@ class Context(object):
         else:
             return None
 
-    def test(self, key):
-        """test for a key."""
-        return key in self.cache
-
     def set(self, key, val):
         """set a value."""
         self.cache[key] = val
+
+    def factory_obj(ctx, key, obj_type):
+        """Get (or create -> get) a factory-backed object."""
+        obj = ctx.get(key)
+        if obj is None:
+            obj = ctx.get(Context.FACTORY).create(obj_type)
+            ctx.set(key, obj)
+        return obj
 
 
 def _updatethread(ctx, room_id, msg):
