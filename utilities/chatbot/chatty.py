@@ -11,7 +11,7 @@ import os
 import time
 from multiprocessing import Process, Queue
 
-async def _proc(ws_socket, ctx, q):
+async def _proc(ws_socket, ctx, q, debug):
     """Support websockets connection to handle chat in and command exec."""
     async with websockets.connect(ws_socket) as websocket:
         conph = ctx.get(commands.Context.CONPH)
@@ -39,10 +39,11 @@ async def _proc(ws_socket, ctx, q):
                         commands.execute(parts[1],
                                          parts[2:],
                                          selected["roomID"],
-                                         ctx)
+                                         ctx,
+                                         debug)
 
 
-def _bot(host, token, last, lock):
+def _bot(host, token, last, lock, debug):
     """Bot setup and prep."""
     if os.path.exists(lock):
         print("{0} already exists...".format(lock))
@@ -68,11 +69,12 @@ def _bot(host, token, last, lock):
         ctx.set(commands.Context.BOT_USER, "@" + user)
         ctx.set(commands.Context.LAST_TRANS, last)
 
-        def run(ws, context, queued):
+        def run(ws, context, queued, debugging):
             asyncio.get_event_loop().run_until_complete(_proc(ws,
                                                               context,
-                                                              queued))
-        proc = Process(target=run, args=((ws_host), (ctx), (q)))
+                                                              queued,
+                                                              debugging))
+        proc = Process(target=run, args=((ws_host), (ctx), (q), (debug)))
         proc.daemon = True
         proc.start()
         procs.append(proc)
@@ -88,8 +90,9 @@ def main():
     parser.add_argument("--token", type=str, required=True)
     parser.add_argument("--last", type=str, required=True)
     parser.add_argument("--lock", type=str, required=True)
+    parser.add_argument("--debug", action='store_true')
     args = parser.parse_args()
-    _bot(args.host, args.token, args.last, args.lock)
+    _bot(args.host, args.token, args.last, args.lock, args.debug)
 
 
 if __name__ == '__main__':
