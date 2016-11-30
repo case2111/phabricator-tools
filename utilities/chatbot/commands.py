@@ -10,8 +10,7 @@ class Context(object):
     """Context for executing commands."""
 
     CONPH = "conph"
-    BOT_ROOM = "bot_room"
-    BOT_ROOM_PHID = "bot_room_phid"
+    ROOM_PHID = "room_phid"
     BOT_USER_PHID = "bot_user_phid"
     BOT_USER = "bot_user"
     LAST_TRANS = "last_transactions."
