@@ -35,6 +35,8 @@ async def _proc(ws_socket, ctx, q, debug):
                 for m in all_msgs:
                     if str(m) == str(msg_id):
                         selected = all_msgs[m]
+                        if selected['transactionType'] != "core:comment":
+                            continue
                         authored = selected["authorPHID"]
                         if authored == user_phid:
                             continue
