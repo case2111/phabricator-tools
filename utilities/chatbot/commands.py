@@ -9,6 +9,7 @@ DEBUG_CMD = "debug"
 ALIVE_CMD = "alive"
 DEBUG_CMDS = [ECHO_CMD, CHAT_CMD, DEBUG_CMD]
 ALL_CMDS = [HELP_CMD, ALIVE_CMD]
+ADMIN_CMDS = [ALIVE_CMD]
 
 
 class Context(object):
@@ -22,6 +23,7 @@ class Context(object):
     CHATBOT = "chatbot"
     DEBUG = "debug"
     FACTORY = "factory"
+    ADMINS = "admins"
 
     def __init__(self, factory):
         """init instance."""
@@ -64,12 +66,14 @@ def _create_chatbot():
     return chat
 
 
-def execute(command, parameters, room_id, ctx, debugging):
+def execute(command, parameters, room_id, ctx, debugging, is_admin):
     """Execute a command."""
     try:
         cmd = command
         debug = ctx.get(Context.DEBUG)
         if not debug and command in DEBUG_CMDS:
+            cmd = HELP_CMD
+        if not is_admin and (command in ADMIN_CMDS or command in DEBUG_CMDS):
             cmd = HELP_CMD
         if cmd == ECHO_CMD:
             _updatethread(ctx, room_id, " ".join(parameters))
@@ -92,8 +96,17 @@ def execute(command, parameters, room_id, ctx, debugging):
             use_cmds = ALL_CMDS
             if debug:
                 use_cmds += DEBUG_CMDS
+            msg = []
+            for commands in sorted(use_cmds):
+                flavor = commands
+                added = ""
+                if commands in ADMIN_CMDS:
+                    added = " (admin)"
+                if commands in DEBUG_CMDS:
+                    added = " (debug)"
+                msg.append(flavor + added)
             _updatethread(ctx,
                           room_id,
-                          "available: " + ",".join(sorted(use_cmds)))
+                          "available: " + " , ".join(msg))
     except Exception as e:
         _updatethread(ctx, room_id, str(e))

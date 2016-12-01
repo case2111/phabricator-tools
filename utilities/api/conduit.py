@@ -132,6 +132,10 @@ class User(ConduitBase):
         """Query users."""
         return self._go("query", params)
 
+    def query(self):
+        """Query users."""
+        return self._query()
+
 
 class CalendarEvent(ConduitBase):
     """Calendar implementation."""

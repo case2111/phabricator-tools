@@ -21,6 +21,7 @@ async def _proc(ws_socket, ctx, q, debug):
         user_phid = ctx.get(commands.Context.BOT_USER_PHID)
         last = ctx.get(commands.Context.LAST_TRANS)
         user = ctx.get(commands.Context.BOT_USER)
+        admins = ctx.get(commands.Context.ADMINS)
         connect = {}
         connect["command"] = "subscribe"
         connect["data"] = [room_phid, user_phid]
@@ -34,8 +35,10 @@ async def _proc(ws_socket, ctx, q, debug):
                 for m in all_msgs:
                     if str(m) == str(msg_id):
                         selected = all_msgs[m]
-                        if selected["authorPHID"] == user_phid:
+                        authored = selected["authorPHID"]
+                        if authored == user_phid:
                             continue
+                        is_admin = authored in admins
                         comment = selected["transactionComment"]
                         parts = comment.split(" ")
                         if parts[0] == user:
@@ -43,7 +46,8 @@ async def _proc(ws_socket, ctx, q, debug):
                                              parts[2:],
                                              selected["roomID"],
                                              ctx,
-                                             debug)
+                                             debug,
+                                             is_admin)
 
 
 def _bot(host, token, last, lock, debug):
@@ -56,7 +60,13 @@ def _bot(host, token, last, lock, debug):
     factory.host = host
     factory.token = token
     c = factory.create(conduit.Conpherence)
-    u = factory.create(conduit.User).whoami()
+    users = factory.create(conduit.User)
+    u = users.whoami()
+    admins = []
+    a = users.query()
+    for check in a:
+        if "admin" in check['roles']:
+            admins.append(check['phid'])
     u_phid = u["phid"]
     user = u["userName"]
     ws_host = "ws" + host[4:] + "/ws/"
@@ -70,6 +80,7 @@ def _bot(host, token, last, lock, debug):
         ctx.set(commands.Context.BOT_USER_PHID, u_phid)
         ctx.set(commands.Context.BOT_USER, "@" + user)
         ctx.set(commands.Context.LAST_TRANS, last)
+        ctx.set(commands.Context.ADMINS, admins)
 
         def run(ws, context, queued, debugging):
             asyncio.get_event_loop().run_until_complete(_proc(ws,
