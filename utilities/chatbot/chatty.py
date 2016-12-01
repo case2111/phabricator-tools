@@ -26,6 +26,7 @@ async def _proc(ws_socket, ctx, q, debug):
         connect = {}
         connect["command"] = "subscribe"
         connect["data"] = [room_phid, user_phid]
+        room_id = None
         await websocket.send(json.dumps(connect))
         while q.empty():
             raw = await websocket.recv()
@@ -44,10 +45,12 @@ async def _proc(ws_socket, ctx, q, debug):
                         is_admin = authored in admins
                         comment = selected["transactionComment"]
                         parts = comment.split(" ")
+                        if room_id is None:
+                            room_id = selected["roomID"]
                         if parts[0] == user:
                             commands.execute(parts[1],
                                              parts[2:],
-                                             selected["roomID"],
+                                             room_id,
                                              ctx,
                                              debug,
                                              is_admin)
