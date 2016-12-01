@@ -11,6 +11,7 @@ import os
 import time
 from multiprocessing import Process, Queue
 import threading
+from datetime import datetime
 
 async def _proc(ws_socket, ctx, q, debug):
     """Support websockets connection to handle chat in and command exec."""
@@ -83,6 +84,8 @@ def _bot(host, token, last, lock, debug):
         ctx.set(commands.Context.BOT_USER, "@" + user)
         ctx.set(commands.Context.LAST_TRANS, last)
         ctx.set(commands.Context.ADMINS, admins)
+        ctx.set(commands.Context.LOCK_FILE, lock)
+        ctx.set(commands.Context.STARTED, str(datetime.now()))
 
         def run(ws, context, queued, debugging):
             asyncio.get_event_loop().run_until_complete(_proc(ws,

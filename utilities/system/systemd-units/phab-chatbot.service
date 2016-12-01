@@ -6,6 +6,8 @@ ExecStart=/opt/phabricator-tools/utilities/system/scripts/chat.sh start
 ExecReload=/opt/phabricator-tools/utilities/system/scripts/chat.sh restart
 ExecStop=/opt/phabricator-tools/utilities/system/scripts/chat.sh stop
 KillMode=none
+Restart=always
+
 
 [Install]
 WantedBy=multi-user.target

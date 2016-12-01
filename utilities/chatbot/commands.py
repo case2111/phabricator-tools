@@ -7,9 +7,11 @@ HELP_CMD = "help"
 CHAT_CMD = "chat"
 DEBUG_CMD = "debug"
 ALIVE_CMD = "alive"
+REBOOT_CMD = "reboot"
+STATUS_CMD = "status"
 DEBUG_CMDS = [ECHO_CMD, CHAT_CMD, DEBUG_CMD]
-ALL_CMDS = [HELP_CMD, ALIVE_CMD]
-ADMIN_CMDS = [ALIVE_CMD]
+ALL_CMDS = [HELP_CMD, ALIVE_CMD, STATUS_CMD, REBOOT_CMD]
+ADMIN_CMDS = [ALIVE_CMD, REBOOT_CMD, STATUS_CMD]
 
 
 class Context(object):
@@ -24,6 +26,8 @@ class Context(object):
     DEBUG = "debug"
     FACTORY = "factory"
     ADMINS = "admins"
+    LOCK_FILE = "lock_file"
+    STARTED = "started"
 
     def __init__(self, factory):
         """init instance."""
@@ -66,6 +70,15 @@ def _create_chatbot():
     return chat
 
 
+def _reboot(lock_file):
+    """reboot the monitor."""
+    import os
+    try:
+        os.remove(lock_file)
+    except OSError:
+        return
+
+
 def execute(command, parameters, room_id, ctx, debugging, is_admin):
     """Execute a command."""
     try:
@@ -92,6 +105,10 @@ def execute(command, parameters, room_id, ctx, debugging, is_admin):
             _updatethread(ctx, room_id, "debug mode toggled")
         elif cmd == ALIVE_CMD:
             _updatethread(ctx, room_id, "yes")
+        elif cmd == REBOOT_CMD:
+            _reboot(ctx.get(Context.LOCK_FILE))
+        elif cmd == STATUS_CMD:
+            _updatethread(ctx, room_id, ctx.get(Context.STARTED))
         else:
             use_cmds = ALL_CMDS
             if debug:
