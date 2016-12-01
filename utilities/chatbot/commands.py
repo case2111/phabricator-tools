@@ -6,8 +6,9 @@ ECHO_CMD = "echo"
 HELP_CMD = "help"
 CHAT_CMD = "chat"
 DEBUG_CMD = "debug"
+ALIVE_CMD = "alive"
 DEBUG_CMDS = [ECHO_CMD, CHAT_CMD, DEBUG_CMD]
-ALL_CMDS = [HELP_CMD]
+ALL_CMDS = [HELP_CMD, ALIVE_CMD]
 
 
 class Context(object):
@@ -85,6 +86,8 @@ def execute(command, parameters, room_id, ctx, debugging):
         elif command == DEBUG_CMD and debugging:
             ctx.set(Context.DEBUG, not debug)
             _updatethread(ctx, room_id, "debug mode toggled")
+        elif cmd == ALIVE_CMD:
+            _updatethread(ctx, room_id, "yes")
         else:
             use_cmds = ALL_CMDS
             if debug:

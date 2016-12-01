@@ -1,0 +1,11 @@
+[Unit]
+Description=Phab ChatBot Service
+
+[Service]
+ExecStart=/opt/phabricator-tools/utilities/system/scripts/chat.sh start
+ExecReload=/opt/phabricator-tools/utilities/system/scripts/chat.sh restart
+ExecStop=/opt/phabricator-tools/utilities/system/scripts/chat.sh stop
+KillMode=none
+
+[Install]
+WantedBy=multi-user.target
