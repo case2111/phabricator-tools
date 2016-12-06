@@ -3,6 +3,7 @@
 
 from io import BytesIO
 import json
+from urllib.parse import urlencode
 import pycurl
 
 
@@ -31,11 +32,13 @@ class ConduitBase(object):
         """build a parameter for posting."""
         return name + "=" + value
 
-    def _go(self, operator, params=None):
+    def _go(self, operator, manual_post=True, params=None):
         """run an operation."""
         if self.prefix is None:
             raise Exception("no prefix configured")
-        return self._execute(self.prefix + "." + operator, params)
+        return self._execute(self.prefix + "." + operator,
+                             manual_post=manual_post,
+                             parameters=params)
 
     def _encode_list(self, prefix, vals):
         """encode a list set."""
@@ -65,7 +68,7 @@ class ConduitBase(object):
                 for l in self._encode_list(prefix, vals):
                     yield l
 
-    def _execute(self, endpoint, parameters=None):
+    def _execute(self, endpoint, manual_post=True, parameters=None):
         """Execute a conduit query."""
         if self.token is None:
             raise Exception("no token given...")
@@ -74,12 +77,16 @@ class ConduitBase(object):
         curl = pycurl.Curl()
         curl.setopt(curl.URL, self.host + "/api/" + endpoint)
         # post-data
-        fields = []
-        fields.append(self._build("api.token", self.token))
-        if parameters is not None and len(parameters) > 0:
-            for f in self._encode("", parameters, False):
-                fields.append(f)
-        posting = "&".join(fields)
+        if manual_post:
+            fields = []
+            fields.append(self._build("api.token", self.token))
+            if parameters is not None and len(parameters) > 0:
+                for f in self._encode("", parameters, False):
+                    fields.append(f)
+            posting = "&".join(fields)
+        else:
+            parameters["api.token"] = self.token
+            posting = urlencode(parameters)
         buf = BytesIO()
         curl.setopt(curl.POSTFIELDS, posting)
         curl.setopt(curl.WRITEDATA, buf)
@@ -197,6 +204,14 @@ class Phriction(ConduitBase):
     def info(self, slug):
         """get information for a page/slug."""
         return self._go("info", {"slug": slug})
+
+    def edit(self, slug, title, content):
+        """edit a phriction page."""
+        return self._go("edit",
+                        params={"slug": slug,
+                                "title": title,
+                                "content": content},
+                        manual_post=False)
 
 
 class Maniphest(ConduitBase):
