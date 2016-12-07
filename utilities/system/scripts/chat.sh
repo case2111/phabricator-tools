@@ -5,7 +5,7 @@ LOCK_FILE=/tmp/chatbot.lck
 # start the chatbot
 function start-now()
 {
-    python $PHAB_TOOLS/utilities/chatbot/chatty.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE --token $PHAB_MON_TOKEN
+    python $PHAB_TOOLS/utilities/chatbot/chatty.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE --token $PHAB_MON_TOKEN --type phabtools
 }
 
 # stop the chatbot
