@@ -13,12 +13,11 @@ Tooling to check jenkins status values for jobs and send a message to a phabrica
 provides a websocket connected chatbot for getting messages to a bot outside of phabricator
 
 ```
-python chatty.py --host "https://phab.example.com" --token "api-token" --last 30 --lock /path/to/lock/file
+python chat_bot.py --host "https://phab.example.com" --token "api-token" --last 30 --lock /path/to/lock/file
 ```
 
-# post2phriction
 post data to phriction from various sources
 
 ```
-python post.py --host <host> --token <api token> --slug <wiki slug> --input <file containing markdown> --title <title>
+python post_phriction.py --host <host> --token <api token> --slug <wiki slug> --input <file containing markdown> --title <title>
 ```
