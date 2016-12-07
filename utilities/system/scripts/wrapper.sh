@@ -1,4 +1,3 @@
 #!/bin/bash
 source /etc/environment
-LOCATION=$PHAB_TOOLS/utilities/system/scripts
-python ${LOCATION}/main.py --mode $1
+python ${PHAB_TOOLS}/utilities/src/task_main.py --mode $1
