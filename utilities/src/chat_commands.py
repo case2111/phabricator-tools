@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """Commands for bot."""
 import conduit
+import time
 
 ECHO_CMD = "echo"
 HELP_CMD = "help"
@@ -152,6 +153,7 @@ class PhabTools(OptionCommand):
     def _operate(self):
         """inherited."""
         import diffusion_phriction
+        time.sleep(5)
         slug = self.params[0]
         diffusion_phriction._process(self.context.get(Context.FACTORY),
                                      slug,
