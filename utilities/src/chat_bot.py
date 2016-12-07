@@ -6,7 +6,7 @@ import websockets
 import argparse
 import conduit
 import json
-import commands
+import chat_commands
 import os
 import time
 from multiprocessing import Process, Queue
