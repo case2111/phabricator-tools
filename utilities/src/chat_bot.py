@@ -77,7 +77,8 @@ def _bot(host, token, last, lock, debug, options):
     admins = []
     a = users.query()
     for check in a:
-        if "admin" in check['roles']:
+        roles = check['roles']
+        if "admin" in roles or "agent" in roles:
             admins.append(check['phid'])
     u_phid = u["phid"]
     user = u["userName"]
