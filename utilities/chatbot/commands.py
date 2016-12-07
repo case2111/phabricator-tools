@@ -11,7 +11,7 @@ REBOOT_CMD = "reboot"
 STATUS_CMD = "status"
 GEN_PAGE_CMD = "genpage"
 DEBUG_CMDS = [ECHO_CMD, CHAT_CMD, DEBUG_CMD]
-ALL_CMDS = [HELP_CMD, ALIVE_CMD, STATUS_CMD, REBOOT_CMD, GEN_PAGE_CMD]
+ALL_CMDS = [HELP_CMD, ALIVE_CMD, STATUS_CMD, REBOOT_CMD]
 ADMIN_CMDS = [ALIVE_CMD, REBOOT_CMD, STATUS_CMD, GEN_PAGE_CMD]
 
 
@@ -99,10 +99,22 @@ class OptionCommand(object):
         self.context = ctx
         self.debug = debugging
         self.admin = is_admin
+        use_supported = self._support()
+        self.supported = []
+        if self.admin:
+            self.supported = use_supported
+        else:
+            for sup in use_supported:
+                if sup not in ADMIN_CMDS:
+                    self.supported.append(sup)
+
+    def _support(self):
+        """Get supported commands."""
+        raise Exception("must implement support")
 
     def operate(self):
         """Operate the context."""
-        if self.is_command():
+        if self.cmd in self.supported and self.is_command():
             self._operate()
             return True
         else:
@@ -120,9 +132,12 @@ class OptionCommand(object):
 class PhabTools(OptionCommand):
     """Phabricator co-located tooling."""
 
+    def _support(self):
+        return [GEN_PAGE_CMD]
+
     def is_command(self):
         """inherited."""
-        return self.cmd in GEN_PAGE_CMD
+        return True
 
     def _operate(self):
         """inherited."""
@@ -168,7 +183,7 @@ def execute(command, parameters, room_id, ctx, debugging, is_admin, added_ctx):
         elif cmd == STATUS_CMD:
             _updatethread(ctx, room_id, ctx.get(Context.STARTED))
         else:
-            use_cmds = ALL_CMDS
+            use_cmds = ALL_CMDS + options.supported
             if debug:
                 use_cmds += DEBUG_CMDS
             msg = []
