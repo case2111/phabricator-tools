@@ -27,34 +27,39 @@ async def _proc(ws_socket, ctx, q, debug, options):
         connect["command"] = "subscribe"
         connect["data"] = [room_phid, user_phid]
         room_id = None
-        await websocket.send(json.dumps(connect))
-        while q.empty():
-            raw = await websocket.recv()
-            msg = json.loads(raw)
-            msg_id = msg["messageID"]
-            with rlock:
-                all_msgs = conph.querytransaction_by_phid_last(room_phid, last)
-                for m in all_msgs:
-                    if str(m) == str(msg_id):
-                        selected = all_msgs[m]
-                        if selected['transactionType'] != "core:comment":
-                            continue
-                        authored = selected["authorPHID"]
-                        if authored == user_phid:
-                            continue
-                        is_admin = authored in admins
-                        comment = selected["transactionComment"]
-                        parts = comment.split(" ")
-                        if room_id is None:
-                            room_id = selected["roomID"]
-                        if parts[0] == user:
-                            chat_commands.execute(parts[1],
-                                                  parts[2:],
-                                                  room_id,
-                                                  ctx,
-                                                  debug,
-                                                  is_admin,
-                                                  options)
+        try:
+            await websocket.send(json.dumps(connect))
+            while q.empty():
+                raw = await websocket.recv()
+                msg = json.loads(raw)
+                msg_id = msg["messageID"]
+                with rlock:
+                    all_msgs = conph.querytransaction_by_phid_last(room_phid,
+                                                                   last)
+                    for m in all_msgs:
+                        if str(m) == str(msg_id):
+                            selected = all_msgs[m]
+                            if selected['transactionType'] != "core:comment":
+                                continue
+                            authored = selected["authorPHID"]
+                            if authored == user_phid:
+                                continue
+                            is_admin = authored in admins
+                            comment = selected["transactionComment"]
+                            parts = comment.split(" ")
+                            if room_id is None:
+                                room_id = selected["roomID"]
+                            if parts[0] == user:
+                                chat_commands.execute(parts[1],
+                                                      parts[2:],
+                                                      room_id,
+                                                      ctx,
+                                                      debug,
+                                                      is_admin,
+                                                      options)
+        except Exception as e:
+            print(str(e))
+            q.put(1)
 
 
 def _bot(host, token, last, lock, debug, options):
@@ -106,8 +111,10 @@ def _bot(host, token, last, lock, debug, options):
         proc.daemon = True
         proc.start()
         procs.append(proc)
-    while os.path.exists(lock):
+    while os.path.exists(lock) and q.empty():
         time.sleep(5)
+    if os.path.exists(lock):
+        os.remove(lock)
     q.put(1)
 
 
