@@ -32,7 +32,7 @@ class ConduitBase(object):
         """build a parameter for posting."""
         return name + "=" + value
 
-    def _go(self, operator, manual_post=True, params=None):
+    def _go(self, operator, params=None, manual_post=True):
         """run an operation."""
         if self.prefix is None:
             raise Exception("no prefix configured")
@@ -85,8 +85,11 @@ class ConduitBase(object):
                     fields.append(f)
             posting = "&".join(fields)
         else:
-            parameters["api.token"] = self.token
-            posting = urlencode(parameters)
+            params = parameters
+            if params is None:
+                params = {}
+            params["api.token"] = self.token
+            posting = urlencode(params)
         buf = BytesIO()
         curl.setopt(curl.POSTFIELDS, posting)
         curl.setopt(curl.WRITEDATA, buf)

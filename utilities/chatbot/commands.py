@@ -9,9 +9,10 @@ DEBUG_CMD = "debug"
 ALIVE_CMD = "alive"
 REBOOT_CMD = "reboot"
 STATUS_CMD = "status"
+GEN_PAGE_CMD = "genpage"
 DEBUG_CMDS = [ECHO_CMD, CHAT_CMD, DEBUG_CMD]
-ALL_CMDS = [HELP_CMD, ALIVE_CMD, STATUS_CMD, REBOOT_CMD]
-ADMIN_CMDS = [ALIVE_CMD, REBOOT_CMD, STATUS_CMD]
+ALL_CMDS = [HELP_CMD, ALIVE_CMD, STATUS_CMD, REBOOT_CMD, GEN_PAGE_CMD]
+ADMIN_CMDS = [ALIVE_CMD, REBOOT_CMD, STATUS_CMD, GEN_PAGE_CMD]
 
 
 class Context(object):
@@ -79,9 +80,66 @@ def _reboot(lock_file):
         return
 
 
-def execute(command, parameters, room_id, ctx, debugging, is_admin):
+def get_opts(options):
+    """Get the backing options for the worker."""
+    if options == "phabtools":
+        return PhabTools
+    else:
+        raise Exception("unknown options: " + options)
+
+
+class OptionCommand(object):
+    """Base option context."""
+
+    def __init__(self, command, parameters, room_id, ctx, debugging, is_admin):
+        """Init the instance."""
+        self.cmd = command
+        self.params = parameters
+        self.room = room_id
+        self.context = ctx
+        self.debug = debugging
+        self.admin = is_admin
+
+    def operate(self):
+        """Operate the context."""
+        if self.is_command():
+            self._operate()
+            return True
+        else:
+            return False
+
+    def is_command(self):
+        """Check if this is a command for this option set."""
+        raise Exception("must implement is_command")
+
+    def _operate(self):
+        """Run the operation."""
+        raise Exception("must implement operate")
+
+
+class PhabTools(OptionCommand):
+    """Phabricator co-located tooling."""
+
+    def is_command(self):
+        """inherited."""
+        return self.cmd in GEN_PAGE_CMD
+
+    def _operate(self):
+        """inherited."""
+        pass
+
+
+def execute(command, parameters, room_id, ctx, debugging, is_admin, added_ctx):
     """Execute a command."""
     try:
+        options = added_ctx(command,
+                            parameters,
+                            room_id,
+                            ctx,
+                            debugging,
+                            is_admin)
+        if options.operate():
+            return
         cmd = command
         debug = ctx.get(Context.DEBUG)
         if not debug and command in DEBUG_CMDS:

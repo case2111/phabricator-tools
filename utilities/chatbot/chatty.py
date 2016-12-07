@@ -13,7 +13,7 @@ from multiprocessing import Process, Queue
 import threading
 from datetime import datetime
 
-async def _proc(ws_socket, ctx, q, debug):
+async def _proc(ws_socket, ctx, q, debug, options):
     """Support websockets connection to handle chat in and command exec."""
     rlock = threading.RLock()
     async with websockets.connect(ws_socket) as websocket:
@@ -53,10 +53,11 @@ async def _proc(ws_socket, ctx, q, debug):
                                              room_id,
                                              ctx,
                                              debug,
-                                             is_admin)
+                                             is_admin,
+                                             options)
 
 
-def _bot(host, token, last, lock, debug):
+def _bot(host, token, last, lock, debug, options):
     """Bot setup and prep."""
     if os.path.exists(lock):
         print("{0} already exists...".format(lock))
@@ -79,6 +80,7 @@ def _bot(host, token, last, lock, debug):
     rooms = c.querythread()
     q = Queue()
     procs = []
+    opts = commands.get_opts(options)
     for room in rooms:
         r = rooms[room]
         ctx = commands.Context(factory)
@@ -90,12 +92,17 @@ def _bot(host, token, last, lock, debug):
         ctx.set(commands.Context.LOCK_FILE, lock)
         ctx.set(commands.Context.STARTED, str(datetime.now()))
 
-        def run(ws, context, queued, debugging):
+        def run(ws, context, queued, debugging, opts):
             asyncio.get_event_loop().run_until_complete(_proc(ws,
                                                               context,
                                                               queued,
-                                                              debugging))
-        proc = Process(target=run, args=((ws_host), (ctx), (q), (debug)))
+                                                              debugging,
+                                                              opts))
+        proc = Process(target=run, args=((ws_host),
+                                         (ctx),
+                                         (q),
+                                         (debug),
+                                         (opts)))
         proc.daemon = True
         proc.start()
         procs.append(proc)
@@ -109,11 +116,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", type=str, required=True)
     parser.add_argument("--token", type=str, required=True)
-    parser.add_argument("--last", type=str, required=True)
     parser.add_argument("--lock", type=str, required=True)
+    parser.add_argument("--last", type=str, required=True)
     parser.add_argument("--debug", action='store_true')
+    parser.add_argument("--type", type=str, required=True)
     args = parser.parse_args()
-    _bot(args.host, args.token, args.last, args.lock, args.debug)
+    _bot(args.host, args.token, args.last, args.lock, args.debug, args.type)
 
 
 if __name__ == '__main__':
