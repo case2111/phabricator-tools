@@ -3,11 +3,11 @@
 
 import argparse
 import conduit
-import today
-import ping
-import onsubscribe
-import duedates
-import unmodified
+import task_today
+import task_ping
+import task_onsub
+import task_duedates
+import task_unmod
 
 
 WEEKLY = "weekly"
@@ -76,25 +76,27 @@ def main():
     args = parser.parse_args()
     settings = Settings()
     if args.mode == DAILY:
-        duedates.process(settings.task_factory, duedates.RESOLVE_OVER)
-        today.process(settings.monitor_factory, settings.bot_room)
-        onsubscribe.process(settings.monitor_factory,
-                            settings.bot_room,
-                            settings.admin_project)
-        ping.check(settings.status_factory,
-                   settings.bot_room,
-                   settings.check_hosts())
+        task_duedates.process(settings.task_factory,
+                              task_duedates.RESOLVE_OVER)
+        task_today.process(settings.monitor_factory, settings.bot_room)
+        task_onsub.process(settings.monitor_factory,
+                           settings.bot_room,
+                           settings.admin_project)
+        task_ping.check(settings.status_factory,
+                        settings.bot_room,
+                        settings.check_hosts())
     else:
         if args.mode == WEEKLY:
-            duedates.process(settings.task_factory, duedates.COMMENT_OVER)
-            unmodified.process(settings.task_factory,
+            task_duedates.process(settings.task_factory,
+                                  task_duedates.COMMENT_OVER)
+            task_unmod.process(settings.task_factory,
                                settings.host,
                                settings.common_room,
                                30,
                                45)
-    ping.process(settings.status_factory,
-                 settings.bot_room,
-                 "{0} executed".format(args.mode))
+    task_ping.process(settings.status_factory,
+                      settings.bot_room,
+                      "{0} executed".format(args.mode))
 
 if __name__ == '__main__':
     main()
