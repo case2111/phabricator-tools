@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Handles consuming wiki and producing output md."""
+"""Edits a phriction page from source."""
 
 import argparse
 import os
