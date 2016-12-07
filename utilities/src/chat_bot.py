@@ -17,12 +17,12 @@ async def _proc(ws_socket, ctx, q, debug, options):
     """Support websockets connection to handle chat in and command exec."""
     rlock = threading.RLock()
     async with websockets.connect(ws_socket) as websocket:
-        conph = ctx.get(commands.Context.CONPH)
-        room_phid = ctx.get(commands.Context.ROOM_PHID)
-        user_phid = ctx.get(commands.Context.BOT_USER_PHID)
-        last = ctx.get(commands.Context.LAST_TRANS)
-        user = ctx.get(commands.Context.BOT_USER)
-        admins = ctx.get(commands.Context.ADMINS)
+        conph = ctx.get(chat_commands.Context.CONPH)
+        room_phid = ctx.get(chat_commands.Context.ROOM_PHID)
+        user_phid = ctx.get(chat_commands.Context.BOT_USER_PHID)
+        last = ctx.get(chat_commands.Context.LAST_TRANS)
+        user = ctx.get(chat_commands.Context.BOT_USER)
+        admins = ctx.get(chat_commands.Context.ADMINS)
         connect = {}
         connect["command"] = "subscribe"
         connect["data"] = [room_phid, user_phid]
@@ -48,13 +48,13 @@ async def _proc(ws_socket, ctx, q, debug, options):
                         if room_id is None:
                             room_id = selected["roomID"]
                         if parts[0] == user:
-                            commands.execute(parts[1],
-                                             parts[2:],
-                                             room_id,
-                                             ctx,
-                                             debug,
-                                             is_admin,
-                                             options)
+                            chat_commands.execute(parts[1],
+                                                  parts[2:],
+                                                  room_id,
+                                                  ctx,
+                                                  debug,
+                                                  is_admin,
+                                                  options)
 
 
 def _bot(host, token, last, lock, debug, options):
@@ -80,17 +80,17 @@ def _bot(host, token, last, lock, debug, options):
     rooms = c.querythread()
     q = Queue()
     procs = []
-    opts = commands.get_opts(options)
+    opts = chat_commands.get_opts(options)
     for room in rooms:
         r = rooms[room]
-        ctx = commands.Context(factory)
-        ctx.set(commands.Context.ROOM_PHID, r["conpherencePHID"])
-        ctx.set(commands.Context.BOT_USER_PHID, u_phid)
-        ctx.set(commands.Context.BOT_USER, "@" + user)
-        ctx.set(commands.Context.LAST_TRANS, last)
-        ctx.set(commands.Context.ADMINS, admins)
-        ctx.set(commands.Context.LOCK_FILE, lock)
-        ctx.set(commands.Context.STARTED, str(datetime.now()))
+        ctx = chat_commands.Context(factory)
+        ctx.set(chat_commands.Context.ROOM_PHID, r["conpherencePHID"])
+        ctx.set(chat_commands.Context.BOT_USER_PHID, u_phid)
+        ctx.set(chat_commands.Context.BOT_USER, "@" + user)
+        ctx.set(chat_commands.Context.LAST_TRANS, last)
+        ctx.set(chat_commands.Context.ADMINS, admins)
+        ctx.set(chat_commands.Context.LOCK_FILE, lock)
+        ctx.set(chat_commands.Context.STARTED, str(datetime.now()))
 
         def run(ws, context, queued, debugging, opts):
             asyncio.get_event_loop().run_until_complete(_proc(ws,
