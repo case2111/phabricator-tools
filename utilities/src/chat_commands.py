@@ -212,7 +212,7 @@ def execute(command, parameters, room_id, ctx, debugging, is_admin, added_ctx):
                 flavor = commands
                 added = ""
                 if commands in ADMIN_CMDS:
-                    added = " (admin)"
+                    added = " (admin/agent)"
                 if commands in DEBUG_CMDS:
                     added = " (debug)"
                 msg.append(flavor + added)
