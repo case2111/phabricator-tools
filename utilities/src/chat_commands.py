@@ -165,6 +165,7 @@ class PhabTools(OptionCommand):
                       self.room,
                       "[[{0}]] page updated".format(slug))
 
+
 def execute(command, parameters, room_id, ctx, debugging, is_admin, added_ctx):
     """Execute a command."""
     try:
