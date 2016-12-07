@@ -1,4 +1,5 @@
 #!/bin/sh
+source /etc/environment
 for msg in $(echo $PHAB_PRE_RECEIVE_MSG); do
     message=$(echo $msg | sed "s/|/ /g")
     curl -s $PHAB_HOST/api/conpherence.updatethread \
