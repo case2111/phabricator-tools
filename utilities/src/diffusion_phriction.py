@@ -15,7 +15,7 @@ def _process(factory, slug, title, path, callsign, branch):
     b = base64.b64decode(f).decode("ascii")
     p = factory.create(conduit.Phriction)
     post_content = """
-> this page is managed externally, do NOT edit it
+> this page is managed externally, do NOT edit it here.
 > to change, use the r{1} repository and edit the {0} file in the {2} branch
 
 ---

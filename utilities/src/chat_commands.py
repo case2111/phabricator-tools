@@ -137,12 +137,28 @@ class PhabTools(OptionCommand):
 
     def is_command(self):
         """inherited."""
-        return True
+        if self.cmd == GEN_PAGE_CMD:
+            if len(self.params) == 5:
+                return True
+            else:
+                raise Exception("requires parameters: " + ",".join(["slug",
+                                                                    "title",
+                                                                    "path",
+                                                                    "callsign",
+                                                                    "branch"]))
+        else:
+            return False
 
     def _operate(self):
         """inherited."""
-        pass
-
+        import diffusion_phriction
+        diffusion_phriction._process(self.context.get(Context.FACTORY),
+                                     self.params[0],
+                                     self.params[1],
+                                     self.params[2],
+                                     self.params[3],
+                                     self.params[4])
+        _updatethread(self.context, self.room, "page updated")
 
 def execute(command, parameters, room_id, ctx, debugging, is_admin, added_ctx):
     """Execute a command."""
