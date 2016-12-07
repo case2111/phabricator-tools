@@ -103,6 +103,32 @@ class ConduitBase(object):
             raise Exception(res["error_info"])
 
 
+class Diffusion(ConduitBase):
+    """Diffusion queries."""
+
+    def __init__(self):
+        """init the instance."""
+        self.prefix = "diffusion"
+
+    def filecontent_by_path_branch(self, path, callsign, branch):
+        """file content query/lookup."""
+        return self._go("filecontentquery", {"path": path,
+                                             "repository": "r" + callsign,
+                                             "branch": branch})
+
+
+class File(ConduitBase):
+    """File queries."""
+
+    def __init__(self):
+        """Init the instance."""
+        self.prefix = "file"
+
+    def download(self, phid):
+        """Download a file."""
+        return self._go("download", {"phid": phid})
+
+
 class Project(ConduitBase):
     """Project queries."""
 
