@@ -8,5 +8,10 @@ Tooling to consuming a phriction page, convert markdown for consumption by pando
 # jenkins2conpherence
 Tooling to check jenkins status values for jobs and send a message to a phabricator conpherence room
 
-# tasks
-Tooling relating to task management
+
+# chatbot
+provides a websocket connected chatbot for getting messages to a bot outside of phabricator
+
+```
+python chatty.py --host "https://phab.example.com" --token "api-token" --last 30 --lock /path/to/lock/file
+```
