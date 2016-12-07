@@ -152,13 +152,16 @@ class PhabTools(OptionCommand):
     def _operate(self):
         """inherited."""
         import diffusion_phriction
+        slug = self.params[0]
         diffusion_phriction._process(self.context.get(Context.FACTORY),
-                                     self.params[0],
+                                     slug,
                                      self.params[1],
                                      self.params[2],
                                      self.params[3],
                                      self.params[4])
-        _updatethread(self.context, self.room, "page updated")
+        _updatethread(self.context,
+                      self.room,
+                      "[[{0}]] page updated".format(slug))
 
 def execute(command, parameters, room_id, ctx, debugging, is_admin, added_ctx):
     """Execute a command."""
