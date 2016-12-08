@@ -209,7 +209,9 @@ class PhabTools(OptionCommand):
                           self.room,
                           "download: {0}/sfh/{1}.pdf".format(factory.host,
                                                              file_name))
-
+            _updatethread(self.context,
+                          self.room,
+                          "file downloads expire at the end of the day.")
     def _get_artifact_path(self):
         return "{0}{1}".format(time.time(),
                                random.randint(0, 2147483647))
