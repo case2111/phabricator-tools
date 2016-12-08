@@ -17,6 +17,7 @@ ADMIN_CMDS = [ALIVE_CMD, REBOOT_CMD, STATUS_CMD, GEN_PAGE_CMD]
 
 PHAB_TOOL_TYPE = "phabtools"
 
+
 class Context(object):
     """Context for executing commands."""
 

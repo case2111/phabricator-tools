@@ -98,6 +98,7 @@ def _bot(host, token, last, lock, debug, options, configuration):
         ctx.set(chat_commands.Context.LOCK_FILE, lock)
         ctx.set(chat_commands.Context.STARTED, str(datetime.now()))
         ctx.set(chat_commands.Context.CONFIG, configuration[options])
+
         def run(ws, context, queued, debugging, opts):
             asyncio.get_event_loop().run_until_complete(_proc(ws,
                                                               context,
