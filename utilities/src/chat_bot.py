@@ -62,7 +62,7 @@ async def _proc(ws_socket, ctx, q, debug, options):
             q.put(1)
 
 
-def _bot(host, token, last, lock, debug, options):
+def _bot(host, token, last, lock, debug, options, configuration):
     """Bot setup and prep."""
     if os.path.exists(lock):
         print("{0} already exists...".format(lock))
@@ -97,7 +97,7 @@ def _bot(host, token, last, lock, debug, options):
         ctx.set(chat_commands.Context.ADMINS, admins)
         ctx.set(chat_commands.Context.LOCK_FILE, lock)
         ctx.set(chat_commands.Context.STARTED, str(datetime.now()))
-
+        ctx.set(chat_commands.Context.CONFIG, configuration[options])
         def run(ws, context, queued, debugging, opts):
             asyncio.get_event_loop().run_until_complete(_proc(ws,
                                                               context,
@@ -128,9 +128,16 @@ def main():
     parser.add_argument("--last", type=str, required=True)
     parser.add_argument("--debug", action='store_true')
     parser.add_argument("--type", type=str, required=True)
+    parser.add_argument("--config", type=str, default="default.config")
     args = parser.parse_args()
-    _bot(args.host, args.token, args.last, args.lock, args.debug, args.type)
-
+    with open(args.config, 'r') as f:
+        _bot(args.host,
+             args.token,
+             args.last,
+             args.lock,
+             args.debug,
+             args.type,
+             json.loads(f.read()))
 
 if __name__ == '__main__':
     main()

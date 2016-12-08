@@ -15,6 +15,7 @@ DEBUG_CMDS = [ECHO_CMD, CHAT_CMD, DEBUG_CMD]
 ALL_CMDS = [HELP_CMD, ALIVE_CMD, STATUS_CMD, REBOOT_CMD]
 ADMIN_CMDS = [ALIVE_CMD, REBOOT_CMD, STATUS_CMD, GEN_PAGE_CMD]
 
+PHAB_TOOL_TYPE = "phabtools"
 
 class Context(object):
     """Context for executing commands."""
@@ -30,6 +31,7 @@ class Context(object):
     ADMINS = "admins"
     LOCK_FILE = "lock_file"
     STARTED = "started"
+    CONFIG = "config"
 
     def __init__(self, factory):
         """init instance."""
@@ -83,7 +85,7 @@ def _reboot(lock_file):
 
 def get_opts(options):
     """Get the backing options for the worker."""
-    if options == "phabtools":
+    if options == PHAB_TOOL_TYPE:
         return PhabTools
     else:
         raise Exception("unknown options: " + options)
@@ -102,6 +104,7 @@ class OptionCommand(object):
         self.admin = is_admin
         use_supported = self._support()
         self.supported = []
+        self.config = ctx.get(Context.CONFIG)[self.cmd]
         if self.admin:
             self.supported = use_supported
         else:
@@ -153,7 +156,7 @@ class PhabTools(OptionCommand):
     def _operate(self):
         """inherited."""
         import diffusion_phriction
-        time.sleep(5)
+        time.sleep(self.config["sleep"])
         slug = self.params[0]
         diffusion_phriction._process(self.context.get(Context.FACTORY),
                                      slug,
