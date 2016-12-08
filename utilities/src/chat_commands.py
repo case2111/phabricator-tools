@@ -105,7 +105,11 @@ class OptionCommand(object):
         self.admin = is_admin
         use_supported = self._support()
         self.supported = []
-        self.config = ctx.get(Context.CONFIG)[self.cmd]
+        cfg = ctx.get(Context.CONFIG)
+        if self.cmd in cfg:
+            self.config = cfg[self.cmd]
+        else:
+            self.config = {}
         if self.admin:
             self.supported = use_supported
         else:
