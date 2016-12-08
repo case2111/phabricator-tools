@@ -1,11 +1,12 @@
 #!/bin/bash
 source /etc/environment
 LOCK_FILE=/tmp/chatbot.lck
+PHAB_SRC=$PHAB_TOOLS/utilities/src/
 
 # start the chatbot
 function start-now()
 {
-    python $PHAB_TOOLS/utilities/src/chat_bot.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE --token $PHAB_MON_TOKEN --type phabtools
+    python ${PHAB_SRC}chat_bot.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE --token $PHAB_MON_TOKEN --type phabtools --config ${PHAB_SRC}default.config
 }
 
 # stop the chatbot
