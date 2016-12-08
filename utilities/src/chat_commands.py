@@ -2,6 +2,10 @@
 """Commands for bot."""
 import conduit
 import time
+import pdf_from_phriction
+import pdf_from_diffusion
+import random
+import os
 
 ECHO_CMD = "echo"
 HELP_CMD = "help"
@@ -11,6 +15,8 @@ ALIVE_CMD = "alive"
 REBOOT_CMD = "reboot"
 STATUS_CMD = "status"
 GEN_PAGE_CMD = "genpage"
+PDF_FROM_REPO = "repo2pdf"
+PDF_FROM_WIKI = "wiki2pdf"
 DEBUG_CMDS = [ECHO_CMD, CHAT_CMD, DEBUG_CMD]
 ALL_CMDS = [HELP_CMD, ALIVE_CMD, STATUS_CMD, REBOOT_CMD]
 ADMIN_CMDS = [ALIVE_CMD, REBOOT_CMD, STATUS_CMD, GEN_PAGE_CMD]
@@ -142,7 +148,7 @@ class PhabTools(OptionCommand):
     """Phabricator co-located tooling."""
 
     def _support(self):
-        return [GEN_PAGE_CMD]
+        return [GEN_PAGE_CMD, PDF_FROM_WIKI, PDF_FROM_REPO]
 
     def is_command(self):
         """inherited."""
@@ -155,23 +161,58 @@ class PhabTools(OptionCommand):
                                                                     "path",
                                                                     "callsign",
                                                                     "branch"]))
+        elif self.cmd == PDF_FROM_WIKI:
+            if len(self.params) == 1:
+                return True
+            else:
+                raise Exception("requires a slug parameter")
+        elif self.cmd == PDF_FROM_REPO:
+            if len(self.params) == 3:
+                return True
+            else:
+                raise Exception("requires parameters: " + ",".join(["path",
+                                                                    "callsign",
+                                                                    "branch"]))
         else:
             return False
 
     def _operate(self):
         """inherited."""
-        import diffusion_phriction
-        time.sleep(self.config["sleep"])
-        slug = self.params[0]
-        diffusion_phriction._process(self.context.get(Context.FACTORY),
-                                     slug,
-                                     self.params[1],
-                                     self.params[2],
-                                     self.params[3],
-                                     self.params[4])
-        _updatethread(self.context,
-                      self.room,
-                      "[[{0}]] page updated".format(slug))
+        factory = self.context.get(Context.FACTORY)
+        if self.cmd == GEN_PAGE_CMD:
+            import diffusion_phriction
+            time.sleep(self.config["sleep"])
+            slug = self.params[0]
+            diffusion_phriction._process(factory,
+                                         slug,
+                                         self.params[1],
+                                         self.params[2],
+                                         self.params[3],
+                                         self.params[4])
+            _updatethread(self.context,
+                          self.room,
+                          "[[{0}]] page updated".format(slug))
+        elif self.cmd == PDF_FROM_WIKI or self.cmd == PDF_FROM_REPO:
+            file_name = self._get_artifact_path().replace(".", "")
+            output_path = os.path.join(self.config["path"], file_name)
+            if self.cmd == PDF_FROM_WIKI:
+                pdf_from_phriction._get(factory,
+                                        self.params[0],
+                                        output_path)
+            if self.cmd == PDF_FROM_REPO:
+                pdf_from_diffusion._get(factory,
+                                        self.params[0],
+                                        self.params[1],
+                                        self.params[2],
+                                        output_path)
+            _updatethread(self.context,
+                          self.room,
+                          "download: {0}/sfh/{1}.pdf".format(factory.host,
+                                                             file_name))
+
+    def _get_artifact_path(self):
+        return "{0}{1}".format(time.time(),
+                               random.randint(0, 2147483647))
 
 
 def execute(command, parameters, room_id, ctx, debugging, is_admin, added_ctx):
