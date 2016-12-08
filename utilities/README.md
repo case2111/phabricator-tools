@@ -2,22 +2,12 @@ utilities
 ---------
 Various utilities for interacting with phabricator
 
-# phriction2pdf
-Tooling to consuming a phriction page, convert markdown for consumption by pandoc, and output a pdf
-
-# jenkins2conpherence
-Tooling to check jenkins status values for jobs and send a message to a phabricator conpherence room
-
-
-# chatbot
+# chat_*
 provides a websocket connected chatbot for getting messages to a bot outside of phabricator
 
 ```
 python chat_bot.py --host "https://phab.example.com" --token "api-token" --last 30 --lock /path/to/lock/file
 ```
 
-post data to phriction from various sources
-
-```
-python post_phriction.py --host <host> --token <api token> --slug <wiki slug> --input <file containing markdown> --title <title>
-```
+# task_*
+provides timed (daily, weekly) tasks operations within and around phabricator
