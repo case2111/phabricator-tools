@@ -2,7 +2,7 @@
 final class StaticFileController extends PhabricatorController {
   public function handleRequest(AphrontRequest $request) {
     $file = explode('/', $request->getRequestURI())[2];
-    $env = getenv('PHAB_MON_PATH');
+    $env = ini_get('phab_static_dir');
     if (!$env) {
       $env = '/tmp/';
     }
