@@ -14,7 +14,7 @@ def _version(in_path):
             version = f.read()
     proc = subprocess.Popen(["git",
                              "--git-dir",
-                             path + "/.git",
+                             in_path + "/.git",
                              "log",
                              "-n",
                              "1"],
