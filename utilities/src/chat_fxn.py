@@ -38,9 +38,9 @@ class Bot(object):
     def go(self, command, parameters, is_admin):
         """Execute a bot command."""
         try:
-            print(command)
-            print(parameters)
-            print(is_admin)
+            print("{0} ({1}) as admin? {2}".format(command,
+                                                   ",".join(parameters),
+                                                   is_admin))
             pkg = Bot.Package(command, parameters, is_admin)
             if not self._go(pkg):
                 self._common(pkg)
