@@ -2,7 +2,11 @@
 final class StaticFileController extends PhabricatorController {
   public function handleRequest(AphrontRequest $request) {
     $file = split('/', $request->getRequestURI())[2];
-    $full = '/opt/phab/static/' . $file;
+    $env = getenv('PHAB_MON_PATH')
+    if (!$env) {
+      $env = '/tmp/'
+    }
+    $full = $env . $file;
     if (!file_exists($full)) {
         return new Aphront404Response();
     }
