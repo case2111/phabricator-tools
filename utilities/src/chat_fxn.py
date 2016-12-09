@@ -71,6 +71,7 @@ class Bot(object):
         no_cmd = True
         if pkg.is_admin:
             if pkg.cmd == self.REBOOT:
+                self._chat("rebooting...")
                 self._reboot()
                 no_cmd = False
         need_help = False
