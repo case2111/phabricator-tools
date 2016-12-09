@@ -24,10 +24,18 @@ def _process(content, output):
     markdown = output + ".md"
     with open(markdown, 'w') as f:
         f.write(result)
-    subprocess.run(["pandoc",
-                    markdown,
-                    "--output",
-                    output + ".pdf",
-                    "--smart",
-                    "-V",
-                    "geometry:margin=0.7in"])
+    proc = subprocess.Popen(["pandoc",
+                             markdown,
+                             "--output",
+                             output + ".pdf",
+                             "--smart",
+                             "-V",
+                             "geometry:margin=0.7in"],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    out, err = proc.communicate()
+    print(out)
+    print(err)
+    if proc.returncode != 0:
+        raise Exception("{0} \n {1}".format(out.decode("ascii"),
+                                            err.decode("ascii")))
