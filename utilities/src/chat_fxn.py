@@ -35,14 +35,21 @@ class Bot(object):
         self.room = None
         self.ctx = None
 
-    def go(self, command, parameters, is_admin):
+    def go(self, command, parameters, is_admin, is_all):
         """Execute a bot command."""
         try:
-            print("{0} ({1}) as admin? {2}".format(command,
-                                                   ",".join(parameters),
-                                                   is_admin))
+            print("{0} ({1}) admin? {2}, all? {3}".format(command,
+                                                          ",".join(parameters),
+                                                          is_admin,
+                                                          is_all))
             pkg = Bot.Package(command, parameters, is_admin)
-            if not self._go(pkg):
+            common = False
+            if is_all:
+                common = True
+            else:
+                if not self._go(pkg):
+                    common = True
+            if common:
                 self._common(pkg)
         except Exception as e:
             print(e)

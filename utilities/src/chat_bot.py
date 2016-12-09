@@ -49,10 +49,13 @@ async def _proc(ws_socket, ctx, q, bot):
                             parts = comment.split(" ")
                             if bot.room is None:
                                 bot.room = selected["roomID"]
-                            if parts[0] == user:
+                            uname = parts[0]
+                            is_all = uname == "!all"
+                            if uname == user or (is_admin and is_all):
                                 bot.go(parts[1],
                                        parts[2:],
-                                       is_admin)
+                                       is_admin,
+                                       is_all)
         except Exception as e:
             print(str(e))
             q.put(1)
