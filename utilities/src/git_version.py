@@ -8,7 +8,7 @@ import os
 def _version(in_path):
     """process the input file."""
     version = "unknown"
-    if os.path.exist(full):
+    if os.path.exists(full):
         with open(full, 'r') as f:
             version = f.read()
     proc = subprocess.Popen(["git",
