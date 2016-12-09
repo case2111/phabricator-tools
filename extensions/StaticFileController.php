@@ -2,7 +2,7 @@
 final class StaticFileController extends PhabricatorController {
   public function handleRequest(AphrontRequest $request) {
     $file = explode('/', $request->getRequestURI())[2];
-    $full = '/var/run/phabricator/static/' . $file;
+    $full = '/var/opt/phabricator/static/' . $file;
     if (!file_exists($full)) {
         return new Aphront404Response();
     }
