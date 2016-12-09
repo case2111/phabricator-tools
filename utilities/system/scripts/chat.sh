@@ -10,7 +10,18 @@ function start-now()
     for bot in $(echo $BOTS); do
         tok=$(echo $bot | cut -d "|" -f 1)
         bot_type=$(echo $bot | cut -d "|" -f 2)
-        python ${PHAB_SRC}chat_bot.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE$bot_type --token $tok --type $bot_type
+        python ${PHAB_SRC}chat_bot.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE$bot_type --token $tok --type $bot_type &
+    done
+    running=1
+    while [ $running -eq 1 ]; do
+        sleep 5
+        exists=0
+        for bot in $(echo $BOTS | cut -d "|" -f 2); do
+            if [ -e $LOCK_FILE$bot ]; then
+                exists=1
+            fi
+        done
+        running=$exists
     done
 }
 
