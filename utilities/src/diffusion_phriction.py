@@ -64,13 +64,24 @@ def from_csv(content):
             if area != last_sub:
                 lines.append("\n## {0}\n".format(area))
             last_sub = area
+            note = None
+            area_lines = []
             for sect in sub[area]:
                 name = sect[0]
                 data = sect[1]
                 use = data
-                if name != "Note":
+                is_note = name == "Note"
+                if not is_note:
                     use = name + "\n" + use
-                lines.append("```\n{0}\n```".format(use))
+                sect_line = "```\n{0}\n```".format(use)
+                if is_note:
+                    note = sect_line
+                else:
+                    area_lines.append(sect_line)
+            if note is not None:
+                lines.append(note)
+            for out in sorted(area_lines):
+                lines.append(out)
         last_item = item
     return "\n".join(lines)
 
