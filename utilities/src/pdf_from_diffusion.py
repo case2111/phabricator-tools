@@ -8,6 +8,8 @@ import conduit
 
 def _get(factory, path, callsign, branch, output):
     """get the artifact."""
+    if not path.endswith(".md"):
+        raise Exception("only md files are supported for conversion")
     d = factory.create(conduit.Diffusion).filecontent_by_path_branch(path,
                                                                      callsign,
                                                                      branch)

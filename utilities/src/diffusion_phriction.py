@@ -8,8 +8,6 @@ import base64
 
 def _process(factory, slug, title, path, callsign, branch):
     """process the input file."""
-    if not path.endswith(".md"):
-        raise Exception("only markdown files are allowed")
     d = factory.create(conduit.Diffusion).filecontent_by_path_branch(path,
                                                                      callsign,
                                                                      branch)
