@@ -7,6 +7,11 @@ import pdf_from_diffusion
 import pdf_from_phriction
 import time
 import random
+import task_today
+import task_ping
+import task_onsub
+import task_duedates
+import task_unmod
 
 
 class Bot(object):
@@ -110,6 +115,86 @@ class Bot(object):
                                                           "\n".join(params)))
 
 
+class PruneBot(Bot):
+    """Pruner bot."""
+
+    DO = "do"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+
+    def _go(self, pkg):
+        """inherited."""
+        if pkg.is_admin and pkg.cmd == self.DO:
+            if len(pkg.params) == 1:
+                tasks = pkg.params[0]
+                if tasks == self.DAILY or tasks == self.WEEKLY:
+                    settings = PruneBot.Settings(self.ctx)
+                    if tasks == self.DAILY:
+                        self._daily(settings)
+                    else:
+                        self._weekly(settings)
+                    self._chat("{0} tasks completed".format(tasks))
+                    return True
+            self._subcommand_help(pkg, [self.DAILY + " or " + self.WEEKLY])
+
+    def _daily(self, settings):
+        """daily tasks."""
+        task_duedates.process(settings.task_factory,
+                              task_duedates.RESOLVE_OVER)
+        task_today.process(settings.monitor_factory, settings.bot_room)
+        task_onsub.process(settings.monitor_factory,
+                           settings.bot_room,
+                           settings.admin_project)
+        task_ping.check(settings.status_factory,
+                        settings.bot_room,
+                        settings.check_hosts())
+
+    def _weekly(self, settings):
+        """weekly tasks."""
+        task_duedates.process(settings.task_factory,
+                              task_duedates.COMMENT_OVER)
+        task_unmod.process(settings.task_factory,
+                           settings.host,
+                           settings.common_room,
+                           30,
+                           45)
+
+    def _get_help(self, pkg):
+        """Inherited."""
+        if pkg.is_admin:
+            return {self.DO: "do a set of scheduled/enumerated tasks."}
+        else:
+            return {}
+
+    class Settings(object):
+        """Settings object."""
+
+        def __init__(self, ctx):
+            """Init instance."""
+            self.host = ctx.factory.host
+            self.common_room = ctx.env("COMMON_ROOM")
+            self.task_factory = self._factory(ctx, "TASK_TOKEN")
+            self.monitor_factory = self._factory(ctx, "MON_TOKEN")
+            self.bot_room = ctx.env("BOT_ROOM")
+            self.status_factory = self._factory(ctx, "STATUS_TOKEN")
+            self.admin_project = ctx.env("ADMIN_PROJ")
+            self.domain = ctx.env("CHECK_DOMAIN")
+            self.hosts = ctx.env("CHECK_HOSTS").split(' ')
+
+        def _factory(self, ctx, token):
+            """create/clone a factory."""
+            factory = conduit.Factory()
+            factory.host = ctx.factory.host
+            factory.token = ctx.env(token)
+            return factory
+
+        def check_hosts(self):
+            """Host(s) to check for being up."""
+            yield self.domain
+            for host in self.hosts:
+                yield host + "." + self.domain
+
+
 class MonitorBot(Bot):
     """Monitor bot."""
 
@@ -175,15 +260,19 @@ class MonitorBot(Bot):
 
     def _get_help(self, pkg):
         """inherited."""
-        return {self.GEN_PAGE: "generate a wiki page from a repository/path",
-                self.PDF_WIKI: "produce a pdf from a phriction page",
-                self.PDF_REPO: "produce a pdf from a repository/path"}
+        avail = {self.PDF_WIKI: "produce a pdf from a phriction page",
+                 self.PDF_REPO: "produce a pdf from a repository/path"}
+        if pkg.is_admin:
+            avail[self.GEN_PAGE] = "generate a wiki page from a repo/path"
+        return avail
 
 
 def bot(bot_type):
     """create bots of types."""
     if bot_type == "monitor":
         return MonitorBot()
+    elif bot_type == "prune":
+        return PruneBot()
     else:
         raise Exception("unknown bot type: " + bot_type)
 
