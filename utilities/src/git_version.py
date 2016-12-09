@@ -2,10 +2,15 @@
 """Check the git version of an item."""
 
 import subprocess
+import os
 
 
-def _version(path):
+def _version(in_path):
     """process the input file."""
+    version = "unknown"
+    if os.path.exist(full):
+        with open(full, 'r') as f:
+            version = f.read()
     proc = subprocess.Popen(["git",
                              "--git-dir",
                              path + "/.git",
@@ -18,7 +23,7 @@ def _version(path):
     print(out)
     print(err)
     if proc.returncode == 0:
-        return '```\n' + out.decode("ascii") + "\n```"
+        return "{0}\n\n```\n{1}\n```".format(version, out.decode("ascii"))
     else:
         raise Exception("{0} \n {1}".format(out.decode("ascii"),
                                             err.decode("ascii")))

@@ -7,6 +7,7 @@ BOTS="$PHAB_MON_TOKEN|monitor $PHAB_TASK_TOKEN|prune"
 # start the chatbot
 function start-now()
 {
+    git --git-dir $PHAB_TOOLS/.git log -n 1 | grep "^commit" > ${PHAB_TOOLS}/version.txt
     for bot in $(echo $BOTS); do
         tok=$(echo $bot | cut -d "|" -f 1)
         bot_type=$(echo $bot | cut -d "|" -f 2)
