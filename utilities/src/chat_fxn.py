@@ -79,6 +79,7 @@ class Bot(object):
             if pkg.cmd == self.VERSION:
                 vers = git_version._version(self.ctx.env("TOOLS"))
                 self._chat(vers)
+                no_cmd = False
         need_help = False
         if no_cmd:
             if pkg.cmd == self.ALIVE:
