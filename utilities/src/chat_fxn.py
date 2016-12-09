@@ -103,7 +103,7 @@ class Bot(object):
             help_items[self.REBOOT] = "reboot the bot"
             help_items[self.VERSION] = "get version information (git)"
         text = []
-        for key in help_items:
+        for key in sorted(help_items.keys()):
             txt = "{0} -> {1}".format(key, help_items[key])
             text.append(txt)
         self._chat("\n".join(text))
