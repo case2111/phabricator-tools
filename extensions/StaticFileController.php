@@ -4,7 +4,7 @@ final class StaticFileController extends PhabricatorController {
     $file = split('/', $request->getRequestURI())[2];
     $env = getenv('PHAB_MON_PATH');
     if (!$env) {
-      $env = '/tmp/'
+      $env = '/tmp/';
     }
     $full = $env . $file;
     if (!file_exists($full)) {
