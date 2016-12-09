@@ -28,7 +28,7 @@ async def _proc(ws_socket, ctx, q, bot):
         connect["data"] = [room_phid, user_phid]
         try:
             await websocket.send(json.dumps(connect))
-            conph.updatethread(ctx.bots, "online")
+            conph.updatethread(ctx.bots, "online in: " + room_phid)
             while q.empty():
                 raw = await websocket.recv()
                 msg = json.loads(raw)
