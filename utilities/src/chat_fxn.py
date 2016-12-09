@@ -150,7 +150,7 @@ class MonitorBot(Bot):
     def _pdf(self, pkg):
         """do pdf conversion steps."""
         file_name = self._get_artifact_path().replace(".", "")
-        output_path = os.path.join(self.ctx.env("MON_PATH"))
+        output_path = os.path.join(self.ctx.env("MON_PATH"), file_name)
         if pkg.cmd == self.PDF_WIKI:
             pdf_from_phriction._get(self.ctx.factory,
                                     pkg.params[0],
