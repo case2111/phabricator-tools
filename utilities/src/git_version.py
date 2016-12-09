@@ -8,6 +8,7 @@ import os
 def _version(in_path):
     """process the input file."""
     version = "unknown"
+    full = os.path.join(in_path, "version.txt")
     if os.path.exists(full):
         with open(full, 'r') as f:
             version = f.read()
