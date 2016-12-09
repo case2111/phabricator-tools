@@ -27,8 +27,6 @@ def _process(factory, slug, title, path, callsign, branch, convert):
 > this page is managed externally, do NOT edit it here.
 > to change, use the r{1} repository and edit the {0} file in the {2} branch
 
----
-
 {3}
 """.format(path, callsign, branch, b)
     p.edit(slug, title, post_content)

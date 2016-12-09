@@ -12,6 +12,7 @@ import task_ping
 import task_onsub
 import task_duedates
 import task_unmod
+import git_version
 
 
 class Bot(object):
@@ -20,6 +21,7 @@ class Bot(object):
     ALIVE = "alive"
     STATUS = "status"
     REBOOT = "reboot"
+    VERSION = "version"
 
     class Package(object):
         """Package of a command."""
@@ -74,6 +76,9 @@ class Bot(object):
                 self._chat("rebooting...")
                 self._reboot()
                 no_cmd = False
+            if pkg.cmd == self.VERSION:
+                vers = git_version._version(self.ctx.env("TOOLS"))
+                self._chat(vers)
         need_help = False
         if no_cmd:
             if pkg.cmd == self.ALIVE:
@@ -96,6 +101,7 @@ class Bot(object):
         help_items[self.STATUS] = "check bot status"
         if pkg.is_admin:
             help_items[self.REBOOT] = "reboot the bot"
+            help_items[self.VERSION] = "get version information (git)"
         text = []
         for key in help_items:
             txt = "{0} -> {1}".format(key, help_items[key])
