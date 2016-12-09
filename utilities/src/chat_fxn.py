@@ -175,7 +175,7 @@ class PruneBot(Bot):
             self.common_room = ctx.env("COMMON_ROOM")
             self.task_factory = self._factory(ctx, "TASK_TOKEN")
             self.monitor_factory = self._factory(ctx, "MON_TOKEN")
-            self.bot_room = ctx.env("BOT_ROOM")
+            self.bot_room = ctx.bots
             self.status_factory = self._factory(ctx, "STATUS_TOKEN")
             self.admin_project = ctx.env("ADMIN_PROJ")
             self.domain = ctx.env("CHECK_DOMAIN")
@@ -305,6 +305,7 @@ class Context(object):
         self.cache = {}
         self.factory = factory
         self.api(Context.CONPH, conduit.Conpherence)
+        self.bots = self.env("BOT_ROOM")
 
     def get(self, key):
         """get a value."""
