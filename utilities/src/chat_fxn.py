@@ -215,6 +215,7 @@ class MonitorBot(Bot):
         if pkg.cmd == self.GEN_PAGE and pkg.is_admin:
             if len(pkg.params) == 4:
                 slug = pkg.params[0]
+                self._chat("generating please hold...")
                 time.sleep(int(self.ctx.env("MON_SLEEP")))
                 diffusion_phriction._process(self.ctx.factory,
                                              slug,
