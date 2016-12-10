@@ -163,11 +163,11 @@ class PruneBot(Bot):
         task_ping.check(settings.status_factory,
                         settings.bot_room,
                         settings.check_hosts())
+        task_duedates.process(settings.task_factory,
+                              task_duedates.COMMENT_OVER)
 
     def _weekly(self, settings):
         """weekly tasks."""
-        task_duedates.process(settings.task_factory,
-                              task_duedates.COMMENT_OVER)
         task_unmod.process(settings.task_factory,
                            settings.host,
                            settings.common_room,
