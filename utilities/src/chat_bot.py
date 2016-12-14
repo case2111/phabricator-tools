@@ -63,57 +63,60 @@ async def _proc(ws_socket, ctx, q, bot):
 
 def _bot(host, token, last, lock, bot_type):
     """Bot setup and prep."""
-    if os.path.exists(lock):
-        print("{0} already exists...".format(lock))
-        return
-    os.mknod(lock)
-    factory = conduit.Factory()
-    factory.host = host
-    factory.token = token
-    c = factory.create(conduit.Conpherence)
-    users = factory.create(conduit.User)
-    u = users.whoami()
-    admins = []
-    a = users.query()
-    for check in a:
-        roles = check['roles']
-        if "admin" in roles or "agent" in roles:
-            admins.append(check['phid'])
-    u_phid = u["phid"]
-    user = u["userName"]
-    ws_host = "ws" + host[4:] + "/ws/"
-    rooms = c.querythread()
     q = Queue()
-    procs = []
-    bot = chat_fxn.bot(bot_type)
-    print(bot_type)
-    for room in rooms:
-        print(room)
-        r = rooms[room]
-        ctx = chat_fxn.Context(factory)
-        ctx.set(chat_fxn.Context.ROOM_PHID, r["conpherencePHID"])
-        ctx.set(chat_fxn.Context.BOT_USER_PHID, u_phid)
-        ctx.set(chat_fxn.Context.BOT_USER, "@" + user)
-        ctx.set(chat_fxn.Context.LAST_TRANS, last)
-        ctx.set(chat_fxn.Context.ADMINS, admins)
-        ctx.set(chat_fxn.Context.STARTED, str(datetime.now()))
-        ctx.set(chat_fxn.Context.LOCK, lock)
-        bot.ctx = ctx
+    try:
+        if os.path.exists(lock):
+            print("{0} already exists...".format(lock))
+            return
+        os.mknod(lock)
+        factory = conduit.Factory()
+        factory.host = host
+        factory.token = token
+        c = factory.create(conduit.Conpherence)
+        users = factory.create(conduit.User)
+        u = users.whoami()
+        admins = []
+        a = users.query()
+        for check in a:
+            roles = check['roles']
+            if "admin" in roles or "agent" in roles:
+                admins.append(check['phid'])
+        u_phid = u["phid"]
+        user = u["userName"]
+        ws_host = "ws" + host[4:] + "/ws/"
+        rooms = c.querythread()
+        procs = []
+        bot = chat_fxn.bot(bot_type)
+        print(bot_type)
+        for room in rooms:
+            print(room)
+            r = rooms[room]
+            ctx = chat_fxn.Context(factory)
+            ctx.set(chat_fxn.Context.ROOM_PHID, r["conpherencePHID"])
+            ctx.set(chat_fxn.Context.BOT_USER_PHID, u_phid)
+            ctx.set(chat_fxn.Context.BOT_USER, "@" + user)
+            ctx.set(chat_fxn.Context.LAST_TRANS, last)
+            ctx.set(chat_fxn.Context.ADMINS, admins)
+            ctx.set(chat_fxn.Context.STARTED, str(datetime.now()))
+            ctx.set(chat_fxn.Context.LOCK, lock)
+            bot.ctx = ctx
 
-        def run(ws, context, queued, bot_obj):
-            asyncio.get_event_loop().run_until_complete(_proc(ws,
-                                                              context,
-                                                              queued,
-                                                              bot_obj))
-        proc = Process(target=run, args=((ws_host),
-                                         (ctx),
-                                         (q),
-                                         (bot)))
-        proc.daemon = True
-        proc.start()
-        procs.append(proc)
-    while os.path.exists(lock) and q.empty():
-        time.sleep(5)
+            def run(ws, context, queued, bot_obj):
+                asyncio.get_event_loop().run_until_complete(_proc(ws,
+                                                                  context,
+                                                                  queued,
+                                                                  bot_obj))
+            proc = Process(target=run, args=((ws_host),
+                                             (ctx),
+                                             (q),
+                                             (bot)))
+            proc.daemon = True
+            proc.start()
+            procs.append(proc)
+        while os.path.exists(lock) and q.empty():
+            time.sleep(5)
+    except Exception as e:
+        print(e)
     if os.path.exists(lock):
         os.remove(lock)
     q.put(1)
