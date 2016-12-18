@@ -118,6 +118,7 @@ def _bot(host, token, last, lock, bot_type):
     except Exception as e:
         print(e)
     if os.path.exists(lock):
+        print('deleting lock')
         os.remove(lock)
     q.put(1)
 
