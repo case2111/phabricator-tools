@@ -22,6 +22,9 @@ class Bot(object):
     STATUS = "status"
     REBOOT = "reboot"
     VERSION = "version"
+    MON_BOT_TYPE = "monitor"
+    PRUNE_BOT_TYPE = "prune"
+    BOT_TYPES = [MON_BOT_TYPE, PRUNE_BOT_TYPE]
 
     class Package(object):
         """Package of a command."""
@@ -286,9 +289,9 @@ class MonitorBot(Bot):
 
 def bot(bot_type):
     """create bots of types."""
-    if bot_type == "monitor":
+    if bot_type == Bot.MON_BOT_TYPE:
         return MonitorBot()
-    elif bot_type == "prune":
+    elif bot_type == Bot.PRUNE_BOT_TYPE:
         return PruneBot()
     else:
         raise Exception("unknown bot type: " + bot_type)

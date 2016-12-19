@@ -127,12 +127,33 @@ def main():
     """main entry."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", type=str, required=True)
-    parser.add_argument("--token", type=str, required=True)
     parser.add_argument("--lock", type=str, required=True)
     parser.add_argument("--last", type=str, required=True)
-    parser.add_argument("--type", type=str, required=True)
+    for item in chat_fxn.Bot.BOT_TYPES:
+        parser.add_argument("--" + item, type=str, required=False)
     args = parser.parse_args()
-    _bot(args.host, args.token, args.last, args.lock, args.type)
+    bots = {}
+    if args.monitor:
+        bots[chat_fxn.Bot.MON_BOT_TYPE] = args.monitor
+    if args.prune:
+        bots[chat_fxn.Bot.PRUNE_BOT_TYPE] = args.prune
+    if len(bots) == 0:
+        print("at least one bot type must be enabled")
+        exit(-1)
+
+    def start_bot(host, token, last, lock, typed):
+        _bot(host, token, last, lock + "." + typed, typed)
+    workers = []
+    for bot in bots:
+        proc = Process(target=start_bot, args=((args.host),
+                                               (bots[bot]),
+                                               (args.last),
+                                               (args.lock),
+                                               (bot)))
+        proc.start()
+        workers.append(proc)
+    for worker in workers:
+        worker.join()
 
 if __name__ == '__main__':
     main()

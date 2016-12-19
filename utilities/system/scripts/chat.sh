@@ -8,24 +8,7 @@ BOTS="$PHAB_MON_TOKEN|monitor $PHAB_TASK_TOKEN|prune"
 function start-now()
 {
     git --git-dir $PHAB_TOOLS/.git log -n 1 | grep "^commit" > ${PHAB_TOOLS}/version.txt
-    for bot in $(echo $BOTS); do
-        tok=$(echo $bot | cut -d "|" -f 1)
-        bot_type=$(echo $bot | cut -d "|" -f 2)
-        echo "starting $tok ($bot_type)"
-        python ${PHAB_SRC}chat_bot.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE$bot_type --token $tok --type $bot_type &
-    done
-    running=1
-    while [ $running -eq 1 ]; do
-        sleep 5
-        exists=0
-        for bot in $(echo $BOTS | cut -d "|" -f 2); do
-            if [ -e $LOCK_FILE$bot ]; then
-                exists=1
-            fi
-        done
-        running=$exists
-    done
-    echo "stopping..."
+    python ${PHAB_SRC}chat_bot.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE --monitor $PHAB_MON_TOKEN --prune $PHAB_TASK_TOKEN
 }
 
 # stop the chatbot
