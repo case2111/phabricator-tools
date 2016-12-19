@@ -10,12 +10,22 @@ import io
 CSV_CONVERT = "csv"
 
 
-def _process(factory, slug, title, path, callsign, branch, convert):
+def _process(factory,
+             slug,
+             title,
+             path,
+             callsign,
+             branch,
+             convert,
+             main_idx,
+             second_idx):
     """process the input file."""
     converter = raw
     if convert is not None:
         if convert == CSV_CONVERT:
-            converter = from_csv
+            def use_csv(content):
+                return from_csv(content, main_idx, second_idx)
+            converter = use_csv
     d = factory.create(conduit.Diffusion).filecontent_by_path_branch(path,
                                                                      callsign,
                                                                      branch)
@@ -37,14 +47,14 @@ def raw(content):
     return content
 
 
-def from_csv(content):
+def from_csv(content, main_idx, secondary_idx):
     """csv conversion."""
     buf = io.StringIO(content)
     reader = csv.reader(buf, delimiter=",")
     segments = {}
     for row in reader:
-        main = row[0]
-        secondary = row[1]
+        main = row[main_idx]
+        secondary = row[secondary_idx]
         if main not in segments:
             segments[main] = {}
         if secondary not in segments[main]:
@@ -96,6 +106,8 @@ def main():
     parser.add_argument("--branch", required=True, type=str)
     parser.add_argument("--convert", default=None, type=str,
                         choices=[CSV_CONVERT])
+    parser.add_argument("--main", default=0, type=int)
+    parser.add_argument("--secondary", default=1, type=int)
     args = parser.parse_args()
     factory = conduit.Factory()
     factory.token = args.token
@@ -106,7 +118,9 @@ def main():
              args.path,
              args.callsign,
              args.branch,
-             args.convert)
+             args.convert,
+             args.main,
+             args.secondary)
 
 if __name__ == '__main__':
     main()
