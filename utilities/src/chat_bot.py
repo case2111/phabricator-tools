@@ -12,6 +12,7 @@ import time
 from multiprocessing import Process, Queue
 import threading
 from datetime import datetime
+import shlex
 
 async def _proc(ws_socket, ctx, q, bot):
     """Support websockets connection to handle chat and command exec."""
@@ -46,7 +47,7 @@ async def _proc(ws_socket, ctx, q, bot):
                                 continue
                             is_admin = authored in admins
                             comment = selected["transactionComment"]
-                            parts = comment.split(" ")
+                            parts = shlex.split(comment)
                             if bot.room is None:
                                 bot.room = selected["roomID"]
                             uname = parts[0]

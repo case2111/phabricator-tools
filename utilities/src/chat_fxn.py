@@ -233,7 +233,9 @@ class MonitorBot(Bot):
                                              pkg.params[3],
                                              pkg.params[2][1:],
                                              "master",
-                                             diffusion_phriction.CSV_CONVERT)
+                                             diffusion_phriction.CSV_CONVERT,
+                                             0,
+                                             1)
                 self._chat("[[{0}]] page updated".format(slug))
             else:
                 self._subcommand_help(pkg,
