@@ -223,10 +223,16 @@ class MonitorBot(Bot):
     def _go(self, pkg):
         """inherited."""
         if pkg.cmd == self.GEN_PAGE and pkg.is_admin:
-            if len(pkg.params) == 4:
+            if len(pkg.params) >= 4:
                 slug = pkg.params[0]
                 self._chat("generating please hold...")
                 time.sleep(int(self.ctx.env("MON_SLEEP")))
+                main_idx = 0
+                sec_idx = 1
+                if len(pkg.params) >= 5:
+                    main_idx = int(pkg.params[4])
+                    if len(pkg.params) == 6:
+                        sec_idx = int(pkg.params[5])
                 diffusion_phriction._process(self.ctx.factory,
                                              slug,
                                              pkg.params[1],
@@ -234,12 +240,17 @@ class MonitorBot(Bot):
                                              pkg.params[2][1:],
                                              "master",
                                              diffusion_phriction.CSV_CONVERT,
-                                             0,
-                                             1)
+                                             main_idx,
+                                             sec_idx)
                 self._chat("[[{0}]] page updated".format(slug))
             else:
                 self._subcommand_help(pkg,
-                                      ["slug", "title", "callsign", "path"])
+                                      ["slug",
+                                       "title",
+                                       "callsign",
+                                       "path",
+                                       "main index (optional)",
+                                       "secondary index (optional)"])
             return True
         elif pkg.cmd == self.PDF_WIKI:
             if len(pkg.params) == 1:
