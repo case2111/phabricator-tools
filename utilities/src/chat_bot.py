@@ -61,7 +61,7 @@ async def _proc(ws_socket, ctx, q, bot):
             q.put(1)
 
 
-def _bot(host, token, last, lock, bot_type):
+def _bot(host, token, last, lock, bot_type, controls):
     """Bot setup and prep."""
     q = Queue()
     try:
@@ -113,7 +113,7 @@ def _bot(host, token, last, lock, bot_type):
             proc.daemon = True
             proc.start()
             procs.append(proc)
-        while os.path.exists(lock) and q.empty():
+        while os.path.exists(lock) and q.empty() and controls.empty():
             time.sleep(5)
     except Exception as e:
         print(e)
@@ -121,6 +121,7 @@ def _bot(host, token, last, lock, bot_type):
         print('deleting lock')
         os.remove(lock)
     q.put(1)
+    controls.put(0)
 
 
 def main():
@@ -140,16 +141,18 @@ def main():
     if len(bots) == 0:
         print("at least one bot type must be enabled")
         exit(-1)
+    q = Queue()
 
-    def start_bot(host, token, last, lock, typed):
-        _bot(host, token, last, lock + "." + typed, typed)
+    def start_bot(host, token, last, lock, typed, q):
+        _bot(host, token, last, lock + "." + typed, typed, q)
     workers = []
     for bot in bots:
         proc = Process(target=start_bot, args=((args.host),
                                                (bots[bot]),
                                                (args.last),
                                                (args.lock),
-                                               (bot)))
+                                               (bot),
+                                               (q)))
         proc.start()
         workers.append(proc)
     for worker in workers:
