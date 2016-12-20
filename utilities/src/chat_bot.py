@@ -30,12 +30,14 @@ async def _proc(ws_socket, ctx, q, bot):
         connect = {}
         connect["command"] = "subscribe"
         connect["data"] = [room_phid, user_phid]
+        last = {}
         try:
             await websocket.send(json.dumps(connect))
             conph.updatethread(ctx.bots, "online in: " + room_phid)
             while q.empty():
                 raw = await websocket.recv()
                 msg = json.loads(raw)
+                last = msg
                 if _TYPE_KEY in msg:
                     data_type = msg[_TYPE_KEY]
                     if data_type != "message":
@@ -68,6 +70,7 @@ async def _proc(ws_socket, ctx, q, bot):
                                        is_all)
         except Exception as e:
             print(str(e))
+            print(json.dumps(last))
             q.put(1)
 
 
