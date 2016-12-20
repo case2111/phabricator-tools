@@ -14,6 +14,9 @@ import threading
 from datetime import datetime
 import shlex
 
+_TYPE_KEY = "type"
+_MSG_ID_KEY = "messageID"
+
 async def _proc(ws_socket, ctx, q, bot):
     """Support websockets connection to handle chat and command exec."""
     rlock = threading.RLock()
@@ -33,7 +36,13 @@ async def _proc(ws_socket, ctx, q, bot):
             while q.empty():
                 raw = await websocket.recv()
                 msg = json.loads(raw)
-                msg_id = msg["messageID"]
+                if _TYPE_KEY in msg:
+                    data_type = msg[_TYPE_KEY]
+                    if data_type != "message":
+                        continue
+                if _MSG_ID_KEY not in msg:
+                    print("missing message id")
+                msg_id = msg[_MSG_ID_KEY]
                 with rlock:
                     all_msgs = conph.querytransaction_by_phid_last(room_phid,
                                                                    last)
