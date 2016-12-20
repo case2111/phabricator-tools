@@ -101,9 +101,8 @@ def _bot(host, token, last, lock, bot_type, controls):
         rooms = c.querythread()
         procs = []
         bot = chat_fxn.bot(bot_type)
-        print(bot_type)
+        print("{0} in rooms {1}".format(bot_type, str(sorted(rooms.keys()))))
         for room in rooms:
-            print(room)
             r = rooms[room]
             ctx = chat_fxn.Context(factory)
             ctx.set(chat_fxn.Context.ROOM_PHID, r["conpherencePHID"])
