@@ -171,11 +171,7 @@ class PruneBot(Bot):
 
     def _weekly(self, settings):
         """weekly tasks."""
-        task_unmod.process(settings.task_factory,
-                           settings.host,
-                           settings.common_room,
-                           30,
-                           45)
+        pass
 
     def _get_help(self, pkg):
         """Inherited."""
