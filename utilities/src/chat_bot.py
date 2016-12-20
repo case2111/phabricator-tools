@@ -30,20 +30,21 @@ async def _proc(ws_socket, ctx, q, bot):
         connect = {}
         connect["command"] = "subscribe"
         connect["data"] = [room_phid, user_phid]
-        last = {}
+        lastMessage = {}
         try:
             await websocket.send(json.dumps(connect))
             conph.updatethread(ctx.bots, "online in: " + room_phid)
             while q.empty():
                 raw = await websocket.recv()
                 msg = json.loads(raw)
-                last = msg
+                lastMessage = msg
                 if _TYPE_KEY in msg:
                     data_type = msg[_TYPE_KEY]
                     if data_type != "message":
                         continue
                 if _MSG_ID_KEY not in msg:
                     print("missing message id")
+                    continue
                 msg_id = msg[_MSG_ID_KEY]
                 with rlock:
                     all_msgs = conph.querytransaction_by_phid_last(room_phid,
@@ -70,7 +71,7 @@ async def _proc(ws_socket, ctx, q, bot):
                                        is_all)
         except Exception as e:
             print(str(e))
-            print(json.dumps(last))
+            print(json.dumps(lastMessage))
             q.put(1)
 
 
