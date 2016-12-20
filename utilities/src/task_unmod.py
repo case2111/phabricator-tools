@@ -22,7 +22,8 @@ def _convert_user_phid(input_set, users):
     for k in input_set:
         user_set = []
         for u in input_set[k]:
-            user_set.append(users[u])
+            if "PHID-USER" in u:
+                user_set.append(users[u])
         result[k] = sorted(set(user_set))
     return result
 
