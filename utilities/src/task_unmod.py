@@ -4,7 +4,7 @@
 import conduit
 import calendar
 import time
-
+import task_duedates
 
 def resolve_users(factory, user_set):
     """resolve user phid set to dict of phid & @name."""
@@ -67,6 +67,19 @@ def process(factory, host, room, report, close):
             tell = [datum["authorPHID"]]
             owner = datum["ownerPHID"]
             cc = datum["ccPHIDs"]
+            if task_duedates.AUX_KEY in datum:
+                aux = datum[task_duedates.AUX_KEY]
+                if task_duedates.DUE_KEY in aux:
+                    due = aux[task_duedates.DUE_KEY]
+                    valid = False
+                    if due is not None:
+                        try:
+                            int(due)
+                            valid = True
+                        except ValueError:
+                            valid = False
+                    if valid:
+                        diff = 0
             if owner is not None:
                 tell.append(owner)
             if cc is not None:
