@@ -59,12 +59,14 @@ async def _proc(ws_socket, ctx, q, bot):
                                 continue
                             is_admin = authored in admins
                             comment = selected["transactionComment"]
+                            is_all = comment.startswith("!all ")
+                            is_user = comment.startswith(user + " ")
+                            if not is_all and not is_user:
+                                continue
                             parts = shlex.split(comment)
                             if bot.room is None:
                                 bot.room = selected["roomID"]
-                            uname = parts[0]
-                            is_all = uname == "!all"
-                            if uname == user or (is_admin and is_all):
+                            if is_user or (is_admin and is_all):
                                 bot.go(parts[1],
                                        parts[2:],
                                        is_admin,
