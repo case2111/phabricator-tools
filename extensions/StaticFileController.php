@@ -15,6 +15,7 @@ final class StaticFileController extends PhabricatorController {
             break;
         case "html":
             $mime = 'text/html';
+            break;
         default:
             return new Aphront404Response();
     }
