@@ -9,19 +9,23 @@ final class StaticFileController extends PhabricatorController {
     $ext = pathinfo($full)['extension'];
     $response = new AphrontFileResponse();
     $mime = 'n/a';
+    $isDownload = True;
     switch ($ext) {
         case "pdf":
             $mime = 'application/pdf';
             break;
         case "html":
             $mime = 'text/html';
+            $isDownload = False;
             break;
         default:
             return new Aphront404Response();
     }
     $response->setMimeType($mime);
     $response->setCanCDN(false);
-    $response->setDownload($file);
+    if ($isDownload) {
+        $response->setDownload($file);
+    }
     $handle = fopen($full, "rb");
     if (!$handle) {
         return new Aphront404Response();
