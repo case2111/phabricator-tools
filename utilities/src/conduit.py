@@ -3,7 +3,7 @@
 
 from io import BytesIO
 import json
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote
 import pycurl
 
 
@@ -127,6 +127,21 @@ class File(ConduitBase):
     def download(self, phid):
         """Download a file."""
         return self._go("download", {"phid": phid})
+
+
+class Dashboard(ConduitBase):
+    """Dashboard queries."""
+
+    def __init__(self):
+        """init the instance."""
+        self.prefix = "dashboard"
+
+    def edit_text(self, identifier, text):
+        vals = {}
+        vals["transactions[0][type]"] = "custom.text"
+        vals["transactions[0][value]"] = quote(text)
+        vals["objectIdentifier"] = identifier
+        return self._go("panel.edit", vals, manual_post=True)
 
 
 class Project(ConduitBase):
