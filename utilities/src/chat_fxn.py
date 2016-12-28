@@ -13,6 +13,7 @@ import task_onsub
 import task_duedates
 import task_unmod
 import git_version
+import dash_from_phriction
 
 
 class Bot(object):
@@ -215,6 +216,7 @@ class MonitorBot(Bot):
     GEN_PAGE = "genpage"
     PDF_WIKI = "wiki2pdf"
     PDF_REPO = "repo2pdf"
+    DASH_WIKI = "wiki2dash"
 
     def _go(self, pkg):
         """inherited."""
@@ -248,6 +250,10 @@ class MonitorBot(Bot):
                                        "main index (optional)",
                                        "secondary index (optional)"])
             return True
+        elif pkg.cmd == self.DASH_WIKI and pkg.is_admin:
+            self._dash_from_wiki()
+            self._chat("dashboard updated")
+            return True
         elif pkg.cmd == self.PDF_WIKI:
             if len(pkg.params) == 1:
                 self._pdf(pkg)
@@ -260,6 +266,12 @@ class MonitorBot(Bot):
             else:
                 self._subcommand_help(pkg, ["callsign", "path"])
             return True
+
+    def _dash_from_wiki(self):
+        """Dashboard from wiki page."""
+        obj = self.ctx.env("DASH_OBJECT")
+        slug = self.ctx.env("DASH_WIKI")
+        dash_from_phriction.update(self.ctx.factory, slug, obj)
 
     def _pdf(self, pkg):
         """do pdf conversion steps."""
@@ -293,6 +305,7 @@ class MonitorBot(Bot):
                  self.PDF_REPO: "produce a pdf from a repository/path"}
         if pkg.is_admin:
             avail[self.GEN_PAGE] = "generate a wiki page from a repo/path"
+            avail[self.DASH_WIKI] = "update dashboard panel from wiki"
         return avail
 
 
