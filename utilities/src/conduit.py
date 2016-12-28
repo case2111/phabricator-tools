@@ -137,6 +137,7 @@ class Dashboard(ConduitBase):
         self.prefix = "dashboard"
 
     def edit_text(self, identifier, text):
+        """edit dashboard text."""
         vals = {}
         vals["transactions[0][type]"] = "custom.text"
         vals["transactions[0][value]"] = quote(text)

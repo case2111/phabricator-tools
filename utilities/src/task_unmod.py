@@ -6,6 +6,7 @@ import calendar
 import time
 import task_duedates
 
+
 def resolve_users(factory, user_set):
     """resolve user phid set to dict of phid & @name."""
     u = factory.create(conduit.User)

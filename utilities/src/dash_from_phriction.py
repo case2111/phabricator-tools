@@ -3,12 +3,14 @@
 import argparse
 import conduit
 
+
 def update(factory, slug, obj):
     """Update an object (dashboard) from wiki."""
     p = factory.create(conduit.Phriction)
     d = factory.create(conduit.Dashboard)
     wiki = p.info(slug)
     d.edit_text(obj, wiki["content"])
+
 
 def main():
     """Main entry."""
