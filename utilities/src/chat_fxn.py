@@ -170,14 +170,13 @@ class PruneBot(Bot):
                         settings.check_hosts())
         task_duedates.process(settings.task_factory,
                               task_duedates.COMMENT_OVER)
+
+    def _weekly(self, settings):
+        """weekly tasks."""
         database.user_check(settings.db_user,
                             settings.db_pass,
                             settings.monitor_factory,
                             settings.bot_room)
-
-    def _weekly(self, settings):
-        """weekly tasks."""
-        pass
 
     def _get_help(self, pkg):
         """Inherited."""
