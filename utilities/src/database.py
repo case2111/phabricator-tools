@@ -21,7 +21,7 @@ def user_check(user, password, factory, room):
                                 from conpherence_participant
                                 where participationStatus = 0
                             );"""):
-        named = "@" + u_factory.by_phids([u])["userName"]
+        named = "@" + u_factory.by_phids([u])[0]["userName"]
         users.append(named)
     if len(users) > 0:
         c = factory.create(conduit.Conpherence)
