@@ -21,7 +21,10 @@ def user_check(user, password, factory, room):
                                 from conpherence_participant
                                 where participationStatus = 0
                             );"""):
-        named = "@" + u_factory.by_phids([u])[0]["userName"]
+        user_obj = u_factory.by_phids([u])[0]
+        if "agent" in user_obj["roles"]:
+            continue
+        named = "@" + user_obj["userName"]
         users.append(named)
     if len(users) > 0:
         c = factory.create(conduit.Conpherence)
