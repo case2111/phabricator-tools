@@ -14,6 +14,7 @@ import task_duedates
 import task_unmod
 import git_version
 import dash_from_phriction
+import database
 
 
 class Bot(object):
@@ -169,6 +170,10 @@ class PruneBot(Bot):
                         settings.check_hosts())
         task_duedates.process(settings.task_factory,
                               task_duedates.COMMENT_OVER)
+        database.user_check(settings.db_user,
+                            settings.db_pass,
+                            settings.monitor_factory,
+                            settings.bot_room)
 
     def _weekly(self, settings):
         """weekly tasks."""
@@ -195,6 +200,8 @@ class PruneBot(Bot):
             self.admin_project = ctx.env("ADMIN_PROJ")
             self.domain = ctx.env("CHECK_DOMAIN")
             self.hosts = ctx.env("CHECK_HOSTS").split(' ')
+            self.db_user = ctx.env("DB_USER")
+            self.db_pass = ctx.env("DB_PASS")
 
         def _factory(self, ctx, token):
             """create/clone a factory."""
