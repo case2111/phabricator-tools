@@ -25,7 +25,8 @@ def user_check(user, password, factory, room):
         users.append(named)
     if len(users) > 0:
         c = factory.create(conduit.Conpherence)
-        c.updatethread(room, "ignoring chat: {0}".format(",".join(users)))
+        c.updatethread(room,
+                       "ignoring chat: {0}".format(",".join(sorted(users))))
 
 
 def _get_scaler(user, password, db, query):
