@@ -34,5 +34,6 @@ def _get_scaler(user, password, db, query):
                            password=password,
                            database=db)
     curs = conn.cursor()
-    for row in curs.execute(query):
+    curs.execute(query)
+    for row in curs:
         yield row
