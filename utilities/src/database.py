@@ -36,4 +36,4 @@ def _get_scaler(user, password, db, query):
     curs = conn.cursor()
     curs.execute(query)
     for row in curs:
-        yield row
+        yield row[0].decode("ascii")
