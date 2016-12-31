@@ -42,7 +42,7 @@ class Bot(object):
         """Init the instance."""
         self.room = None
         self.ctx = None
-        self.id = str(uuid.uuid4())
+        self.id = uuid.uuid4().urn
 
     def go(self, command, parameters, is_admin, is_all):
         """Execute a bot command."""
