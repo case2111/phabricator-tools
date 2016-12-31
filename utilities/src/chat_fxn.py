@@ -48,12 +48,11 @@ class Bot(object):
         """Execute a bot command."""
         try:
             print("{0} ({1}) admin? {2}, all? {3}, id: {4}"
-                    .format(
-                                                          command,
-                                                          ",".join(parameters),
-                                                          is_admin,
-                                                          is_all,
-                                                          self.id))
+                  .format(command,
+                          ",".join(parameters),
+                          is_admin,
+                          is_all,
+                          self.id))
             pkg = Bot.Package(command, parameters, is_admin)
             common = False
             if is_all:
