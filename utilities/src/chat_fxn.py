@@ -15,6 +15,7 @@ import task_unmod
 import git_version
 import dash_from_phriction
 import database
+import uuid
 
 
 class Bot(object):
@@ -36,6 +37,7 @@ class Bot(object):
             self.cmd = command
             self.params = parameters
             self.is_admin = admin
+            self.id = str(uuid.uuid4())
 
     def __init__(self):
         """Init the instance."""
@@ -45,10 +47,13 @@ class Bot(object):
     def go(self, command, parameters, is_admin, is_all):
         """Execute a bot command."""
         try:
-            print("{0} ({1}) admin? {2}, all? {3}".format(command,
+            print("{0} ({1}) admin? {2}, all? {3}, id: {4}"
+                    .format(
+                                                          command,
                                                           ",".join(parameters),
                                                           is_admin,
-                                                          is_all))
+                                                          is_all,
+                                                          self.id))
             pkg = Bot.Package(command, parameters, is_admin)
             common = False
             if is_all:
