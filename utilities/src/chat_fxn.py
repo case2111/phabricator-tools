@@ -37,12 +37,12 @@ class Bot(object):
             self.cmd = command
             self.params = parameters
             self.is_admin = admin
-            self.id = str(uuid.uuid4())
 
     def __init__(self):
         """Init the instance."""
         self.room = None
         self.ctx = None
+        self.id = str(uuid.uuid4())
 
     def go(self, command, parameters, is_admin, is_all):
         """Execute a bot command."""
@@ -118,7 +118,7 @@ class Bot(object):
 
     def _status(self):
         """check status call."""
-        self._chat(self.ctx.get(Context.STARTED))
+        self._chat(self.ctx.get(Context.STARTED) + ", " + self.id)
 
     def _alive(self):
         """alive call."""
