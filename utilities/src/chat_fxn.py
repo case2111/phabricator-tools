@@ -85,15 +85,12 @@ class Bot(object):
                 vers = git_version._version(self.ctx.env("TOOLS"))
                 self._chat(vers)
                 no_cmd = False
-        need_help = False
         if no_cmd:
             if pkg.cmd == self.ALIVE:
                 self._alive()
             elif pkg.cmd == self.STATUS:
                 self._status()
-            else:
-                need_help = True
-        if need_help:
+        if pkg.cmd == "help":
             self._help(pkg)
 
     def _chat(self, msg):
