@@ -58,7 +58,8 @@ async def _proc(ws_socket, ctx, q, bot):
                             is_admin = authored in admins
                             comment = selected["transactionComment"]
                             is_all = comment.startswith("!all ")
-                            is_user = comment.startswith(user + " ")
+                            is_user = comment.startswith(user + " ") or \
+                                      comment.startswith(bot.named)
                             if not is_all and not is_user:
                                 continue
                             parts = shlex.split(comment)
@@ -101,6 +102,7 @@ def _bot(host, token, last, lock, bot_type, controls):
         rooms = c.querythread()
         procs = []
         bot = chat_fxn.bot(bot_type)
+        bot.named = "@" + bot_type
         print("{0} in rooms {1} {2}".format(bot_type,
                                             str(sorted(rooms.keys())),
                                             bot.id))
