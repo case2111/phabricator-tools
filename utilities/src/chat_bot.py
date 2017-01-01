@@ -55,8 +55,6 @@ async def _proc(ws_socket, ctx, q, bot):
                             if selected['transactionType'] != "core:comment":
                                 continue
                             authored = selected["authorPHID"]
-                            if authored == user_phid:
-                                continue
                             is_admin = authored in admins
                             comment = selected["transactionComment"]
                             is_all = comment.startswith("!all ")
