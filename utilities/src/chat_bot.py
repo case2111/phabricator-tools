@@ -16,7 +16,8 @@ import shlex
 
 _TYPE_KEY = "type"
 _MSG_ID_KEY = "messageID"
-_BOT_CALL="!"
+_BOT_CALL = "!"
+
 
 async def _proc(ws_socket, ctx, q, bot):
     """Support websockets connection to handle chat and command exec."""
@@ -59,8 +60,11 @@ async def _proc(ws_socket, ctx, q, bot):
                             is_admin = authored in admins
                             comment = selected["transactionComment"]
                             is_all = comment.startswith(_BOT_CALL + "all ")
-                            is_user = comment.startswith(user + " ") or \
-                                      comment.startswith(bot.named + " ")
+                            is_user = False
+                            for alias in [user, bot.named]:
+                                if comment.startswith(alias + " "):
+                                    is_user = True
+                                    break
                             if not is_all and not is_user:
                                 continue
                             parts = shlex.split(comment)
