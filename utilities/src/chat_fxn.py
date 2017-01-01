@@ -7,7 +7,6 @@ import pdf_from_diffusion
 import pdf_from_phriction
 import time
 import random
-import task_today
 import task_ping
 import task_onsub
 import task_duedates
@@ -162,7 +161,6 @@ class PruneBot(Bot):
         """daily tasks."""
         task_duedates.process(settings.task_factory,
                               task_duedates.RESOLVE_OVER)
-        task_today.process(settings.monitor_factory, settings.bot_room)
         task_onsub.process(settings.monitor_factory,
                            settings.bot_room,
                            settings.admin_project)
