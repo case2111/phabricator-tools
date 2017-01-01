@@ -16,6 +16,7 @@ import shlex
 
 _TYPE_KEY = "type"
 _MSG_ID_KEY = "messageID"
+_BOT_CALL="!"
 
 async def _proc(ws_socket, ctx, q, bot):
     """Support websockets connection to handle chat and command exec."""
@@ -57,7 +58,7 @@ async def _proc(ws_socket, ctx, q, bot):
                             authored = selected["authorPHID"]
                             is_admin = authored in admins
                             comment = selected["transactionComment"]
-                            is_all = comment.startswith("!all ")
+                            is_all = comment.startswith(_BOT_CALL + "all ")
                             is_user = comment.startswith(user + " ") or \
                                       comment.startswith(bot.named)
                             if not is_all and not is_user:
@@ -102,7 +103,7 @@ def _bot(host, token, last, lock, bot_type, controls):
         rooms = c.querythread()
         procs = []
         bot = chat_fxn.bot(bot_type)
-        bot.named = "@" + bot_type
+        bot.named = _BOT_CALL + bot_type
         print("{0} in rooms {1} {2}".format(bot_type,
                                             str(sorted(rooms.keys())),
                                             bot.id))
