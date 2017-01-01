@@ -60,7 +60,7 @@ async def _proc(ws_socket, ctx, q, bot):
                             comment = selected["transactionComment"]
                             is_all = comment.startswith(_BOT_CALL + "all ")
                             is_user = comment.startswith(user + " ") or \
-                                      comment.startswith(bot.named)
+                                      comment.startswith(bot.named + " ")
                             if not is_all and not is_user:
                                 continue
                             parts = shlex.split(comment)
