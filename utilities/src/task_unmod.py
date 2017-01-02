@@ -29,7 +29,7 @@ def _convert_user_phid(input_set, users):
     return result
 
 
-def _execute(factory, room, values):
+def _execute(factory, room, values, column):
     """execute on a set of task values."""
     c = factory.create(conduit.Conpherence)
     m = factory.create(conduit.Maniphest)
@@ -38,9 +38,8 @@ def _execute(factory, room, values):
         msgs.append("{0} will be auto-closed, please update it ({1})"
                     .format(val,
                             " ".join(values[val])))
-    for msg in msgs:
-        print(msg)
-    #c.updatethread(room, "\n".join(sorted(msgs)))
+        m.move_column(val[1:], column)
+    c.updatethread(room, "\n".join(sorted(msgs)))
 
 
 def process(factory, room, report, column):
@@ -99,4 +98,4 @@ def process(factory, room, report, column):
         super_sets.append(reporting)
     for sets in super_sets:
         use_set = _convert_user_phid(sets, resolved)
-        _execute(factory, room, use_set)
+        _execute(factory, room, use_set, column)
