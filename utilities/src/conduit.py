@@ -316,3 +316,11 @@ class Maniphest(ConduitBase):
     def _query(self, params=None):
         """Query operations."""
         return self._go("query", params)
+
+    def move_column(self, task, column):
+        """move tasks to a column."""
+        vals = {}
+        vals["transactions[0][type]"] = "column"
+        vals["transactions[0][value]"] = column
+        vals["objectIdentifier"] = task
+        return self._go("edit", vals, manual_post=True)
