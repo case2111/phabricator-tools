@@ -29,30 +29,27 @@ def _convert_user_phid(input_set, users):
     return result
 
 
-def _execute(factory, room, host, values, message, is_closing):
+def _execute(factory, room, values):
     """execute on a set of task values."""
     c = factory.create(conduit.Conpherence)
     m = factory.create(conduit.Maniphest)
     msgs = []
     for val in values:
-        msgs.append("[`{0}`]({3}/{0}) ({1}) {2}"
+        msgs.append("{0} will be auto-closed, please update it ({1})"
                     .format(val,
-                            " ".join(values[val]),
-                            message,
-                            host))
-        if is_closing:
-            m.invalid_by_id(val[1:])
-    c.updatethread(room, "\n".join(sorted(msgs)))
+                            " ".join(values[val])))
+    for msg in msgs:
+        print(msg)
+    #c.updatethread(room, "\n".join(sorted(msgs)))
 
 
-def process(factory, host, room, report, close):
+def process(factory, room, report, column):
     """Process unmodified tasks."""
     p = factory.create(conduit.Project)
     m = factory.create(conduit.Maniphest)
     res = p.open()["data"]
     proj_tracked = []
     reporting = {}
-    closing = {}
     all_users = []
     now = calendar.timegm(time.localtime())
     for proj in res:
@@ -86,27 +83,20 @@ def process(factory, host, room, report, close):
             if cc is not None:
                 for user in cc:
                     tell.append(user)
-            if diff > close:
-                closing[task] = tell
-            else:
-                if diff > report:
-                    reporting[task] = tell
-            bad = task in reporting or task in closing
+            if diff > report:
+                reporting[task] = tell
+            bad = task in reporting
             if bad:
                 for telling in tell:
                     if telling not in all_users:
                         all_users.append(telling)
-    if len(reporting) == 0 and len(closing) == 0:
+    if len(reporting) == 0:
         return
 
     resolved = resolve_users(factory, all_users)
     super_sets = []
     if len(reporting) > 0:
-        super_sets.append((reporting,
-                           "will be closed if not updated soon",
-                           False))
-    if len(closing) > 0:
-        super_sets.append((closing, "was closed, no recent activity", True))
+        super_sets.append(reporting)
     for sets in super_sets:
-        use_set = _convert_user_phid(sets[0], resolved)
-        _execute(factory, room, host, use_set, sets[1], sets[2])
+        use_set = _convert_user_phid(sets, resolved)
+        _execute(factory, room, use_set)
