@@ -317,6 +317,12 @@ class Maniphest(ConduitBase):
         """Query operations."""
         return self._go("query", params)
 
+    def add_project(self, task_id, project_phids, comment):
+        """add a project to a task."""
+        params = self._comment_params(task_id, comment)
+        params["projectPHIDs"] = project_phids
+        return self._update(params)
+
     def move_column(self, task, column):
         """move tasks to a column."""
         vals = {}
