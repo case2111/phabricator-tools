@@ -177,6 +177,10 @@ class PruneBot(Bot):
                             settings.db_pass,
                             settings.monitor_factory,
                             settings.bot_room)
+        task_unmod.process(settings.monitor_factory,
+                           settings.common_room,
+                           settings.autoclose_threshold,
+                           settings.autoclose_proj)
 
     def _get_help(self, pkg):
         """Inherited."""
@@ -201,6 +205,8 @@ class PruneBot(Bot):
             self.hosts = ctx.env("CHECK_HOSTS").split(' ')
             self.db_user = ctx.env("DB_USER")
             self.db_pass = ctx.env("DB_PASS")
+            self.autoclose_threshold = int(ctx.env("AUTOCLOSE_THRESH"))
+            self.autoclose_proj = ctx.env("AUTOCLOSE_PROJ")
 
         def _factory(self, ctx, token):
             """create/clone a factory."""
