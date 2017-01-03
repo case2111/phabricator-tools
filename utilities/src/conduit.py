@@ -321,7 +321,7 @@ class Maniphest(ConduitBase):
         """Query operations."""
         return self._go("query", params)
 
-    def update_project(self, task_id, project_phids, comment):
+    def update_projects(self, task_id, project_phids, comment):
         """add a project to a task."""
         params = self._comment_params(task_id, comment)
         params["projectPHIDs"] = project_phids
