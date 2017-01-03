@@ -45,8 +45,8 @@ def _execute(factory, room, values, proj):
         task_id = val[1:]
         cur = tasks[task_id]
         cur.append(proj)
-    #    m.update_projects(task_id, proj)
-    #c.updatethread(room, "\n".join(sorted(msgs)))
+        m.update_projects(task_id, cur)
+    c.updatethread(room, "\n".join(sorted(msgs)))
 
 
 def process(factory, room, report, project_close):
