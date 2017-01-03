@@ -45,14 +45,18 @@ def _execute(factory, room, values, proj):
         task_id = val[1:]
         cur = tasks[task_id]
         cur.append(proj)
-    #    m.update_projects(val[1:], proj)
+    #    m.update_projects(task_id, proj)
     #c.updatethread(room, "\n".join(sorted(msgs)))
 
 
-def process(factory, room, report, proj):
+def process(factory, room, report, project_close):
     """Process unmodified tasks."""
     p = factory.create(conduit.Project)
     m = factory.create(conduit.Maniphest)
+    closing = m.open_by_project_phid(project_close)
+    for task in closing:
+        close_id = closing[task]["id"]
+        m.resolve_by_id(close_id)
     res = p.open()["data"]
     proj_tracked = []
     reporting = {}
@@ -105,4 +109,4 @@ def process(factory, room, report, proj):
         super_sets.append(reporting)
     for sets in super_sets:
         use_set = _convert_user_phid(sets, resolved)
-        _execute(factory, room, use_set, proj)
+        _execute(factory, room, use_set, project_close)
