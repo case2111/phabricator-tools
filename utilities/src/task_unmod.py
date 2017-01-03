@@ -29,20 +29,27 @@ def _convert_user_phid(input_set, users):
     return result
 
 
-def _execute(factory, room, values, column):
+def _execute(factory, room, values, proj):
     """execute on a set of task values."""
     c = factory.create(conduit.Conpherence)
     m = factory.create(conduit.Maniphest)
     msgs = []
+    tasks = {}
+    task_data = m.get_by_ids([x[1:] for x in values.keys()])
+    for t in task_data:
+        tasks[task_data[t]["id"]] = task_data[t]["projectPHIDs"]
     for val in values:
         msgs.append("{0} will be auto-closed, please update it ({1})"
                     .format(val,
                             " ".join(values[val])))
-        m.move_column(val[1:], column)
-    c.updatethread(room, "\n".join(sorted(msgs)))
+        task_id = val[1:]
+        cur = tasks[task_id]
+        cur.append(proj)
+    #    m.update_projects(val[1:], proj)
+    #c.updatethread(room, "\n".join(sorted(msgs)))
 
 
-def process(factory, room, report, column):
+def process(factory, room, report, proj):
     """Process unmodified tasks."""
     p = factory.create(conduit.Project)
     m = factory.create(conduit.Maniphest)
@@ -98,4 +105,4 @@ def process(factory, room, report, column):
         super_sets.append(reporting)
     for sets in super_sets:
         use_set = _convert_user_phid(sets, resolved)
-        _execute(factory, room, use_set, column)
+        _execute(factory, room, use_set, proj)

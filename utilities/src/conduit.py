@@ -271,6 +271,10 @@ class Maniphest(ConduitBase):
         params = self._comment_params(task_id, message)
         return self._update(params)
 
+    def get_by_ids(self, task_ids):
+        """get a task by id."""
+        return self._query({"ids": task_ids})
+
     def open(self):
         """Open tasks."""
         return self._query(self._open_params())
@@ -317,7 +321,7 @@ class Maniphest(ConduitBase):
         """Query operations."""
         return self._go("query", params)
 
-    def add_project(self, task_id, project_phids, comment):
+    def update_project(self, task_id, project_phids, comment):
         """add a project to a task."""
         params = self._comment_params(task_id, comment)
         params["projectPHIDs"] = project_phids
