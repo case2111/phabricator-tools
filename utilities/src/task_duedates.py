@@ -14,7 +14,6 @@ def process(factory):
     m = factory.create(conduit.Maniphest)
     res = m.open()
     now = calendar.timegm(time.localtime())
-    who = factory.create(conduit.User).whoami()["phid"]
     for item in res:
         datum = res[item]
         if AUX_KEY in datum:
