@@ -160,16 +160,13 @@ class PruneBot(Bot):
 
     def _daily(self, settings):
         """daily tasks."""
-        task_duedates.process(settings.task_factory,
-                              task_duedates.RESOLVE_OVER)
         task_onsub.process(settings.monitor_factory,
                            settings.bot_room,
                            settings.admin_project)
         task_ping.check(settings.status_factory,
                         settings.bot_room,
                         settings.check_hosts())
-        task_duedates.process(settings.task_factory,
-                              task_duedates.COMMENT_OVER)
+        task_duedates.process(settings.task_factory)
 
     def _weekly(self, settings):
         """weekly tasks."""

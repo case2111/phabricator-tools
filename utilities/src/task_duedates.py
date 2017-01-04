@@ -8,11 +8,8 @@ import calendar
 DUE_KEY = "std:maniphest:custom:duedate"
 AUX_KEY = "auxiliary"
 
-COMMENT_OVER = 1
-RESOLVE_OVER = 2
 
-
-def process(factory, op):
+def process(factory):
     """Process due dates."""
     m = factory.create(conduit.Maniphest)
     res = m.open()
@@ -27,9 +24,4 @@ def process(factory, op):
                 if due is not None:
                     if due < now:
                         name = datum["objectName"][1:]
-                        if op == COMMENT_OVER:
-                            m.comment_by_id(name, "this task is overdue")
-                        else:
-                            if op == RESOLVE_OVER:
-                                if datum["ownerPHID"] == who:
-                                    m.resolve_by_id(name)
+                        m.comment_by_id(name, "this task is overdue")
