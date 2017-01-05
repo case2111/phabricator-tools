@@ -156,6 +156,7 @@ class ScheduleBot(Bot):
                 tasks = pkg.params[0]
                 if tasks == self.DAILY or tasks == self.WEEKLY:
                     settings = ScheduleBot.Settings(self.ctx)
+                    self._chat("starting {0} tasks".format(tasks))
                     if tasks == self.DAILY:
                         self._daily(settings)
                     else:
