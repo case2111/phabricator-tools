@@ -1,6 +1,6 @@
 #!/bin/bash
 source /etc/environment
-LOCK_FILE=/tmp/chatbot.lck.
+LOCK_FILE=/tmp/chatbot.lck
 PHAB_SRC=$PHAB_TOOLS/utilities/src/
 BOTS="$PHAB_MON_TOKEN|monitor $PHAB_TASK_TOKEN|schedule"
 
