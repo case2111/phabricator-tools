@@ -2,6 +2,8 @@
 """Convert a phriction page to dashboard object."""
 import argparse
 import conduit
+import re
+from datetime import datetime
 
 
 def update(factory, slug, obj):
@@ -9,7 +11,24 @@ def update(factory, slug, obj):
     p = factory.create(conduit.Phriction)
     d = factory.create(conduit.Dashboard)
     wiki = p.info(slug)
-    d.edit_text(obj, wiki["content"])
+    lines = []
+    regex = re.compile(r'\d{4}[-/]\d{2}[-/]\d{2}')
+    today = datetime.now()
+    today = datetime(today.year, today.month, today.day)
+    for line in wiki["content"].split("\n"):
+        matches = regex.findall(line)
+        for match in matches:
+            line_date = datetime.strptime(match, '%Y-%m-%d')
+            if line_date < today:
+                skip = True
+                break
+        skip = False
+        if skip:
+            continue
+        lines.append(line)
+
+    content = "\n".join(lines)
+    d.edit_text(obj, content)
 
 
 def main():
