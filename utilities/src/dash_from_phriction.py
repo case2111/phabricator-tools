@@ -16,13 +16,13 @@ def update(factory, slug, obj):
     today = datetime.now()
     today = datetime(today.year, today.month, today.day)
     for line in wiki["content"].split("\n"):
+        skip = False
         matches = regex.findall(line)
         for match in matches:
             line_date = datetime.strptime(match, '%Y-%m-%d')
             if line_date < today:
                 skip = True
                 break
-        skip = False
         if skip:
             continue
         lines.append(line)
