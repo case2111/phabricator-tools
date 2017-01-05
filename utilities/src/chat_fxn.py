@@ -25,7 +25,7 @@ class Bot(object):
     REBOOT = "reboot"
     VERSION = "version"
     MON_BOT_TYPE = "monitor"
-    SCHED_BOT_TYPE = "scheduled"
+    SCHED_BOT_TYPE = "schedule"
     BOT_TYPES = [MON_BOT_TYPE, SCHED_BOT_TYPE]
 
     class Package(object):
