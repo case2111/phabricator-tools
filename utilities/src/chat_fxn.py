@@ -25,8 +25,8 @@ class Bot(object):
     REBOOT = "reboot"
     VERSION = "version"
     MON_BOT_TYPE = "monitor"
-    PRUNE_BOT_TYPE = "prune"
-    BOT_TYPES = [MON_BOT_TYPE, PRUNE_BOT_TYPE]
+    SCHED_BOT_TYPE = "scheduled"
+    BOT_TYPES = [MON_BOT_TYPE, SCHED_BOT_TYPE]
 
     class Package(object):
         """Package of a command."""
@@ -136,8 +136,8 @@ class Bot(object):
                                                           "\n".join(params)))
 
 
-class PruneBot(Bot):
-    """Pruner bot."""
+class ScheduleBot(Bot):
+    """Schedule bot."""
 
     DO = "do"
     DAILY = "daily"
@@ -149,7 +149,7 @@ class PruneBot(Bot):
             if len(pkg.params) == 1:
                 tasks = pkg.params[0]
                 if tasks == self.DAILY or tasks == self.WEEKLY:
-                    settings = PruneBot.Settings(self.ctx)
+                    settings = ScheduleBot.Settings(self.ctx)
                     if tasks == self.DAILY:
                         self._daily(settings)
                     else:
@@ -322,8 +322,8 @@ def bot(bot_type):
     """create bots of types."""
     if bot_type == Bot.MON_BOT_TYPE:
         return MonitorBot()
-    elif bot_type == Bot.PRUNE_BOT_TYPE:
-        return PruneBot()
+    elif bot_type == Bot.SCHED_BOT_TYPE:
+        return ScheduleBot()
     else:
         raise Exception("unknown bot type: " + bot_type)
 

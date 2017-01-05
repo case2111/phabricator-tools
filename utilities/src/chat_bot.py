@@ -159,8 +159,8 @@ def main():
     bots = {}
     if args.monitor:
         bots[chat_fxn.Bot.MON_BOT_TYPE] = args.monitor
-    if args.prune:
-        bots[chat_fxn.Bot.PRUNE_BOT_TYPE] = args.prune
+    if args.schedule:
+        bots[chat_fxn.Bot.SCHED_BOT_TYPE] = args.schedule
     if len(bots) == 0:
         print("at least one bot type must be enabled")
         exit(-1)
