@@ -45,7 +45,7 @@ def _execute(factory, room, values, proj):
         task_id = val[1:]
         cur = tasks[task_id]
         cur.append(proj)
-        m.update_projects(task_id, cur)
+        m.update_projects(task_id, cur, "this task will be auto-closed soon")
     c.updatethread(room, "\n".join(sorted(msgs)))
 
 
