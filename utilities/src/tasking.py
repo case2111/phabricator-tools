@@ -20,8 +20,6 @@ def _process(factory, project, file_name, skip, title):
         user_name = user["userName"]
         if user_name in skips:
             continue
-        if user_name != "enckse":
-            continue
         user_set.append(phid)
     with open(file_name, 'r') as f:
         contents = f.read()
