@@ -266,6 +266,15 @@ class Maniphest(ConduitBase):
         """init the instance."""
         self.prefix = "maniphest"
 
+    def create(self, title, text, owner_phid, project_phid):
+        """create a task."""
+        params = {}
+        params["title"] = title
+        params["description"] = text
+        params["ownerPHID"] = owner_phid
+        params["projectPHIDs"] = [project_phid]
+        return self._go("createtask", params)
+
     def comment_by_id(self, task_id, message):
         """comment on a task by using the id."""
         params = self._comment_params(task_id, message)
@@ -312,6 +321,9 @@ class Maniphest(ConduitBase):
     def _open_params(self):
         """Open status parameter building."""
         return {"status": "status-open"}
+
+    def _create(self, params=None):
+        """task creation."""
 
     def _update(self, params=None):
         """task updates."""
