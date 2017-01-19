@@ -5,8 +5,18 @@ A toolbox of utilities for interacting with phabricator.
 # data
 Tools for dealing with data in phabricator on the host
 
+## highlights
+
+* nightly backup scripts
+* production of nightly repository bundles/snapshots
+
 # extensions
 Phabricator extensions
+
+## highlights
+
+* static file hosting (behind phabricator)
+* ability to host various file types matching names and by file extension
 
 # utility
 Various utility scripts for interacting with parts of phabricator
