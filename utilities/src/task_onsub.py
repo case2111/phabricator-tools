@@ -14,6 +14,7 @@ def process(factory, room, project):
     m = factory.create(conduit.Maniphest)
     sub = m.open_and_subscribed(who)
     conph = factory.create(conduit.Conpherence)
+    msgs = []
     for subbed in sub:
         datum = sub[subbed]
         if datum["status"] != "actionneeded":
@@ -21,4 +22,6 @@ def process(factory, room, project):
         if project_phid not in datum["projectPHIDs"]:
             continue
         msg = "{0} needs action from an admin".format(datum["objectName"])
-        conph.updatethread(room, msg)
+        msgs.append(msg)
+    if len(msgs) > 0:
+        conph.updatethread(room, "\n".join(msgs))
