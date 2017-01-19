@@ -13,6 +13,12 @@ Tools for dealing with data in phabricator on the host
 # extensions
 Phabricator extensions
 
+## Static File Host (sfh)
+
+* Provides an endpoint "/sfh/" within phabricator to place and download/view files
+* Requires naming of format [0-9]+.[extension]
+* Currently supports pdf, html, and gzip downloads
+
 ## highlights
 
 * static file hosting (behind phabricator)
