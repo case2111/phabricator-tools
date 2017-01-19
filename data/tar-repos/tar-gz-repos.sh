@@ -26,8 +26,8 @@ function tar-dir-files()
 {
     cd $1
     for f in $(ls); do
-        file_name=$f$TODAY
-        cd $1/$f && tar -zcf $STATIC/$file_name.gz *
+        file_name=$f$TODAY.gz
+        cd $1/$f && tar -zcf $STATIC/$file_name *
         echo $HTML | sed "s/FILENAME/$file_name/g" > $STATIC/$f.html
     done
 }
