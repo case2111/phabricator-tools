@@ -10,25 +10,25 @@ cd /opt/phabricator-tools/utilities
 make install
 ```
 
-## src
+### src
 python implementation(s)
 
 
-## system
+### system
 system install and execution scripts
 
-### scripts
+#### scripts
 
 * Timers that run daily/weekly
 * Chat wrapper
 
-### git
+#### git
 
 * hooks to implement repo-based workflows
 
 navigate to git repository `.git/hooks/` and link the corresponding hooks by name
 
-### systemd-units
+#### systemd-units
 
 * units to enable timers, chat, etc.
 
