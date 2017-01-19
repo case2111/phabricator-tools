@@ -1,0 +1,9 @@
+[Unit]
+Description=Nightly tar gz of phabricator repos
+
+[Timer]
+Unit=phabricator-tar-repos.service
+OnCalendar=*-*-* 00:30:00
+
+[Install]
+WantedBy=timers.target
