@@ -2,13 +2,6 @@ data
 ----
 Scripts and utilties for managing data within phabricator
 
-## general setup
-
-```
-cd /opt
-git clone https://github.com/epiphyte/phabricator-tools
-```
-
 ### backup
 Handles dumping/backing up content from phabricator to the file system.
 

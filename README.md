@@ -2,6 +2,16 @@ phabricator-tools
 ===
 A toolbox of utilities for interacting with phabricator.
 
+
+## general setup
+
+```
+cd /opt
+git clone https://github.com/epiphyte/phabricator-tools
+```
+
+from here navigate to subfolders where applicable for further instruction
+
 ## data
 Tools for dealing with data in phabricator on the host
 
@@ -20,6 +30,7 @@ Phabricator extensions
 * Provides an endpoint "/sfh/" within phabricator to place and download/view files
 * Requires naming of format [0-9]+.[extension]
 * Currently supports pdf, html, and gzip downloads
+* Copy the php files into the phabricator extensions folder
 
 ### highlights
 
