@@ -35,8 +35,6 @@ async def _proc(ws_socket, ctx, q, bot):
         lastMessage = {}
         try:
             await websocket.send(json.dumps(connect))
-            conph.updatethread(ctx.bots, "{0} in {1}".format(bot.named,
-                                                             room_phid))
             while q.empty():
                 raw = await websocket.recv()
                 msg = json.loads(raw)
