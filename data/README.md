@@ -2,19 +2,19 @@ data
 ----
 Scripts and utilties for managing data within phabricator
 
-# general setup
+## general setup
 
 ```
 cd /opt
 git clone https://github.com/epiphyte/phabricator-tools
 ```
 
-# backup
+### backup
 Handles dumping/backing up content from phabricator to the file system.
 
 * Review the backup.sh to make sure it points where the phabricator install was done, going forward from there
 
-## enable
+#### enable
 
 ```
 mkdir -p /opt/phab
@@ -26,11 +26,13 @@ systemctl daemon-reload
 systemctl start phabricator-backup.timer
 ```
 
-# tar-repos
+### tar-repos
 Supports a tar/gz of repos and static-file-hosting them. 
 
 * This should be setup after the backup scripts are in place
 * Review the tar-gz-repos.sh script to match the corresponding environment
+
+#### enable
 
 ```
 ln -s /opt/phabricator-tools/data/tar-repos/tar-gz-repos.sh /opt/phab/

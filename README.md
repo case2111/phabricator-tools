@@ -2,32 +2,32 @@ phabricator-tools
 ===
 A toolbox of utilities for interacting with phabricator.
 
-# data
+## data
 Tools for dealing with data in phabricator on the host
 
-## highlights
+### highlights
 
 * nightly backup scripts
 * production of nightly repository bundles/snapshots
 
-# extensions
+## extensions
 Phabricator extensions
 
-## Static File Host (sfh)
+### Static File Host (sfh)
 
 * Provides an endpoint "/sfh/" within phabricator to place and download/view files
 * Requires naming of format [0-9]+.[extension]
 * Currently supports pdf, html, and gzip downloads
 
-## highlights
+### highlights
 
 * static file hosting (behind phabricator)
 * ability to host various file types matching names and by file extension
 
-# utility
+## utility
 Various utility scripts for interacting with parts of phabricator
 
-## highlights
+### highlights
 
 * chat bot(s)
 * weekly/daily scheduled tasks (via systemd + chat bots)
