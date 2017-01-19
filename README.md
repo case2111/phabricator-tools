@@ -1,29 +1,26 @@
 phabricator-tools
 ===
-A toolbox of utilities for interacting with phabricator.
+A toolbox of utilities for interacting with phabricator. These tools are meant to extend and expand the abilities presented by phabricator. Though they are custom to our organizations requirements, they should offer some insights and starting points for other implementations
 
 
 ## general setup
 
+clone the repository
 ```
 cd /opt
 git clone https://github.com/epiphyte/phabricator-tools
+cd phabricator-tools
+git checkout stable
 ```
 
 from here navigate to subfolders where applicable for further instruction
 
 ## data
-Tools for dealing with data in phabricator on the host
-
-### highlights
-
-* nightly backup scripts
-* production of nightly repository bundles/snapshots
+Tools for dealing with data in phabricator on the host. These include general data management from phabricator within the phabricator machine instance. Including the ability to produce nightly backups (following the data to backup from the phabricator guide) and nightly snapshot bundles of repositories
 
 ---
 
 ## extensions
-Phabricator extensions
 
 ### Static File Host (sfh)
 
@@ -32,17 +29,10 @@ Phabricator extensions
 * Currently supports pdf, html, and gzip downloads
 * Copy the php files into the phabricator extensions folder
 
-### highlights
-
-* static file hosting (behind phabricator)
-* ability to host various file types matching names and by file extension
-
 ---
 
 ## utility
-Various utility scripts for interacting with parts of phabricator
-
-### highlights
+Various utility scripts for interacting with parts of phabricator, like:
 
 * chat bot(s)
 * weekly/daily scheduled tasks (via systemd + chat bots)
