@@ -10,6 +10,8 @@ Tools for dealing with data in phabricator on the host
 * nightly backup scripts
 * production of nightly repository bundles/snapshots
 
+---
+
 ## extensions
 Phabricator extensions
 
@@ -23,6 +25,8 @@ Phabricator extensions
 
 * static file hosting (behind phabricator)
 * ability to host various file types matching names and by file extension
+
+---
 
 ## utility
 Various utility scripts for interacting with parts of phabricator
