@@ -16,5 +16,6 @@ mkdir -p /opt/phab/backups
 ln -s /opt/phabricator-tools/data/backup/backup.sh /opt/phab/
 systemctl enable /opt/phabricator-tools/data/backup/phabricator-backup.timer
 ln -s /opt/phabricator-tools/data/backup/phabricator-backup.service /etc/systemd/system/
+systemctl daemon-reload
 systemctl start phabricator-backup.timer
 ```
