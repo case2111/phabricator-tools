@@ -14,6 +14,9 @@ final class StaticFileController extends PhabricatorController {
         case "pdf":
             $mime = 'application/pdf';
             break;
+        case "gz":
+            $mime = 'application/gzip';
+            break;
         case "html":
             $mime = 'text/html';
             $isDownload = False;
