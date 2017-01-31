@@ -4,7 +4,6 @@
 import conduit
 import calendar
 import time
-import task_duedates
 
 
 def resolve_users(factory, user_set):
@@ -75,10 +74,10 @@ def process(factory, room, report, project_close):
             tell = [datum["authorPHID"]]
             owner = datum["ownerPHID"]
             cc = datum["ccPHIDs"]
-            if task_duedates.AUX_KEY in datum:
-                aux = datum[task_duedates.AUX_KEY]
-                if task_duedates.DUE_KEY in aux:
-                    due = aux[task_duedates.DUE_KEY]
+            if conduit.AUX_KEY in datum:
+                aux = datum[conduit.AUX_KEY]
+                if conduit.DUE_KEY in aux:
+                    due = aux[conduit.DUE_KEY]
                     valid = False
                     if due is not None:
                         try:

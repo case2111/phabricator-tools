@@ -5,9 +5,6 @@ import conduit
 import time
 import calendar
 
-DUE_KEY = "std:maniphest:custom:duedate"
-AUX_KEY = "auxiliary"
-
 
 def process(factory):
     """Process due dates."""
@@ -16,10 +13,10 @@ def process(factory):
     now = calendar.timegm(time.localtime())
     for item in res:
         datum = res[item]
-        if AUX_KEY in datum:
-            aux = datum[AUX_KEY]
-            if DUE_KEY in aux:
-                due = aux[DUE_KEY]
+        if conduit.AUX_KEY in datum:
+            aux = datum[conduit.AUX_KEY]
+            if conduit.DUE_KEY in aux:
+                due = aux[conduit.DUE_KEY]
                 if due is not None:
                     if due < now:
                         name = datum["objectName"][1:]

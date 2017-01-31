@@ -7,6 +7,12 @@ from urllib.parse import urlencode, quote
 import pycurl
 
 
+AUX_KEY = "auxiliary"
+CUSTOM = "std:maniphest:custom:"
+IDX_KEY = CUSTOM + "index"
+DUE_KEY = CUSTOM + "duedates"
+
+
 class Factory:
     """Common case to create conduit-derived classes."""
 
@@ -283,6 +289,24 @@ class Maniphest(ConduitBase):
     def get_by_ids(self, task_ids):
         """get a task by id."""
         return self._query({"ids": task_ids})
+
+    def get_by_owner(self, owner):
+        """get tasks by owner."""
+        return self._get_by_user_field("ownerPHIDs", owner)
+
+    def get_by_cc(self, cc):
+        """get by subscriber."""
+        return self._get_by_user_field("ccPHIDs", cc)
+
+    def get_by_author(self, author):
+        """author query."""
+        return self._get_by_user_field("authorPHIDs", author)
+
+    def _get_by_user_field(self, field, phids):
+        """get by a user field."""
+        params = {}
+        params[field] = [phids]
+        return self._query(params)
 
     def open(self):
         """Open tasks."""

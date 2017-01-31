@@ -15,6 +15,7 @@ import git_version
 import dash_from_phriction
 import database
 import uuid
+import maniphest_tag_index
 
 
 class Bot(object):
@@ -141,6 +142,15 @@ class Bot(object):
         slug = self.ctx.env("DASH_WIKI")
         dash_from_phriction.update(self.ctx.factory, slug, obj)
 
+    def _index_now(self):
+        """index now."""
+        self._chat("this may take a moment...")
+        maniphest_tag_index._process(self.ctx.factory,
+                                     self.ctx.env("CHECK_IDX"),
+                                     self.ctx.env("VALID_IDX"),
+                                     self.ctx.bots)
+        self._chat("done")
+
 
 class ScheduleBot(Bot):
     """Schedule bot."""
@@ -175,6 +185,7 @@ class ScheduleBot(Bot):
                         settings.check_hosts())
         task_duedates.process(settings.task_factory)
         self._dash_from_wiki()
+        self._index_now()
 
     def _weekly(self, settings):
         """weekly tasks."""
@@ -234,6 +245,7 @@ class MonitorBot(Bot):
     PDF_WIKI = "wiki2pdf"
     PDF_REPO = "repo2pdf"
     DASH_WIKI = "wiki2dash"
+    IDX_VALID = "index"
 
     def _go(self, pkg):
         """inherited."""
@@ -271,6 +283,9 @@ class MonitorBot(Bot):
             self._dash_from_wiki()
             self._chat("dashboard updated")
             return True
+        elif pkg.cmd == self.IDX_VALID and pkg.is_admin:
+            self._index_now()
+            return True
         elif pkg.cmd == self.PDF_WIKI:
             if len(pkg.params) == 1:
                 self._pdf(pkg)
@@ -283,7 +298,6 @@ class MonitorBot(Bot):
             else:
                 self._subcommand_help(pkg, ["callsign", "path"])
             return True
-
 
     def _pdf(self, pkg):
         """do pdf conversion steps."""
@@ -318,6 +332,7 @@ class MonitorBot(Bot):
         if pkg.is_admin:
             avail[self.GEN_PAGE] = "generate a wiki page from a repo/path"
             avail[self.DASH_WIKI] = "update dashboard panel from wiki"
+            avail[self.IDX_VALID] = "validate index values"
         return avail
 
 
