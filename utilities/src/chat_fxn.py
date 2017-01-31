@@ -144,12 +144,11 @@ class Bot(object):
 
     def _index_now(self):
         """index now."""
-        self._chat("this may take a moment...")
+        self._chat("index check may take a moment...")
         maniphest_tag_index._process(self.ctx.factory,
                                      self.ctx.env("CHECK_IDX"),
                                      self.ctx.env("VALID_IDX"),
                                      self.ctx.bots)
-        self._chat("done")
 
 
 class ScheduleBot(Bot):

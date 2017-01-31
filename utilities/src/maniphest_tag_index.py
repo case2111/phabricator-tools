@@ -43,7 +43,8 @@ def _process(factory, user_names, index_vals, room):
             msgs.append("{0} -> {1} ({2})".format(task,
                                                   ", ".join(set(text)),
                                                   idx))
-    if len(msgs) > 0:
-        msg = "\n".join(msgs)
-        c = factory.create(conduit.Conpherence)
-        c.updatethread(room, msg)
+    if len(msgs) == 0:
+        msgs.append("index/tag values all set")
+    msg = "\n".join(msgs)
+    c = factory.create(conduit.Conpherence)
+    c.updatethread(room, msg)
