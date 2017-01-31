@@ -144,7 +144,6 @@ class Bot(object):
 
     def _index_now(self, quiet):
         """index now."""
-        self._chat("index check may take a moment...")
         maniphest_tag_index._process(self.ctx.factory,
                                      self.ctx.env("CHECK_IDX"),
                                      self.ctx.env("VALID_IDX"),
