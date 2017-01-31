@@ -36,11 +36,13 @@ def _process(factory, user_names, index_vals, room):
         for tag in idx:
             if tag in tags:
                 if len(idx) > 1:
-                    text.append("multi-part indexing is not searchable...")
+                    text.append("multi-part indexing")
             else:
-                text.append("unknown tag: " + tag)
+                text.append("unknown tag")
         if len(text) > 0:
-            msgs.append("{0} -> {1}".format(task, ", ".join(text)))
+            msgs.append("{0} -> {1} ({2})".format(task,
+                                                  ", ".join(set(text)),
+                                                  idx))
     if len(msgs) > 0:
         msg = "\n".join(msgs)
         c = factory.create(conduit.Conpherence)
