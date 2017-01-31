@@ -21,8 +21,11 @@ def _get_by_user(maniphest, user, tasks):
                         tasks[datum["objectName"]] = idx
 
 
-def _process(factory, user_names, index_vals, room):
+def _process(factory, user_names, index_vals, room, silent):
     """process the index values for users and check validity."""
+    c = factory.create(conduit.Conpherence)
+    if not silent:
+        c.updatethread(room, "checking index/tag values...")
     users = user_names.split(" ")
     tags = index_vals.split(" ")
     m = factory.create(conduit.Maniphest)
@@ -43,8 +46,8 @@ def _process(factory, user_names, index_vals, room):
             msgs.append("{0} -> {1} ({2})".format(task,
                                                   ", ".join(set(text)),
                                                   idx))
-    if len(msgs) == 0:
+    if len(msgs) == 0 and not silent:
         msgs.append("index/tag values all set")
-    msg = "\n".join(msgs)
-    c = factory.create(conduit.Conpherence)
-    c.updatethread(room, msg)
+    if len(msgs) > 0:
+        msg = "\n".join(msgs)
+        c.updatethread(room, msg)

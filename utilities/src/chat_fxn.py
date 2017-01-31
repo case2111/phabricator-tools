@@ -142,13 +142,14 @@ class Bot(object):
         slug = self.ctx.env("DASH_WIKI")
         dash_from_phriction.update(self.ctx.factory, slug, obj)
 
-    def _index_now(self):
+    def _index_now(self, quiet):
         """index now."""
         self._chat("index check may take a moment...")
         maniphest_tag_index._process(self.ctx.factory,
                                      self.ctx.env("CHECK_IDX"),
                                      self.ctx.env("VALID_IDX"),
-                                     self.ctx.bots)
+                                     self.ctx.bots,
+                                     quiet)
 
 
 class ScheduleBot(Bot):
@@ -184,7 +185,7 @@ class ScheduleBot(Bot):
                         settings.check_hosts())
         task_duedates.process(settings.task_factory)
         self._dash_from_wiki()
-        self._index_now()
+        self._index_now(True)
 
     def _weekly(self, settings):
         """weekly tasks."""
@@ -283,7 +284,7 @@ class MonitorBot(Bot):
             self._chat("dashboard updated")
             return True
         elif pkg.cmd == self.IDX_VALID and pkg.is_admin:
-            self._index_now()
+            self._index_now(False)
             return True
         elif pkg.cmd == self.PDF_WIKI:
             if len(pkg.params) == 1:
