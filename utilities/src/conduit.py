@@ -300,15 +300,6 @@ class Maniphest(ConduitBase):
         """init the instance."""
         self.prefix = "maniphest"
 
-    def create(self, title, text, owner_phid, project_phid):
-        """create a task."""
-        params = {}
-        params["title"] = title
-        params["description"] = text
-        params["ownerPHID"] = owner_phid
-        params["projectPHIDs"] = [project_phid]
-        return self._go("createtask", params)
-
     def comment_by_id(self, task_id, message):
         """comment on a task by using the id."""
         params = self._comment_params(task_id, message)
@@ -388,10 +379,32 @@ class Maniphest(ConduitBase):
         params["projectPHIDs"] = project_phids
         return self._update(params)
 
+    def _name_value_trans(self, params=None):
+        """name value transaction building."""
+        vals = {}
+        if params is not None:
+            idx = 0
+            for item in params:
+                trans = "transactions[{0}]".format(str(idx))
+                vals[trans + "[type]"] = item
+                vals[trans + "[value]"] = params[item]
+                idx = idx + 1
+        return vals
+
+    def _edit(self, params=None):
+        """edit endpoint."""
+        return self._go("edit", params, manual_post=True)
+
     def move_column(self, task, column):
         """move tasks to a column."""
-        vals = {}
-        vals["transactions[0][type]"] = "column"
-        vals["transactions[0][value]"] = column
+        vals = self._name_value_trans({"column": column})
         vals["objectIdentifier"] = task
-        return self._go("edit", vals, manual_post=True)
+        return self._edit(params=vals)
+
+    def create(self, title, text, owner_phid, project_phid):
+        """create a task."""
+        vals = self._name_value_trans({"title": title,
+                                       "description": text,
+                                       "owner": owner_phid,
+                                       "projects.add": [project_phid]})
+        return self._edit(params=vals)
