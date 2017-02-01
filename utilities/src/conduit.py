@@ -225,7 +225,7 @@ class User(ConduitBase):
         if vals is None:
             vals = {}
         vals["queryKey"] = "all"
-        return self._go("search", params)[DATA_FIELD]
+        return self._go("search", params)
 
     def query(self):
         """Query users."""
