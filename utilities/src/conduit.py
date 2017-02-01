@@ -11,6 +11,7 @@ AUX_KEY = "auxiliary"
 CUSTOM = "std:maniphest:custom:"
 IDX_KEY = CUSTOM + "index"
 DUE_KEY = CUSTOM + "duedate"
+DATA_FIELD = "data"
 
 
 class Factory:
@@ -108,6 +109,16 @@ class ConduitBase(object):
         else:
             raise Exception(res["error_info"])
 
+    def _filter_data(self, inputs, filtered):
+        """filter data."""
+        data = inputs[DATA_FIELD]
+        new_data = []
+        for item in data:
+            if filtered(item):
+                new_data.append(item)
+        inputs[DATA_FIELD] = new_data
+        return inputs
+
 
 class Diffusion(ConduitBase):
     """Diffusion queries."""
@@ -160,15 +171,25 @@ class Project(ConduitBase):
 
     def open(self):
         """Open projects."""
-        return self._query({"status": "status-open"})
+        return self._search("active")
 
     def by_name(self, name):
         """get projects by name."""
-        return self._query({"names": [name]})
+        vals = {}
+        vals["constraints[name]"] = name
+        res = self._search("all", vals)
 
-    def _query(self, params=None):
+        def _filter_name(item):
+            return item["fields"]["name"] == name
+        return self._filter_data(res, _filter_name)
+
+    def _search(self, key, params=None):
         """Query projects."""
-        return self._go("query", params)
+        vals = params
+        if params is None:
+            vals = {}
+        vals["queryKey"] = key
+        return self._go("search", params, manual_post=True)
 
 
 class User(ConduitBase):
