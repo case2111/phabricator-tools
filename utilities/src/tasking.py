@@ -14,11 +14,11 @@ def _process(factory, project, file_name, skip, title):
         skips = skip.split(",")
     for user in u:
         phid = user['phid']
-        if ObjectHelper.user_has_role(user, "disabled"):
+        if conduit.ObjectHelper.user_has_role(user, "disabled"):
             continue
-        if ObjectHelper.user_has_role(user, "agent"):
+        if conduit.ObjectHelper.user_has_role(user, "agent"):
             continue
-        user_name = ObjectHelper.user_get_username(user)
+        user_name = conduit.ObjectHelper.user_get_username(user)
         if user_name in skips:
             continue
         user_set.append(phid)

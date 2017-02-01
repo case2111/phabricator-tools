@@ -10,11 +10,11 @@ def resolve_users(factory, user_set):
     """resolve user phid set to dict of phid & @name."""
     u = factory.create(conduit.User)
     users = u.by_phids(user_set)[conduit.DATA_FIELD]
-    resolved_users = {}
+    resolved = {}
     for user in users:
         u_phid = user["phid"]
-        resolved_users[u_phid] = "@" + ObjectHelper.user_get_username(user)
-    return resolved_users
+        resolved[u_phid] = "@" + conduit.ObjectHelper.user_get_username(user)
+    return resolved
 
 
 def _convert_user_phid(input_set, users):

@@ -99,7 +99,7 @@ def _bot(host, token, last, lock, bot_type, controls):
         for check in a:
             check_phid = check["phid"]
             for roles in ["admin", "agent"]:
-                if ObjectHelper.user_has_role(check, roles):
+                if conduit.ObjectHelper.user_has_role(check, roles):
                     admins.append(check_phid)
                     break
         u_phid = u["phid"]
