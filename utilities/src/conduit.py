@@ -10,7 +10,7 @@ import pycurl
 AUX_KEY = "auxiliary"
 CUSTOM = "std:maniphest:custom:"
 IDX_KEY = CUSTOM + "index"
-DUE_KEY = CUSTOM + "duedates"
+DUE_KEY = CUSTOM + "duedate"
 
 
 class Factory:
