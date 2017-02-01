@@ -195,28 +195,6 @@ class User(ConduitBase):
         return self._query()
 
 
-class CalendarEvent(ConduitBase):
-    """Calendar implementation."""
-
-    def __init__(self):
-        """init the instance."""
-        self.prefix = "calendar.event"
-
-    def upcoming_by_subscriber(self, user_phid):
-        """get upcoming events."""
-        return self._search_by_query("upcoming",
-                                     {"constraints":
-                                      {"subscribers": [user_phid]}})
-
-    def _search_by_query(self, query, params=None):
-        """search the calendar."""
-        vals = {"queryKey": query}
-        if params:
-            for p in params:
-                vals[p] = params[p]
-        return self._go("search", vals)
-
-
 class Conpherence(ConduitBase):
     """Conpherence implementation."""
 
@@ -345,9 +323,6 @@ class Maniphest(ConduitBase):
     def _open_params(self):
         """Open status parameter building."""
         return {"status": "status-open"}
-
-    def _create(self, params=None):
-        """task creation."""
 
     def _update(self, params=None):
         """task updates."""
