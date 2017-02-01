@@ -331,18 +331,10 @@ class Maniphest(ConduitBase):
         """Open tasks."""
         return self._query(self._open_params())
 
-    def invalid_by_id(self, task_id):
-        """close as invalid by id."""
-        return self._close_by_id(task_id, "invalid")
-
     def resolve_by_id(self, task_id):
         """resolve as closed by id."""
-        return self._close_by_id(task_id, "resolved")
-
-    def _close_by_id(self, task_id, status):
-        """close a task by id."""
         params = self._comment_params(task_id, "marking closed")
-        params["status"] = status
+        params["status"] = "resolved"
         return self._update(params)
 
     def open_and_subscribed(self, user_phid):
