@@ -211,19 +211,25 @@ class User(ConduitBase):
 
     def by_phids(self, phids):
         """user by phid."""
-        return self._query({"phids": phids})
+        vals = {}
+        vals["constraints[phids]"] = phids
+        return self._search(vals)
 
     def whoami(self):
         """get user information."""
         return self._go("whoami")
 
-    def _query(self, params=None):
+    def _search(self, params=None):
         """Query users."""
-        return self._go("query", params)
+        vals = params
+        if vals is None:
+            vals = {}
+        vals["queryKey"] = "all"
+        return self._go("search", params)[DATA_FIELD]
 
     def query(self):
         """Query users."""
-        return self._query()
+        return self._search()
 
 
 class Conpherence(ConduitBase):
