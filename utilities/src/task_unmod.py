@@ -56,7 +56,7 @@ def process(factory, room, report, project_close):
     for task in closing:
         close_id = closing[task]["id"]
         m.resolve_by_id(close_id)
-    res = p.open()["data"]
+    res = p.open()[conduit.DATA_FIELD]
     proj_tracked = []
     reporting = {}
     all_users = []

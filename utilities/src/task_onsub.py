@@ -8,7 +8,8 @@ def process(factory, room, project):
     """Process event dates."""
     who = factory.create(conduit.User).whoami()["phid"]
     project_phid = None
-    for item in factory.create(conduit.Project).by_name(project)["data"]:
+    p_factory = factory.create(conduit.Project)
+    for item in p_factory.by_name(project)[conduit.DATA_FIELD]:
         project_phid = item["phid"]
         break
     m = factory.create(conduit.Maniphest)
