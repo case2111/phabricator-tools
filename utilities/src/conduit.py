@@ -39,13 +39,14 @@ class ConduitBase(object):
         """build a parameter for posting."""
         return name + "=" + value
 
-    def _go(self, operator, params=None, manual_post=True):
+    def _go(self, operator, params=None, manual_post=True, data_filter=None):
         """run an operation."""
         if self.prefix is None:
             raise Exception("no prefix configured")
         return self._execute(self.prefix + "." + operator,
                              manual_post=manual_post,
-                             parameters=params)
+                             parameters=params,
+                             filter_data=data_filter)
 
     def _encode_list(self, prefix, vals):
         """encode a list set."""
@@ -75,7 +76,11 @@ class ConduitBase(object):
                 for l in self._encode_list(prefix, vals):
                     yield l
 
-    def _execute(self, endpoint, manual_post=True, parameters=None):
+    def _execute(self,
+                 endpoint,
+                 manual_post=True,
+                 parameters=None,
+                 filter_data=None):
         """Execute a conduit query."""
         if self.token is None:
             raise Exception("no token given...")
@@ -105,7 +110,10 @@ class ConduitBase(object):
         res = json.loads(buf.getvalue().decode("iso-8859-1"))
         errored = res["error_code"]
         if errored is None:
-            return res["result"]
+            data = res["result"]
+            if filter_data is not None:
+                data = self._filter_data(data, filter_data)
+            return data
         else:
             raise Exception(res["error_info"])
 
@@ -177,19 +185,21 @@ class Project(ConduitBase):
         """get projects by name."""
         vals = {}
         vals["constraints[name]"] = name
-        res = self._search("all", vals)
 
         def _filter_name(item):
             return item["fields"]["name"] == name
-        return self._filter_data(res, _filter_name)
+        return self._search("all", vals, _filter_name)
 
-    def _search(self, key, params=None):
+    def _search(self, key, params=None, filtered=None):
         """Query projects."""
         vals = params
         if params is None:
             vals = {}
         vals["queryKey"] = key
-        return self._go("search", params, manual_post=True)
+        return self._go("search",
+                        params,
+                        manual_post=True,
+                        data_filter=filtered)
 
 
 class User(ConduitBase):
