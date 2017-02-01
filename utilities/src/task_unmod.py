@@ -12,7 +12,8 @@ def resolve_users(factory, user_set):
     users = u.by_phids(user_set)[conduit.DATA_FIELD]
     resolved_users = {}
     for user in users:
-        resolved_users[user["phid"]] = "@" + user['fields']["username"]
+        u_phid = user["phid"]
+        resolved_users[u_phid] = "@" + ObjectHelper.user_get_username(user)
     return resolved_users
 
 

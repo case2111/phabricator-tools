@@ -12,6 +12,19 @@ CUSTOM = "std:maniphest:custom:"
 IDX_KEY = CUSTOM + "index"
 DUE_KEY = CUSTOM + "duedate"
 DATA_FIELD = "data"
+FIELDS = "fields"
+
+
+class ObjectHelper(object):
+    """object helper."""
+
+    def user_has_role(obj, role):
+        """check if a user has a role."""
+        return role in obj[FIELDS]["roles"]
+
+    def user_get_username(obj):
+        """get a user name."""
+        return obj[FIELDS]["username"]
 
 
 class Factory:
@@ -187,7 +200,7 @@ class Project(ConduitBase):
         vals["constraints[name]"] = name
 
         def _filter_name(item):
-            return item["fields"]["name"] == name
+            return item[FIELDS]["name"] == name
         return self._search("all", vals, _filter_name)
 
     def _search(self, key, params=None, filtered=None):

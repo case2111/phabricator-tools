@@ -97,9 +97,11 @@ def _bot(host, token, last, lock, bot_type, controls):
         admins = []
         a = users.query()[conduit.DATA_FIELD]
         for check in a:
-            roles = check['fields']['roles']
-            if "admin" in roles or "agent" in roles:
-                admins.append(check['phid'])
+            check_phid = check["phid"]
+            for roles in ["admin", "agent"]:
+                if ObjectHelper.user_has_role(check, roles):
+                    admins.append(check_phid)
+                    break
         u_phid = u["phid"]
         user = u["userName"]
         ws_host = "ws" + host[4:] + "/ws/"
