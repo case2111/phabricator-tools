@@ -9,7 +9,7 @@ def process(factory, room, project):
     who = factory.create(conduit.User).whoami()["phid"]
     project_phid = None
     for item in factory.create(conduit.Project).by_name(project)["data"]:
-        project_phid = item
+        project_phid = item["phid"]
         break
     m = factory.create(conduit.Maniphest)
     sub = m.open_and_subscribed(who)

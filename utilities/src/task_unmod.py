@@ -61,7 +61,8 @@ def process(factory, room, report, project_close):
     reporting = {}
     all_users = []
     now = calendar.timegm(time.localtime())
-    for proj in res:
+    for proj_raw in res:
+        proj = proj_raw["phid"]
         if proj in proj_tracked:
             continue
         proj_tracked.append(proj)
