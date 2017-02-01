@@ -7,17 +7,18 @@ import conduit
 
 def _process(factory, project, file_name, skip, title):
     """process the tasking request."""
-    u = factory.create(conduit.User).query()
+    u = factory.create(conduit.User).query()[conduit.DATA_FIELD]
     skips = []
     user_set = []
     if skip is not None:
         skips = skip.split(",")
     for user in u:
         phid = user['phid']
-        roles = user['roles']
-        if "disabled" in roles or 'agent' in roles:
+        if ObjectHelper.user_has_role(user, "disabled"):
             continue
-        user_name = user["userName"]
+        if ObjectHelper.user_has_role(user, "agent"):
+            continue
+        user_name = ObjectHelper.user_get_username(user)
         if user_name in skips:
             continue
         user_set.append(phid)

@@ -9,10 +9,11 @@ import time
 def resolve_users(factory, user_set):
     """resolve user phid set to dict of phid & @name."""
     u = factory.create(conduit.User)
-    users = u.by_phids(user_set)
+    users = u.by_phids(user_set)[conduit.DATA_FIELD]
     resolved_users = {}
     for user in users:
-        resolved_users[user["phid"]] = "@" + user["userName"]
+        u_phid = user["phid"]
+        resolved_users[u_phid] = "@" + ObjectHelper.user_get_username(user)
     return resolved_users
 
 
@@ -56,12 +57,13 @@ def process(factory, room, report, project_close):
     for task in closing:
         close_id = closing[task]["id"]
         m.resolve_by_id(close_id)
-    res = p.open()["data"]
+    res = p.open()[conduit.DATA_FIELD]
     proj_tracked = []
     reporting = {}
     all_users = []
     now = calendar.timegm(time.localtime())
-    for proj in res:
+    for proj_raw in res:
+        proj = proj_raw["phid"]
         if proj in proj_tracked:
             continue
         proj_tracked.append(proj)

@@ -11,6 +11,20 @@ AUX_KEY = "auxiliary"
 CUSTOM = "std:maniphest:custom:"
 IDX_KEY = CUSTOM + "index"
 DUE_KEY = CUSTOM + "duedate"
+DATA_FIELD = "data"
+FIELDS = "fields"
+
+
+class ObjectHelper(object):
+    """object helper."""
+
+    def user_has_role(obj, role):
+        """check if a user has a role."""
+        return role in obj[FIELDS]["roles"]
+
+    def user_get_username(obj):
+        """get a user name."""
+        return obj[FIELDS]["username"]
 
 
 class Factory:
@@ -38,13 +52,14 @@ class ConduitBase(object):
         """build a parameter for posting."""
         return name + "=" + value
 
-    def _go(self, operator, params=None, manual_post=True):
+    def _go(self, operator, params=None, manual_post=True, data_filter=None):
         """run an operation."""
         if self.prefix is None:
             raise Exception("no prefix configured")
         return self._execute(self.prefix + "." + operator,
                              manual_post=manual_post,
-                             parameters=params)
+                             parameters=params,
+                             filter_data=data_filter)
 
     def _encode_list(self, prefix, vals):
         """encode a list set."""
@@ -74,7 +89,11 @@ class ConduitBase(object):
                 for l in self._encode_list(prefix, vals):
                     yield l
 
-    def _execute(self, endpoint, manual_post=True, parameters=None):
+    def _execute(self,
+                 endpoint,
+                 manual_post=True,
+                 parameters=None,
+                 filter_data=None):
         """Execute a conduit query."""
         if self.token is None:
             raise Exception("no token given...")
@@ -104,9 +123,22 @@ class ConduitBase(object):
         res = json.loads(buf.getvalue().decode("iso-8859-1"))
         errored = res["error_code"]
         if errored is None:
-            return res["result"]
+            data = res["result"]
+            if filter_data is not None:
+                data = self._filter_data(data, filter_data)
+            return data
         else:
             raise Exception(res["error_info"])
+
+    def _filter_data(self, inputs, filtered):
+        """filter data."""
+        data = inputs[DATA_FIELD]
+        new_data = []
+        for item in data:
+            if filtered(item):
+                new_data.append(item)
+        inputs[DATA_FIELD] = new_data
+        return inputs
 
 
 class Diffusion(ConduitBase):
@@ -160,15 +192,27 @@ class Project(ConduitBase):
 
     def open(self):
         """Open projects."""
-        return self._query({"status": "status-open"})
+        return self._search("active")
 
     def by_name(self, name):
         """get projects by name."""
-        return self._query({"names": [name]})
+        vals = {}
+        vals["constraints[name]"] = name
 
-    def _query(self, params=None):
+        def _filter_name(item):
+            return item[FIELDS]["name"] == name
+        return self._search("all", vals, _filter_name)
+
+    def _search(self, key, params=None, filtered=None):
         """Query projects."""
-        return self._go("query", params)
+        vals = params
+        if params is None:
+            vals = {}
+        vals["queryKey"] = key
+        return self._go("search",
+                        vals,
+                        manual_post=True,
+                        data_filter=filtered)
 
 
 class User(ConduitBase):
@@ -180,41 +224,25 @@ class User(ConduitBase):
 
     def by_phids(self, phids):
         """user by phid."""
-        return self._query({"phids": phids})
+        vals = {}
+        vals["constraints[phids]"] = phids
+        return self._search(vals)
 
     def whoami(self):
         """get user information."""
         return self._go("whoami")
 
-    def _query(self, params=None):
+    def _search(self, params=None):
         """Query users."""
-        return self._go("query", params)
+        vals = params
+        if vals is None:
+            vals = {}
+        vals["queryKey"] = "all"
+        return self._go("search", vals)
 
     def query(self):
         """Query users."""
-        return self._query()
-
-
-class CalendarEvent(ConduitBase):
-    """Calendar implementation."""
-
-    def __init__(self):
-        """init the instance."""
-        self.prefix = "calendar.event"
-
-    def upcoming_by_subscriber(self, user_phid):
-        """get upcoming events."""
-        return self._search_by_query("upcoming",
-                                     {"constraints":
-                                      {"subscribers": [user_phid]}})
-
-    def _search_by_query(self, query, params=None):
-        """search the calendar."""
-        vals = {"queryKey": query}
-        if params:
-            for p in params:
-                vals[p] = params[p]
-        return self._go("search", vals)
+        return self._search()
 
 
 class Conpherence(ConduitBase):
@@ -345,9 +373,6 @@ class Maniphest(ConduitBase):
     def _open_params(self):
         """Open status parameter building."""
         return {"status": "status-open"}
-
-    def _create(self, params=None):
-        """task creation."""
 
     def _update(self, params=None):
         """task updates."""
