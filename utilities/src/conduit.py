@@ -197,7 +197,7 @@ class Project(ConduitBase):
             vals = {}
         vals["queryKey"] = key
         return self._go("search",
-                        params,
+                        vals,
                         manual_post=True,
                         data_filter=filtered)
 
@@ -225,7 +225,7 @@ class User(ConduitBase):
         if vals is None:
             vals = {}
         vals["queryKey"] = "all"
-        return self._go("search", params)
+        return self._go("search", vals)
 
     def query(self):
         """Query users."""

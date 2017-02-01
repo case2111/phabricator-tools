@@ -9,10 +9,10 @@ import time
 def resolve_users(factory, user_set):
     """resolve user phid set to dict of phid & @name."""
     u = factory.create(conduit.User)
-    users = u.by_phids(user_set)
+    users = u.by_phids(user_set)[conduit.DATA_FIELD]
     resolved_users = {}
     for user in users:
-        resolved_users[user["phid"]] = "@" + user["userName"]
+        resolved_users[user["phid"]] = "@" + user['fields']["username"]
     return resolved_users
 
 
