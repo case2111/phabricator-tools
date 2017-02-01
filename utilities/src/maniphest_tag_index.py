@@ -57,7 +57,7 @@ def _process(factory, user_names, index_vals, room, silent):
                     warn.append("needs indicators on both ends")
         if len(warn) > 0:
             msgs.append("{0} -> {1} ({2})".format(task,
-                                                  ", ".join(set(warn)),
+                                                  ", ".join(sorted(set(warn))),
                                                   idx))
 
     if len(msgs) == 0 and not silent:
