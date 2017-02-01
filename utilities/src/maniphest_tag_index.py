@@ -3,6 +3,8 @@
 
 import conduit
 
+INDICATOR = "_"
+
 
 def _get_by_user(maniphest, user, tasks):
     """get all tasks by users with an index."""
@@ -17,7 +19,7 @@ def _get_by_user(maniphest, user, tasks):
                 aux = datum[conduit.AUX_KEY]
                 if conduit.IDX_KEY in aux:
                     idx = aux[conduit.IDX_KEY]
-                    if idx is not None and len(idx) > 0:
+                    if idx is not None and len(idx) > 0 and INDICATOR in idx:
                         tasks[datum["objectName"]] = idx
 
 
@@ -35,19 +37,31 @@ def _process(factory, user_names, index_vals, room, silent):
         _get_by_user(m, u, all_tasks)
     for task in all_tasks:
         idx = all_tasks[task].lower().split(" ")
-        text = []
+        warn = []
+        if len(set(idx)) != len(idx):
+            warn.append("duplicate tags")
+        if sorted(idx) != idx:
+            warn.append("suggest alphabetical ordering")
         for tag in idx:
-            if tag in tags:
-                if len(idx) > 1:
-                    text.append("multi-part indexing")
-            else:
-                text.append("unknown tag")
-        if len(text) > 0:
+            begin = tag.startswith(INDICATOR)
+            end = tag.endswith(INDICATOR)
+            if begin or end:
+                if begin and end:
+                    sub = tag[1:-1]
+                    if sub in tags:
+                        if len(idx) > 1:
+                            warn.append("multi-part indexing")
+                    else:
+                        warn.append("unknown tag")
+                else:
+                    warn.append("needs indicators on both ends")
+        if len(warn) > 0:
             msgs.append("{0} -> {1} ({2})".format(task,
-                                                  ", ".join(set(text)),
+                                                  ", ".join(set(warn)),
                                                   idx))
+
     if len(msgs) == 0 and not silent:
-        msgs.append("index/tag values all set")
+        msgs.append("index/tag values checked")
     if len(msgs) > 0:
         msg = "\n".join(msgs)
         c.updatethread(room, msg)
