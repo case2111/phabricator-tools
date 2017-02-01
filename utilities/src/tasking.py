@@ -17,7 +17,7 @@ def _process(factory, project, file_name, skip, title):
         roles = user['fields']['roles']
         if "disabled" in roles or 'agent' in roles:
             continue
-        user_name = user['fields']["userName"]
+        user_name = user['fields']["username"]
         if user_name in skips:
             continue
         user_set.append(phid)
