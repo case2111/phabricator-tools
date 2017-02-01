@@ -24,7 +24,7 @@ def user_check(user, password, factory, room):
         user_obj = u_factory.by_phids([u])[conduit.DATA_FIELD][0]
         if "agent" in user_obj['fields']["roles"]:
             continue
-        named = "@" + user_obj['fields']["userName"]
+        named = "@" + user_obj['fields']["username"]
         users.append(named)
     if len(users) > 0:
         c = factory.create(conduit.Conpherence)
