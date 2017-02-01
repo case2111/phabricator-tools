@@ -95,9 +95,9 @@ def _bot(host, token, last, lock, bot_type, controls):
         users = factory.create(conduit.User)
         u = users.whoami()
         admins = []
-        a = users.query()
+        a = users.query()[conduit.DATA_FIELD]
         for check in a:
-            roles = check['roles']
+            roles = check['fields']['roles']
             if "admin" in roles or "agent" in roles:
                 admins.append(check['phid'])
         u_phid = u["phid"]
