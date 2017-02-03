@@ -13,6 +13,7 @@ IDX_KEY = CUSTOM + "index"
 DUE_KEY = CUSTOM + "duedate"
 DATA_FIELD = "data"
 FIELDS = "fields"
+BOT_MARKER = "bot"
 
 
 class ObjectHelper(object):

@@ -22,7 +22,7 @@ def user_check(user, password, factory, room):
                                 where participationStatus = 0
                             );"""):
         user_obj = u_factory.by_phids([u])[conduit.DATA_FIELD][0]
-        if conduit.ObjectHelper.user_has_role(user_obj, "agent"):
+        if conduit.ObjectHelper.user_has_role(user_obj, conduit.BOT_MARKER):
             continue
         named = "@" + conduit.ObjectHelper.user_get_username(user_obj)
         users.append(named)

@@ -98,7 +98,7 @@ def _bot(host, token, last, lock, bot_type, controls):
         a = users.query()[conduit.DATA_FIELD]
         for check in a:
             check_phid = check["phid"]
-            for roles in ["admin", "agent"]:
+            for roles in ["admin", conduit.BOT_MARKER]:
                 if conduit.ObjectHelper.user_has_role(check, roles):
                     admins.append(check_phid)
                     break

@@ -16,7 +16,7 @@ def _process(factory, project, file_name, skip, title):
         phid = user['phid']
         if conduit.ObjectHelper.user_has_role(user, "disabled"):
             continue
-        if conduit.ObjectHelper.user_has_role(user, "agent"):
+        if conduit.ObjectHelper.user_has_role(user, conduit.BOT_MARKER):
             continue
         user_name = conduit.ObjectHelper.user_get_username(user)
         if user_name in skips:
