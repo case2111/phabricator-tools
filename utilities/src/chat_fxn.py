@@ -182,12 +182,12 @@ class ScheduleBot(Bot):
         task_ping.check(settings.status_factory,
                         settings.bot_room,
                         settings.check_hosts())
-        task_duedates.process(settings.task_factory)
         self._dash_from_wiki()
         self._index_now(True)
 
     def _weekly(self, settings):
         """weekly tasks."""
+        task_duedates.process(settings.task_factory)
         database.user_check(settings.db_user,
                             settings.db_pass,
                             settings.monitor_factory,
