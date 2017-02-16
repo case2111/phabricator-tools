@@ -214,8 +214,6 @@ class ScheduleBot(Bot):
             self.admin_project = ctx.env("ADMIN_PROJ")
             self.domain = ctx.env("CHECK_DOMAIN")
             self.hosts = ctx.env("CHECK_HOSTS").split(' ')
-            self.db_user = ctx.env("DB_USER")
-            self.db_pass = ctx.env("DB_PASS")
             self.autoclose_threshold = int(ctx.env("AUTOCLOSE_THRESH"))
             self.autoclose_proj = ctx.env("AUTOCLOSE_PROJ")
 
