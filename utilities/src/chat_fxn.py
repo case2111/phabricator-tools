@@ -13,7 +13,6 @@ import task_duedates
 import task_unmod
 import git_version
 import dash_from_phriction
-import database
 import uuid
 import maniphest_tag_index
 
@@ -189,10 +188,6 @@ class ScheduleBot(Bot):
     def _weekly(self, settings):
         """weekly tasks."""
         task_duedates.process(settings.task_factory)
-        database.user_check(settings.db_user,
-                            settings.db_pass,
-                            settings.monitor_factory,
-                            settings.bot_room)
         task_unmod.process(settings.monitor_factory,
                            settings.common_room,
                            settings.autoclose_threshold,
