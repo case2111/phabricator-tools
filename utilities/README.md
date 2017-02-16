@@ -100,10 +100,6 @@ PHAB_DASH_OBJECT="1"
 # slug to use to update the panel
 PHAB_DASH_WIKI="slug/path/dash"
 
-# maria credentials
-PHAB_DB_PASS="password"
-PHAB_DB_USER="user"
-
 # threshold a task must not be modified for before being marked for auto-close
 PHAB_AUTOCLOSE_THRESH="60"
 
