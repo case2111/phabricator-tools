@@ -48,12 +48,13 @@ class Bot(object):
     def go(self, command, parameters, is_admin, is_all):
         """Execute a bot command."""
         try:
-            print("{0} ({1}) admin? {2}, all? {3}, id: {4}"
+            print("{0} ({1}) admin? {2}, all? {3}, id: {4}, room: {5}"
                   .format(command,
                           ",".join(parameters),
                           is_admin,
                           is_all,
-                          self.id))
+                          self.id,
+                          self.room))
             pkg = Bot.Package(command, parameters, is_admin)
             common = False
             if is_all:
