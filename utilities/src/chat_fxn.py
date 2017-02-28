@@ -265,10 +265,10 @@ class MonitorBot(Bot):
                 self._chat("[[{0}]] page updated".format(slug))
             else:
                 self._subcommand_help(pkg,
-                                      ["slug",
-                                       "title",
-                                       "callsign",
-                                       "path",
+                                      ["slug (path/to/wiki)",
+                                       "title (title to assign)",
+                                       "callsign (r<REPONAME>",
+                                       "path (offset/to/file/name)",
                                        "main index (optional)",
                                        "secondary index (optional)"])
             return True
@@ -289,7 +289,8 @@ class MonitorBot(Bot):
             if len(pkg.params) == 2:
                 self._pdf(pkg)
             else:
-                self._subcommand_help(pkg, ["callsign", "path"])
+                self._subcommand_help(pkg, ["callsign (r<REPONAME>",
+                                            "path (offset/to/file/name"])
             return True
 
     def _pdf(self, pkg):
