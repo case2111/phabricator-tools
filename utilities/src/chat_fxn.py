@@ -78,6 +78,14 @@ class Bot(object):
         """bot help."""
         return {}
 
+    def offload(self, text):
+        """offload text processing to bot."""
+        self._offload(text)
+
+    def _offload(self, text):
+        """offload to bot."""
+        pass
+
     def _common(self, pkg):
         """common commands."""
         no_cmd = True
@@ -239,6 +247,23 @@ class MonitorBot(Bot):
     PDF_REPO = "repo2pdf"
     DASH_WIKI = "wiki2dash"
     IDX_VALID = "index"
+
+    def _offload(self, text):
+        try:
+            import random
+            parts = text.split(" ")
+            raw = self.ctx.env("OFFLOAD")
+            for item in raw.split(" "):
+                scan = os.path.basename(item)
+                if scan in parts:
+                    lines = []
+                    with open(item, 'r') as f:
+                        lines = f.readlines()
+                        fact = random.randint(0, len(lines))
+                        self._chat(lines[fact])
+                        break
+        except:
+            pass
 
     def _go(self, pkg):
         """inherited."""
