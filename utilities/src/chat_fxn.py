@@ -294,7 +294,7 @@ class MonitorBot(Bot):
                 self._subcommand_help(pkg,
                                       ["slug (path/to/wiki)",
                                        "title (title to assign)",
-                                       "callsign (r<REPONAME>",
+                                       "callsign (r<REPONAME>)",
                                        "path (offset/to/file/name)",
                                        "main index (optional)",
                                        "secondary index (optional)"])
@@ -316,8 +316,8 @@ class MonitorBot(Bot):
             if len(pkg.params) == 2:
                 self._pdf(pkg)
             else:
-                self._subcommand_help(pkg, ["callsign (r<REPONAME>",
-                                            "path (offset/to/file/name"])
+                self._subcommand_help(pkg, ["callsign (r<REPONAME>)",
+                                            "path (offset/to/file/name)"])
             return True
 
     def _pdf(self, pkg):
