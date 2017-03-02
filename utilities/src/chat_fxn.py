@@ -250,10 +250,12 @@ class MonitorBot(Bot):
 
     def _offload(self, text):
         try:
+            print('offloaded')
             import random
             parts = text.split(" ")
             raw = self.ctx.env("OFFLOAD")
             for item in raw.split(" "):
+                print(item)
                 scan = os.path.basename(item)
                 if scan in parts:
                     lines = []
