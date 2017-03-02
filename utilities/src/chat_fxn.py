@@ -262,8 +262,8 @@ class MonitorBot(Bot):
                         fact = random.randint(0, len(lines))
                         self._chat(lines[fact])
                         break
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     def _go(self, pkg):
         """inherited."""
