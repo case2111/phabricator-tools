@@ -62,6 +62,7 @@ def process(factory, room, report, project_close):
     reporting = {}
     all_users = []
     now = calendar.timegm(time.localtime())
+    who = factory.create(conduit.User).whoami()["phid"]
     for proj_raw in res:
         proj = proj_raw["phid"]
         if proj in proj_tracked:
@@ -99,6 +100,8 @@ def process(factory, room, report, project_close):
             bad = task in reporting
             if bad:
                 for telling in tell:
+                    if telling == who:
+                        continue
                     if telling not in all_users:
                         all_users.append(telling)
     if len(reporting) == 0:
