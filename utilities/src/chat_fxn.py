@@ -243,7 +243,6 @@ class MonitorBot(Bot):
     """Monitor bot."""
 
     GEN_PAGE = "genpage"
-    DASH_WIKI = "wiki2dash"
     IDX_VALID = "index"
 
     def _offload(self, text):
@@ -297,10 +296,6 @@ class MonitorBot(Bot):
                                        "main index (optional)",
                                        "secondary index (optional)"])
             return True
-        elif pkg.cmd == self.DASH_WIKI and pkg.is_admin:
-            self._dash_from_wiki()
-            self._chat("dashboard updated")
-            return True
         elif pkg.cmd == self.IDX_VALID and pkg.is_admin:
             self._index_now(False)
             return True
@@ -315,7 +310,6 @@ class MonitorBot(Bot):
         avail = {}
         if pkg.is_admin:
             avail[self.GEN_PAGE] = "generate a wiki page from a repo/path"
-            avail[self.DASH_WIKI] = "update dashboard panel from wiki"
             avail[self.IDX_VALID] = "validate index values"
         return avail
 
