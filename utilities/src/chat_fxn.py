@@ -243,8 +243,6 @@ class MonitorBot(Bot):
     """Monitor bot."""
 
     GEN_PAGE = "genpage"
-    PDF_WIKI = "wiki2pdf"
-    PDF_REPO = "repo2pdf"
     DASH_WIKI = "wiki2dash"
     IDX_VALID = "index"
 
@@ -306,16 +304,6 @@ class MonitorBot(Bot):
         elif pkg.cmd == self.IDX_VALID and pkg.is_admin:
             self._index_now(False)
             return True
-        elif pkg.cmd == self.PDF_WIKI:
-            self._deprecated();
-            return True
-        elif pkg.cmd == self.PDF_REPO:
-            self._deprecated();
-            return True
-
-    def _deprecated(self):
-        """chat that a function is deprecated."""
-        self._chat("this function is no longer available here")
 
     def _get_artifact_path(self):
         """get an artifact output file name."""
@@ -324,8 +312,7 @@ class MonitorBot(Bot):
 
     def _get_help(self, pkg):
         """inherited."""
-        avail = {self.PDF_WIKI: "produce a pdf from a phriction page",
-                 self.PDF_REPO: "produce a pdf from a repository/path"}
+        avail = {}
         if pkg.is_admin:
             avail[self.GEN_PAGE] = "generate a wiki page from a repo/path"
             avail[self.DASH_WIKI] = "update dashboard panel from wiki"
