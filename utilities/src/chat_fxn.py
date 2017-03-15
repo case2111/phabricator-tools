@@ -307,39 +307,15 @@ class MonitorBot(Bot):
             self._index_now(False)
             return True
         elif pkg.cmd == self.PDF_WIKI:
-            if len(pkg.params) == 1:
-                self._pdf(pkg)
-            else:
-                self._subcommand_help(pkg, ["slug"])
+            self._deprecated();
             return True
         elif pkg.cmd == self.PDF_REPO:
-            if len(pkg.params) == 2:
-                self._pdf(pkg)
-            else:
-                self._subcommand_help(pkg, ["callsign (r<REPONAME>)",
-                                            "path (offset/to/file/name)"])
+            self._deprecated();
             return True
 
-    def _pdf(self, pkg):
-        """do pdf conversion steps."""
-        file_name = self._get_artifact_path().replace(".", "")
-        output_path = os.path.join(self.ctx.env("MON_PATH"), file_name)
-        if pkg.cmd == self.PDF_WIKI:
-            pdf_from_phriction._get(self.ctx.factory,
-                                    pkg.params[0],
-                                    output_path)
-        else:
-            pdf_from_diffusion._get(self.ctx.factory,
-                                    pkg.params[1],
-                                    pkg.params[0][1:],
-                                    "master",
-                                    output_path)
-        self._chat(
-                "{0}\n{1}".format(
-                    "download: {0}/sfh/{1}.pdf".format(
-                        self.ctx.factory.host,
-                        file_name),
-                    "this download will expire at the end of the day"))
+    def _deprecated(self):
+        """chat that a function is deprecated."""
+        self._chat("this function is no longer available here")
 
     def _get_artifact_path(self):
         """get an artifact output file name."""
