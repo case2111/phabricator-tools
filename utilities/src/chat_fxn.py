@@ -224,25 +224,6 @@ class MonitorBot(Bot):
 
     GEN_PAGE = "genpage"
 
-    def _offload(self, text):
-        try:
-            print('offloaded')
-            import random
-            parts = text.split(" ")
-            raw = self.ctx.env("OFFLOAD")
-            for item in raw.split(" "):
-                print(item)
-                scan = os.path.basename(item)
-                if scan in parts:
-                    lines = []
-                    with open(item, 'r') as f:
-                        lines = f.readlines()
-                        fact = random.randint(0, len(lines))
-                        self._chat(lines[fact])
-                        break
-        except Exception as e:
-            print(e)
-
     def _go(self, pkg):
         """inherited."""
         if pkg.cmd == self.GEN_PAGE and pkg.is_admin:
