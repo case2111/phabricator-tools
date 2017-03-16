@@ -3,8 +3,6 @@
 import conduit
 import os
 import diffusion_phriction
-import pdf_from_diffusion
-import pdf_from_phriction
 import time
 import random
 import task_ping
