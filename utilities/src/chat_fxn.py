@@ -76,10 +76,6 @@ class Bot(object):
 
     def offload(self, text):
         """offload text processing to bot."""
-        self._offload(text)
-
-    def _offload(self, text):
-        """offload to bot."""
         pass
 
     def _common(self, pkg):
