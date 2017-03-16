@@ -14,7 +14,6 @@ import task_unmod
 import git_version
 import dash_from_phriction
 import uuid
-import maniphest_tag_index
 
 
 class Bot(object):
@@ -150,14 +149,6 @@ class Bot(object):
         slug = self.ctx.env("DASH_WIKI")
         dash_from_phriction.update(self.ctx.factory, slug, obj)
 
-    def _index_now(self, quiet):
-        """index now."""
-        maniphest_tag_index._process(self.ctx.factory,
-                                     self.ctx.env("CHECK_IDX"),
-                                     self.ctx.env("VALID_IDX"),
-                                     self.ctx.bots,
-                                     quiet)
-
 
 class ScheduleBot(Bot):
     """Schedule bot."""
@@ -191,7 +182,6 @@ class ScheduleBot(Bot):
                         settings.bot_room,
                         settings.check_hosts())
         self._dash_from_wiki()
-        self._index_now(True)
 
     def _weekly(self, settings):
         """weekly tasks."""
@@ -243,7 +233,6 @@ class MonitorBot(Bot):
     """Monitor bot."""
 
     GEN_PAGE = "genpage"
-    IDX_VALID = "index"
 
     def _offload(self, text):
         try:
@@ -296,9 +285,6 @@ class MonitorBot(Bot):
                                        "main index (optional)",
                                        "secondary index (optional)"])
             return True
-        elif pkg.cmd == self.IDX_VALID and pkg.is_admin:
-            self._index_now(False)
-            return True
 
     def _get_artifact_path(self):
         """get an artifact output file name."""
@@ -310,7 +296,6 @@ class MonitorBot(Bot):
         avail = {}
         if pkg.is_admin:
             avail[self.GEN_PAGE] = "generate a wiki page from a repo/path"
-            avail[self.IDX_VALID] = "validate index values"
         return avail
 
 
