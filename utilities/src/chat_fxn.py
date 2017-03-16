@@ -10,7 +10,6 @@ import task_onsub
 import task_duedates
 import task_unmod
 import git_version
-import dash_from_phriction
 import uuid
 
 
@@ -141,12 +140,6 @@ class Bot(object):
         self._chat("{0} requires parameters:\n{1}".format(pkg.cmd,
                                                           "\n".join(params)))
 
-    def _dash_from_wiki(self):
-        """Dashboard from wiki page."""
-        obj = self.ctx.env("DASH_OBJECT")
-        slug = self.ctx.env("DASH_WIKI")
-        dash_from_phriction.update(self.ctx.factory, slug, obj)
-
 
 class ScheduleBot(Bot):
     """Schedule bot."""
@@ -179,7 +172,6 @@ class ScheduleBot(Bot):
         task_ping.check(settings.status_factory,
                         settings.bot_room,
                         settings.check_hosts())
-        self._dash_from_wiki()
 
     def _weekly(self, settings):
         """weekly tasks."""
