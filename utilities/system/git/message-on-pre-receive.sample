@@ -1,5 +1,5 @@
 #!/bin/sh
-function update()
+update()
 {
     . /etc/environment
     sleep 10
