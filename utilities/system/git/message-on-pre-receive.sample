@@ -1,9 +1,5 @@
 #!/bin/sh
 . /etc/environment
 for msg in $(echo $PHAB_PRE_RECEIVE_MSG); do
-    message=$(echo $msg | sed "s/|/ /g")
-    curl -s $PHAB_HOST/api/conpherence.updatethread \
-        -d api.token="$PHAB_PBOT_TOKEN" \
-        -d id=$PHAB_BOT_ROOM \
-        -d message="$message" > /dev/null
+    $msg
 done
