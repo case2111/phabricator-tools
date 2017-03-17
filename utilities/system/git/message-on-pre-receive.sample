@@ -1,5 +1,3 @@
 #!/bin/sh
 . /etc/environment
-for msg in $(echo $PHAB_PRE_RECEIVE_MSG); do
-    $msg
-done
+eval $PHAB_PRE_RECEIVE_MSG
