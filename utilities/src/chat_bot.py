@@ -64,8 +64,6 @@ async def _proc(ws_socket, ctx, q, bot):
                                 if comment.startswith(alias + " "):
                                     is_user = True
                                     break
-                            if not is_user:
-                                bot.offload(comment)
                             if not is_all and not is_user:
                                 continue
                             parts = shlex.split(comment)

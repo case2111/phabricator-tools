@@ -17,7 +17,6 @@ class Bot(object):
     """Bot definition."""
 
     ALIVE = "alive"
-    STATUS = "status"
     REBOOT = "reboot"
     VERSION = "version"
     MON_BOT_TYPE = "monitor"
@@ -74,10 +73,6 @@ class Bot(object):
         """bot help."""
         return {}
 
-    def offload(self, text):
-        """offload text processing to bot."""
-        pass
-
     def _common(self, pkg):
         """common commands."""
         no_cmd = True
@@ -93,8 +88,6 @@ class Bot(object):
         if no_cmd:
             if pkg.cmd == self.ALIVE:
                 self._alive()
-            elif pkg.cmd == self.STATUS:
-                self._status()
         if pkg.cmd == "help":
             self._help(pkg)
 
@@ -106,7 +99,6 @@ class Bot(object):
         """get bot help."""
         help_items = self._get_help(pkg)
         help_items[self.ALIVE] = "check if the bot is alive in chat"
-        help_items[self.STATUS] = "check bot status"
         if pkg.is_admin:
             help_items[self.REBOOT] = "reboot the bot"
             help_items[self.VERSION] = "get version information (git)"
