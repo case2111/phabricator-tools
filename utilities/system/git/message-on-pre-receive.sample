@@ -1,9 +1,0 @@
-#!/bin/sh
-update()
-{
-    . /etc/environment
-    sleep 10
-    eval $PHAB_PRE_RECEIVE_MSG > /dev/null
-}
-
-update &

@@ -1,0 +1,3 @@
+#!/bin/sh
+. /etc/environment
+eval $PHAB_PRE_RECEIVE_MSG
