@@ -253,11 +253,6 @@ class MonitorBot(Bot):
                                        "secondary index (optional)"])
             return True
 
-    def _get_artifact_path(self):
-        """get an artifact output file name."""
-        return "{0}{1}".format(time.time(),
-                               random.randint(0, 2147483647))
-
     def _get_help(self, pkg):
         """inherited."""
         avail = {}
