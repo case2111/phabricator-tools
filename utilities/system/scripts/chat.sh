@@ -8,7 +8,7 @@ BOTS="$PHAB_MON_TOKEN|monitor $PHAB_TASK_TOKEN|schedule"
 function start-now()
 {
     git --git-dir $PHAB_TOOLS/.git log -n 1 | grep "^commit" > ${PHAB_TOOLS}/version.txt
-    python -u ${PHAB_SRC}chat_bot.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE --monitor $PHAB_MON_TOKEN --schedule $PHAB_TASK_TOKEN
+    python -u ${PHAB_SRC}chat_bot.py --host $PHAB_HOST --last 30 --lock $LOCK_FILE --schedule $PHAB_TASK_TOKEN
 }
 
 # stop the chatbot
