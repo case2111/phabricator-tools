@@ -157,8 +157,6 @@ def main():
         parser.add_argument("--" + item, type=str, required=False)
     args = parser.parse_args()
     bots = {}
-    if args.monitor:
-        bots[chat_fxn.Bot.MON_BOT_TYPE] = args.monitor
     if args.schedule:
         bots[chat_fxn.Bot.SCHED_BOT_TYPE] = args.schedule
     if len(bots) == 0:

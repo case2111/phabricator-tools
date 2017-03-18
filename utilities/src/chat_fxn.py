@@ -15,9 +15,8 @@ class Bot(object):
     ALIVE = "alive"
     REBOOT = "reboot"
     VERSION = "version"
-    MON_BOT_TYPE = "monitor"
     SCHED_BOT_TYPE = "schedule"
-    BOT_TYPES = [MON_BOT_TYPE, SCHED_BOT_TYPE]
+    BOT_TYPES = [SCHED_BOT_TYPE]
 
     class Package(object):
         """Package of a command."""
