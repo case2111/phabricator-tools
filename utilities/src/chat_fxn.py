@@ -1,10 +1,6 @@
 #!/usr/bin/python
 """Commands for bot."""
 import conduit
-import os
-import diffusion_phriction
-import time
-import random
 import task_ping
 import task_onsub
 import task_duedates
@@ -206,58 +202,9 @@ class ScheduleBot(Bot):
             for host in self.hosts:
                 yield host + "." + self.domain
 
-
-class MonitorBot(Bot):
-    """Monitor bot."""
-
-    GEN_PAGE = "genpage"
-
-    def _go(self, pkg):
-        """inherited."""
-        if pkg.cmd == self.GEN_PAGE and pkg.is_admin:
-            if len(pkg.params) >= 4:
-                slug = pkg.params[0]
-                self._chat("generating please hold...")
-                time.sleep(int(self.ctx.env("MON_SLEEP")))
-                main_idx = 0
-                sec_idx = 1
-                if len(pkg.params) >= 5:
-                    main_idx = int(pkg.params[4])
-                    if len(pkg.params) == 6:
-                        sec_idx = int(pkg.params[5])
-                diffusion_phriction._process(self.ctx.factory,
-                                             slug,
-                                             pkg.params[1],
-                                             pkg.params[3],
-                                             pkg.params[2][1:],
-                                             "master",
-                                             diffusion_phriction.CSV_CONVERT,
-                                             main_idx,
-                                             sec_idx)
-                self._chat("[[{0}]] page updated".format(slug))
-            else:
-                self._subcommand_help(pkg,
-                                      ["slug (path/to/wiki)",
-                                       "title (title to assign)",
-                                       "callsign (r<REPONAME>)",
-                                       "path (offset/to/file/name)",
-                                       "main index (optional)",
-                                       "secondary index (optional)"])
-            return True
-
-    def _get_help(self, pkg):
-        """inherited."""
-        avail = {}
-        if pkg.is_admin:
-            avail[self.GEN_PAGE] = "generate a wiki page from a repo/path"
-        return avail
-
-
 def bot(bot_type):
     """create bots of types."""
-    if bot_type == Bot.MON_BOT_TYPE:
-        return MonitorBot()
-    elif bot_type == Bot.SCHED_BOT_TYPE:
+    if bot_type == Bot.SCHED_BOT_TYPE:
         return ScheduleBot()
     else:
         raise Exception("unknown bot type: " + bot_type)
