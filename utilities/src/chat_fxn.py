@@ -13,7 +13,6 @@ class Bot(object):
     """Bot definition."""
 
     ALIVE = "alive"
-    REBOOT = "reboot"
     VERSION = "version"
     SCHED_BOT_TYPE = "schedule"
     BOT_TYPES = [SCHED_BOT_TYPE]
@@ -72,10 +71,6 @@ class Bot(object):
         """common commands."""
         no_cmd = True
         if pkg.is_admin:
-            if pkg.cmd == self.REBOOT:
-                self._chat("rebooting...")
-                self._reboot()
-                no_cmd = False
             if pkg.cmd == self.VERSION:
                 vers = git_version._version(self.ctx.env("TOOLS"))
                 self._chat(vers)
@@ -95,7 +90,6 @@ class Bot(object):
         help_items = self._get_help(pkg)
         help_items[self.ALIVE] = "check if the bot is alive in chat"
         if pkg.is_admin:
-            help_items[self.REBOOT] = "reboot the bot"
             help_items[self.VERSION] = "get version information (git)"
         text = []
         for key in sorted(help_items.keys()):
@@ -110,13 +104,6 @@ class Bot(object):
     def _alive(self):
         """alive call."""
         self._chat("yes")
-
-    def _reboot(self):
-        """reboot call."""
-        try:
-            os.remove(self.ctx.get(Context.LOCK))
-        except OSError:
-            return
 
     def _subcommand_help(self, pkg, params):
         """subcommand help output."""
