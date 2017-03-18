@@ -5,7 +5,6 @@ import task_ping
 import task_onsub
 import task_duedates
 import task_unmod
-import git_version
 import uuid
 
 
@@ -13,7 +12,6 @@ class Bot(object):
     """Bot definition."""
 
     ALIVE = "alive"
-    VERSION = "version"
     SCHED_BOT_TYPE = "schedule"
     BOT_TYPES = [SCHED_BOT_TYPE]
 
@@ -63,52 +61,16 @@ class Bot(object):
         """bot implementation."""
         pass
 
-    def _get_help(self, pkg):
-        """bot help."""
-        return {}
-
     def _common(self, pkg):
         """common commands."""
-        no_cmd = True
-        if pkg.is_admin:
-            if pkg.cmd == self.VERSION:
-                vers = git_version._version(self.ctx.env("TOOLS"))
-                self._chat(vers)
-                no_cmd = False
-        if no_cmd:
-            if pkg.cmd == self.ALIVE:
-                self._alive()
+        if pkg.cmd == self.ALIVE:
+            self._chat("yes")
         if pkg.cmd == "help":
             self._help(pkg)
 
     def _chat(self, msg):
         """send a chat message."""
         self.ctx.get(Context.CONPH).updatethread(self.room, msg)
-
-    def _help(self, pkg):
-        """get bot help."""
-        help_items = self._get_help(pkg)
-        help_items[self.ALIVE] = "check if the bot is alive in chat"
-        if pkg.is_admin:
-            help_items[self.VERSION] = "get version information (git)"
-        text = []
-        for key in sorted(help_items.keys()):
-            txt = "{0} -> {1}".format(key, help_items[key])
-            text.append(txt)
-        self._chat("\n".join(text))
-
-    def _status(self):
-        """check status call."""
-        self._chat(self.ctx.get(Context.STARTED) + ", " + self.id)
-
-    def _alive(self):
-        """alive call."""
-        self._chat("yes")
-
-    def _subcommand_help(self, pkg, params):
-        """subcommand help output."""
-        self._chat("{0} requires parameters:\n{1}".format(pkg.cmd,
-                                                          "\n".join(params)))
 
 
 class ScheduleBot(Bot):
@@ -132,7 +94,6 @@ class ScheduleBot(Bot):
                         self._weekly(settings)
                     self._chat("{0} tasks completed".format(tasks))
                     return True
-            self._subcommand_help(pkg, [self.DAILY + " or " + self.WEEKLY])
 
     def _daily(self, settings):
         """daily tasks."""
@@ -150,13 +111,6 @@ class ScheduleBot(Bot):
                            settings.common_room,
                            settings.autoclose_threshold,
                            settings.autoclose_proj)
-
-    def _get_help(self, pkg):
-        """Inherited."""
-        if pkg.is_admin:
-            return {self.DO: "do a set of scheduled/enumerated tasks."}
-        else:
-            return {}
 
     class Settings(object):
         """Settings object."""
