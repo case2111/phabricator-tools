@@ -1,9 +1,0 @@
-[Unit]
-Description=Phab Weekly Tasks
-
-[Timer]
-Unit=phab-weekly.service
-OnCalendar=Mon *-*-* 00:00:00
-
-[Install]
-WantedBy=timers.target
