@@ -5,4 +5,7 @@
     missingok
     notifempty
     rotate 12
+    postrotate
+        systemctl restart phabricator-aphlict.service
+    endscript
 }

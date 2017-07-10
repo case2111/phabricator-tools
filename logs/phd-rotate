@@ -5,4 +5,7 @@
     notifempty
     rotate 12
     create
+    postrotate
+        systemctl kill -s SIGHUP phabricator-phd.service
+    endscript
 }
