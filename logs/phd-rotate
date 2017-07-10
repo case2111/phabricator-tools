@@ -4,8 +4,5 @@
     missingok
     notifempty
     rotate 12
-    create
-    postrotate
-        /bin/systemctl restart phabricator-phd.service
-    endscript
+    copytruncate
 }
