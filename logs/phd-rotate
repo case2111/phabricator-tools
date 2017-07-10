@@ -1,15 +1,8 @@
-/var/tmp/phd/log/phd {
-    monthly
-    compress
-    missingok
-    notifempty
-    rotate 12
-}
-
 /var/tmp/phd/log/daemons.log {
     monthly
     compress
     missingok
     notifempty
     rotate 12
+    create
 }

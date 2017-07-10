@@ -1,4 +1,5 @@
 /var/log/aphlict.log {
+    create
     monthly
     compress
     missingok
