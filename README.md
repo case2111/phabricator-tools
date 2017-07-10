@@ -38,4 +38,5 @@ Handles log rotation as necessary
 ```
 cd logs
 ln -s /path/to/logs/phd-rotate /etc/logrotate.d/phd
+ln -s /path/to/logs/aphlict-rotate /etc/logrotate.d/aphlict
 ```
