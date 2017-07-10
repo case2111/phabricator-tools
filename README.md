@@ -29,3 +29,13 @@ Tools for dealing with data in phabricator on the host. These include general da
 * Currently supports pdf, html, and gzip downloads
 * Copy the php files into the phabricator extensions folder
 
+## logs
+
+---
+
+Handles log rotation as necessary
+
+```
+cd logs
+ln -s /path/to/logs/phd-rotate /etc/logrotate.d/phd
+```
