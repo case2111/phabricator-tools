@@ -6,6 +6,6 @@
     rotate 12
     create
     postrotate
-        systemctl restart phabricator-phd.service
+        /bin/systemctl restart phabricator-phd.service
     endscript
 }
