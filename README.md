@@ -29,6 +29,11 @@ Tools for dealing with data in phabricator on the host. These include general da
 * Currently supports pdf, html, and gzip downloads
 * Copy the php files into the phabricator extensions folder
 
+### Feed Tagged Story
+
+* Feed stories that take a 'title' and 'tag' json element
+* Produce a delimited `JSON:{'title': '<input_title>', 'tag': '<input_tag>'}` rendering
+
 ## logs
 
 ---
