@@ -15,6 +15,6 @@ final class PhabricatorFeedTaggedStory extends PhabricatorFeedStory {
     $data = $this->getStoryData();
     $obj = array('tag' => $data->getValue('tag'),
                  'title' => $data->getValue('title'));
-    return "JSON:" . json_encode($obj);
+    return json_encode($obj);
   }
 }
