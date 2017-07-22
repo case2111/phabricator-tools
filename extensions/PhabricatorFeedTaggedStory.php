@@ -13,8 +13,12 @@ final class PhabricatorFeedTaggedStory extends PhabricatorFeedStory {
   }
   public function renderText() {
     $data = $this->getStoryData();
-    $obj = array('tag' => $data->getValue('tag'),
-                 'title' => $data->getValue('title'));
+    $fields = explode(',', $data->getValue('fields', ''));
+    array_push($fields, 'tag', 'title');
+    $obj = array();
+    foreach ($fields as &$fld) {
+        $obj[$fld] = $data->getValue($fld, '');
+    }
     return json_encode($obj);
   }
 }
