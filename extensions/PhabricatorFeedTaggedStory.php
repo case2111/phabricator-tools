@@ -17,7 +17,9 @@ final class PhabricatorFeedTaggedStory extends PhabricatorFeedStory {
     array_push($fields, 'tag', 'title');
     $obj = array();
     foreach ($fields as &$fld) {
-        $obj[$fld] = $data->getValue($fld, '');
+        if($fld != '') {
+            $obj[$fld] = $data->getValue($fld, '');
+        }
     }
     return json_encode($obj);
   }
