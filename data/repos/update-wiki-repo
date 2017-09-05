@@ -1,0 +1,40 @@
+#!/bin/bash
+source /etc/environment
+_page='
+> **Downloading these bundles uses bandwidth and some of them are large!!!**
+> this page is edited by a bot
+> do _NOT_ edit it here
+
+These are origin repositories, you must hit download and...
+```
+mkdir repo
+mv {repo}.zip repo/
+cd repo
+unzip {repo}.zip
+cd ..
+git clone repo workingdir
+```
+
+| name | link |
+| ---- | ---- |'
+
+res=$(curl https://phabricator.epiphyte.network/api/diffusion.repository.search -d api.token=$SYNAPSE_PHAB_TOKEN -d queryKey=active)
+_py="
+import sys
+import json
+
+obj = json.loads(sys.stdin.read())
+results = []
+for j in obj['result']['data']:
+    results.append(j['fields']['callsign'] + '.' + str(j['id']))
+
+for i in sorted(results):
+    print(i)
+"
+
+echo "$_page"
+for item in $(echo $res | python -c "$_py"); do
+    call=$(echo $item | cut -d "." -f 1)
+    num=$(echo $item | cut -d "." -f 2)
+    echo "| r$call | [download](/zip/$num) |"
+done
