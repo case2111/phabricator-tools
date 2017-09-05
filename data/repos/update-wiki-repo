@@ -32,15 +32,14 @@ for i in sorted(results):
     print(i)
 "
 
-echo "$_page"
 for item in $(echo $res | python -c "$_py"); do
     call=$(echo $item | cut -d "." -f 1)
     num=$(echo $item | cut -d "." -f 2)
-    echo "| r$call | [download](/zip/$num) |"
+    _page="$_page"$(echo "| r$call | [download](/zip/$num) |")
 done
 
 curl https://phabricator.epiphyte.network/api/phriction.edit \
     -d api.token=$SYNAPSE_PHAB_TOKEN \
     -d slug="meta/phab/repos/" \
     -d title="Repos" \
-    -d content="$(python -c "import sys, urllib.parse; print(urllib.parse.urlencode(sys.stdin.read()))")"
+    -d content="$(echo $_page | python -c "import sys, urllib.parse; print(urllib.parse.urlencode(sys.stdin.read()))")"
