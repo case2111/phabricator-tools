@@ -18,7 +18,7 @@ git clone repo workingdir
 | name | link |
 | ---- | ---- |'
 
-res=$(curl https://phabricator.epiphyte.network/api/diffusion.repository.search -d api.token=$SYNAPSE_PHAB_TOKEN -d queryKey=active)
+res=$(curl -s $PHAB_HOST/api/diffusion.repository.search -d api.token=$SYNAPSE_PHAB_TOKEN -d queryKey=active)
 _py="
 import sys
 import json
@@ -35,11 +35,13 @@ for i in sorted(results):
 for item in $(echo $res | python -c "$_py"); do
     call=$(echo $item | cut -d "." -f 1)
     num=$(echo $item | cut -d "." -f 2)
-    _page="$_page"$(echo "| r$call | [download](/zip/$num) |")
+    _page="$_page
+"$(echo "| r$call | [download](/zip/$num) |")
 done
 
-curl https://phabricator.epiphyte.network/api/phriction.edit \
+content=$(echo "$_page" | python -c "import sys, urllib.parse; print(urllib.parse.quote(sys.stdin.read()))")
+curl -s $PHAB_HOST/api/phriction.edit \
     -d api.token=$SYNAPSE_PHAB_TOKEN \
     -d slug="meta/phab/repos/" \
     -d title="Repos" \
-    -d content="$(echo $_page | python -c "import sys, urllib.parse; print(urllib.parse.urlencode(sys.stdin.read()))")"
+    -d content=$content >/dev/null
