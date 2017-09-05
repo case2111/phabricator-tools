@@ -16,7 +16,7 @@ final class ZipHostApplication extends PhabricatorApplication {
 
   public function getRoutes() {
     return array(
-      '/zip/(\d+))' => 'ZipController'
+      '/zip/(\d+)' => 'ZipController'
     );
   }
 

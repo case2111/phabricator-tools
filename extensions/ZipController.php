@@ -1,8 +1,8 @@
 <?php
 final class ZipController extends PhabricatorController {
   public function handleRequest(AphrontRequest $request) {
-    $file = explode('/', $request->getRequestURI())[1];
-    $full = '/var/opt/phabricator/git/' . $file;
+    $fileName = explode('/', $request->getRequestURI())[2];
+    $full = '/opt/phacility/git/' . $fileName;
     if (!file_exists($full)) {
         return new Aphront404Response();
     }
@@ -25,16 +25,15 @@ final class ZipController extends PhabricatorController {
     }
 
     $zip->close();
-
     $response = new AphrontFileResponse();
     $response->setMimeType('application/zip');
     $response->setCanCDN(false);
-    $response->setDownload($file);
+    $response->setDownload("diffusion-" . $fileName . ".zip");
     $handle = fopen($tmp, "rb");
     if (!$handle) {
         return new Aphront404Response();
     }
-    $contents = fread($handle, filesize($full));
+    $contents = fread($handle, filesize($tmp));
     fclose($handle);
     $response->setContent($contents);
     return $response;

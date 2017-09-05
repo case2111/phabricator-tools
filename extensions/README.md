@@ -13,3 +13,6 @@ restart
 
 make sure to link static content path to `/var/opt/phabricator/static`
 
+## zip
+
+provides an endpoint to download diffusion repositories
