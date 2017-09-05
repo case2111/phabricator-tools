@@ -38,3 +38,16 @@ ln -s /opt/phabricator-tools/data/tar-repos/phabricator-tar-repos.service /etc/s
 systemctl daemon-reload
 systemctl start phabricator-tar-repos.timer
 ```
+
+### repos
+
+handles updating a wikipage with enabled repositories using the ZipController exstension
+
+#### enable
+
+```
+systemctl enable /opt/phabricator-tools/data/repos/phabricator-repo-wiki.timer
+ln -s /opt/phabricator-tools/data/repos/phabricator-repo-wiki.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl start phabricator-repo-wiki.timer
+```
