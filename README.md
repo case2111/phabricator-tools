@@ -11,8 +11,6 @@ install
 pacman -S phabricator-tools
 ```
 
-from here navigate to subfolders where applicable for further instruction
-
 ## data
 Tools for dealing with data in phabricator on the host. These include general data management from phabricator within the phabricator machine instance. Including the ability to produce nightly backups (following the data to backup from the phabricator guide) and nightly snapshot bundles of repositories
 
