@@ -60,6 +60,4 @@ systemctl enable phabricator-repo-wiki.timer
 
 ## logs
 
----
-
 Handles log rotation as necessary for phd and aphlict
