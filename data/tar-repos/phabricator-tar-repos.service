@@ -3,5 +3,4 @@ Description=Nightly tar build of phabricator repos
 
 [Service]
 Type=oneshot
-ExecStart=/opt/phab/tar-gz-repos.sh
-
+ExecStart=/usr/bin/phabricator-tools-tar-gz-repos

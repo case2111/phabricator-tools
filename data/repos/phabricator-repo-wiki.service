@@ -3,5 +3,5 @@ Description=Update wiki with repository information
 
 [Service]
 Type=oneshot
-ExecStart=/opt/phabricator-tools/data/repos/update-wiki-repo
+ExecStart=/usr/bin/phabricator-tools-update-wiki-repo
 
