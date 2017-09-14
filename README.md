@@ -56,6 +56,11 @@ systemctl enable phabricator-repo-wiki.timer
 * Current/live zips of diffusion repositories
 * Supports "package" download with requiring `git`
 
+### Logout (conduit)
+
+* Logout users by passing a list of PHIDs
+* Adminstrator only
+
 ## logs
 
 Handles log rotation as necessary for phd and aphlict
