@@ -39,6 +39,22 @@ for item in $(echo $res | python -c "$_py"); do
 "$(echo "| r$call | [download](/zip/$num) |")
 done
 
+last=/tmp/repos.content
+new=$(echo "$_page" | sha256sum | cut -d " " -f 1)
+skip=0
+if [ -e $last ]; then
+    chk=$(cat $last)
+    if [[ "$chk" == "$new" ]]; then
+        skip=1
+    fi
+fi
+echo "$new" > $last
+
+if [ $skip -eq 1 ]; then
+    echo "no change"
+    exit
+fi
+
 content=$(echo "$_page" | python -c "import sys, urllib.parse; print(urllib.parse.quote(sys.stdin.read()))")
 curl -s $PHAB_HOST/api/phriction.edit \
     -d api.token=$SYNAPSE_PHAB_TOKEN \
