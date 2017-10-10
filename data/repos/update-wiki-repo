@@ -32,12 +32,19 @@ for i in sorted(results):
     print(i)
 "
 
+has=0
 for item in $(echo $res | python -c "$_py"); do
+    has=1
     call=$(echo $item | cut -d "." -f 1)
     num=$(echo $item | cut -d "." -f 2)
     _page="$_page
 "$(echo "| r$call | [download](/zip/$num) |")
 done
+
+if [ $has -eq 0 ]; then
+    echo "no repositories found"
+    exit 1
+fi
 
 last=/tmp/repos.content
 new=$(echo "$_page" | sha256sum | cut -d " " -f 1)
