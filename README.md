@@ -64,3 +64,12 @@ systemctl enable phabricator-repo-wiki.timer
 ## logs
 
 Handles log rotation as necessary for phd and aphlict
+
+## Authorized Keys (conduit)
+
+* Take a set of phids (users) and produce a data array output for use in authorized keys
+
+e.g.
+```
+curl https://<phabricator>/api/auth.authorizedkeys  -d phids[0]=PHID-USER-xyz -d api.token=api-token | python -c "import sys, json; print('\n'.join(json.loads(sys.stdin.read())['result']['data']))"
+```
