@@ -61,6 +61,10 @@ systemctl enable phabricator-repo-wiki.timer
 * Logout users by passing a list of PHIDs
 * Adminstrator only
 
+### Task Redirection
+
+* Supports utilizing a diffusion repo (local) clone to perform repo-configured redirects
+
 ## logs
 
 Handles log rotation as necessary for phd and aphlict
