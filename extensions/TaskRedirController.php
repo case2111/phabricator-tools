@@ -17,7 +17,8 @@ final class TaskRedirController extends PhabricatorController {
                         $quoted = urlencode($raw_text);
                         $and = $value[1];
                         $response = new AphrontRedirectResponse();
-                        $response->setURI("/maniphest/task/edit/form/default/?description=" . $quoted . $and);
+                        $uri = "/maniphest/task/edit/form/default/?";
+                        $response->setURI($uri . $quoted . $and);
                         return $response;
                     }
                 }
