@@ -1,14 +1,14 @@
 <?php
 final class TaskRedirController extends PhabricatorController {
-	public function handleRequest(AphrontRequest $request) {
+    public function handleRequest(AphrontRequest $request) {
         $tasks = '/opt/taskredir/';
-	    exec('git -C ' . $tasks . ' pull 2>&1');
-    	$path = $tasks . 'forms/';
-	    $maniphest = $path . 'forms.csv';
-    	$name = explode('/', $request->getRequestURI())[2];
-	    if (file_exists($maniphest) ) {
-    		$csv = array_map('str_getcsv', file($maniphest));	
-	    	$header = array_shift($csv);
+        exec('git -C ' . $tasks . ' pull 2>&1');
+        $path = $tasks . 'forms/';
+        $maniphest = $path . 'forms.csv';
+        $name = explode('/', $request->getRequestURI())[2];
+        if (file_exists($maniphest) ) {
+            $csv = array_map('str_getcsv', file($maniphest));	
+            $header = array_shift($csv);
 		    foreach ($csv as $value) {
 			    if ($name == $value[0]) {
 				    $use_file = $path . $value[0] . ".md";
@@ -19,10 +19,10 @@ final class TaskRedirController extends PhabricatorController {
 				    	$response = new AphrontRedirectResponse();
 					    $response->setURI("/maniphest/task/edit/form/default/?description=" . $quoted . $and);
     					return $response;
-	    			}
-		    	}
-		    }
-	    }
-    	return new Aphront404Response();
+	    		    }
+                }
+            }
+        }
+        return new Aphront404Response();
     }
 }
