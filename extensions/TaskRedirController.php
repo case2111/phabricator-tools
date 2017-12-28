@@ -9,11 +9,11 @@ final class TaskRedirController extends PhabricatorController {
         if (file_exists($maniphest) ) {
             $csv = array_map('str_getcsv', file($maniphest));	
             $header = array_shift($csv);
-		    foreach ($csv as $value) {
-			    if ($name == $value[0]) {
-				    $use_file = $path . $value[0] . ".md";
-    				if (file_exists($use_file)) {
-	    				$raw_text = file_get_contents($use_file);
+            foreach ($csv as $value) {
+                if ($name == $value[0]) {
+                    $use_file = $path . $value[0] . ".md";
+                    if (file_exists($use_file)) {
+	                    $raw_text = file_get_contents($use_file);
 		    			$quoted = urlencode($raw_text);
 			    		$and = $value[1];
 				    	$response = new AphrontRedirectResponse();
