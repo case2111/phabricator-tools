@@ -7,7 +7,7 @@ final class TaskRedirController extends PhabricatorController {
         $maniphest = $path . 'forms.csv';
         $name = explode('/', $request->getRequestURI())[2];
         if (file_exists($maniphest) ) {
-            $csv = array_map('str_getcsv', file($maniphest));    
+            $csv = array_map('str_getcsv', file($maniphest));
             $header = array_shift($csv);
             foreach ($csv as $value) {
                 if ($name == $value[0]) {

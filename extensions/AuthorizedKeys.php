@@ -50,4 +50,3 @@ final class PhabricatorAuthorizedKeysConduitAPIMethod
     return $this->addPagerResults($results, $pager);
   }
 }
-

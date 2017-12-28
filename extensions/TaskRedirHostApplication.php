@@ -28,4 +28,3 @@ final class TaskRedirHostApplication extends PhabricatorApplication {
     return false;
   }
 }
-

@@ -48,6 +48,4 @@ final class UserLogoutConduitAPIMethod extends UserConduitAPIMethod {
       $engine->terminateLoginSessions($user);
     }
   }
-
 }
-
