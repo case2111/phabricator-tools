@@ -14,7 +14,7 @@ final class TaskRedirController extends PhabricatorController {
                     $use_file = $path . $value[0] . ".md";
                     if (file_exists($use_file)) {
                         $raw_text = file_get_contents($use_file);
-                        $quoted = urlencode($raw_text);
+                        $quoted = "description=" . urlencode($raw_text);
                         $and = $value[1];
                         $response = new AphrontRedirectResponse();
                         $uri = "/maniphest/task/edit/form/default/?";
