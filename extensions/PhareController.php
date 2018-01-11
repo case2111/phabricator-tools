@@ -3,7 +3,7 @@ final class PhareController extends PhabricatorController {
     public function handleRequest(AphrontRequest $request) {
         $pharing = '/opt/phare/';
         $user = strtolower($request->getUser()->getUserName());
-        $user = preg_replace("/[^:alnum:]]/u", "", $user);
+        $user = preg_replace("/[^[:alnum:]]/u", "", $user);
         $name = strtolower(explode('/', $request->getRequestURI())[2]);
         $file_name = $pharing . $user . "." . $name . "*";
         foreach (glob($file_name) as $f_name) {
