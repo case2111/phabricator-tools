@@ -65,10 +65,6 @@ systemctl enable phabricator-repo-wiki.timer
 
 * Supports utilizing a diffusion repo (local) clone to perform repo-configured redirects
 
-### Phare
-
-* Handles/support sharing user-specific files in a simple, hosted manner
-
 ## logs
 
 Handles log rotation as necessary for phd and aphlict
