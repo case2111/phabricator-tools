@@ -1,7 +1,7 @@
 language: d
 
 script: 
-    - make 
+    - cd utilities && make 
 
 notifications:
     email:
