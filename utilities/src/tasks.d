@@ -8,16 +8,9 @@ import common;
 import phabricator.api;
 import phabricator.common;
 import phabricator.util.tasks;
-import std.algorithm: canFind, sort;
-import std.ascii: isDigit, isPunctuation, isWhite;
 import std.conv: to;
 import std.datetime;
-import std.getopt;
-import std.json;
-import std.random;
-import std.string: endsWith, format, join, split, startsWith, strip, toLower;
-import std.typecons;
-
+import std.string: format, join, split, strip;
 /**
  * Hidden task checking
  */
