@@ -14,7 +14,7 @@ deps:
 build: clean $(APPS)
 
 $(APPS):
-	dmd $(FLAGS) $(SRC)/common.d $(SRC)$@.d $(MOD) -of$(OUTPUT)/phabricator-utils-$@
+	dmd $(FLAGS) $(SRC)/common.d $(SRC)$@.d $(MOD) -of$(OUTPUT)/phab-utilities-$@
 
 clean:
 	mkdir -p $(OUTPUT)
