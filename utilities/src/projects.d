@@ -71,6 +71,11 @@ private static void doJoinProjects(API api)
     }
 }
 
+/**
+ * Entry point
+ */
 void main(string[] args)
 {
+    auto api = setup(args);
+    doJoinProjects(api);
 }
