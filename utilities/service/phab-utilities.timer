@@ -1,0 +1,9 @@
+[Unit]
+Description=Phabricator utility execution
+
+[Timer]
+Unit=phab-utilities.service
+OnCalendar=*-*-* 02:00:00
+
+[Install]
+WantedBy=timers.target
