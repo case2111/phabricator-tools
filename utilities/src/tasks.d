@@ -27,7 +27,7 @@ import std.typecons;
 /**
  * Find hidden tasks
  */
-public static void hiddenTasks(MatrixAPI api, string roomId, JSONValue context)
+public static void hiddenTasks(API api, string roomId, JSONValue context)
 {
     auto parsed = parseBody(context, HiddenTasks);
     if (!parsed[0])
@@ -53,7 +53,7 @@ public static void hiddenTasks(MatrixAPI api, string roomId, JSONValue context)
 /**
  * Hidden task checking
  */
-private static int hiddenTasks(MatrixAPI api,
+private static int hiddenTasks(API api,
                                string roomId,
                                int start,
                                int page,
@@ -94,7 +94,7 @@ private static int hiddenTasks(MatrixAPI api,
 /**
  * Scheduled hidden task checking
  */
-public static bool doHiddenTasks(MatrixAPI api)
+public static bool doHiddenTasks(API api)
 {
     try
     {
@@ -133,10 +133,26 @@ public static bool doHiddenTasks(MatrixAPI api)
 /**
  * Unmodified operations
  */
-public static bool tasksUnmodified(MatrixAPI api)
+public static bool tasksUnmodified(API api)
 {
     auto settings = getSettings(api);
     auto opts = api.context[UnmodifiedOpts].split(",");
     auto result = unmodified(settings, opts[0], to!int(opts[1]));
     return result;
+}
+
+/**
+ * Entry point
+ */
+void main(string[] args)
+{
+    auto api = setup(args);
+    if (!tasksUnmodified(api))
+    {
+        onError("unmod tasks");
+    }
+    if (!doHiddenTasks(api))
+    {
+        onError("hidden tasks");
+    }
 }
