@@ -4,24 +4,11 @@
  * Phabricator specific handling
  */
 module projects;
+import common;
 import phabricator.api;
 import phabricator.common;
-import phabricator.util.conv2wiki;
-import phabricator.util.diffusion;
-import phabricator.util.indexing;
 import phabricator.util.projects;
-import phabricator.util.tasks;
-import phabricator.util.wiki2dash;
-import std.algorithm: canFind, sort;
-import std.ascii: isDigit, isPunctuation, isWhite;
-import std.conv: to;
-import std.datetime;
-import std.getopt;
-import std.json;
-import std.random;
-import std.string: endsWith, format, join, split, startsWith, strip, toLower;
-import std.typecons;
-import common;
+import std.string: join;
 
 /**
  * Join projects
