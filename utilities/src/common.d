@@ -21,6 +21,7 @@ import std.json;
 import std.random;
 import std.string: endsWith, format, join, split, startsWith, strip, toLower;
 import std.typecons;
+import std.getopt;
 
 // generic page header
 private enum GenPageHeader = "
@@ -28,39 +29,47 @@ private enum GenPageHeader = "
 > **DO NOT** edit it here
 \n";
 
-private enum PhabIndicator = "PHAB_";
+// NOTE: relic of coming from matrix-bot
+private enum PhabIndicator = "SYNAPSE_PHAB_";
+
+private enum PhabricatorURL = PhabIndicator ~ "URL";
 
 // phabricator api token
 private enum PhabricatorToken = PhabIndicator ~ "TOKEN";
 
 // dashboard (to update, wiki phid)
-private enum DashOpts = PhabIndicator ~ "TO_DASH";
+public enum DashOpts = PhabIndicator ~ "TO_DASH";
 
 // Unmodified tasks (project, months, room)
-private enum UnmodifiedOpts = PhabIndicator ~ "UNMODIFIED";
+public enum UnmodifiedOpts = PhabIndicator ~ "UNMODIFIED";
 
 // index settings (slug, title)
-private enum IndexOpts = PhabIndicator ~ "INDEX";
+public enum IndexOpts = PhabIndicator ~ "INDEX";
 
 // contact settings (slug, title, path, callsign)
-private enum ContactsOpts = PhabIndicator ~ "CONTACTS";
+public enum ContactsOpts = PhabIndicator ~ "CONTACTS";
 
 // whois settings (slug, title, path, callsign)
-private enum WhoIsOpts = PhabIndicator ~ "WHOIS";
+public enum WhoIsOpts = PhabIndicator ~ "WHOIS";
 
 // Synapse lookup resolution (Paste PHID)
-private enum LookupsPHID = "LOOKUP_PHID";
+public enum LookupsPHID = "LOOKUP_PHID";
 
 // User PHID
-private enum PhabricatorUser = PhabIndicator ~ "USER_PHID";
+public enum PhabricatorUser = PhabIndicator ~ "USER_PHID";
 
 // hidden tasks (paste phid, room)
-private enum HiddenOpts = PhabIndicator ~ "HIDDEN";
+public enum HiddenOpts = PhabIndicator ~ "HIDDEN";
+
+public class API
+{
+    @property public string[string] context;
+}
 
 /**
  * Get settings
  */
-private static Settings getSettings(MatrixAPI api)
+public static Settings getSettings(API api)
 {
     auto settings = Settings();
     settings.url = api.context[PhabricatorURL];
@@ -68,92 +77,20 @@ private static Settings getSettings(MatrixAPI api)
     return settings;
 }
 
-/**
- * Check opts, report if needed
- */
-private static bool checkOpts(MatrixAPI api,
-                              string roomId,
-                              string[] segments,
-                              GetoptResult opts)
+public static void onError(string message)
 {
-    if (segments.length == 1 || opts.helpWanted)
-    {
-        api.sendHTML(roomId, getHelp(opts.options));
-        return false;
-    }
-    else
-    {
-        return true;
-    }
 }
 
 /**
- * Generate primitive markdown columns/tables
+ * Get settings
  */
-private static string generateColumns(string[] args)
+Settings getSettings(string[] args)
 {
-    return format("| %s |", join(args, " | "));
-}
+    string env;
+    auto opts = getopt(args,
+                       std.getopt.config.required,
+                       "env",
+                       &env);
 
-/**
- * Manually generate wiki from source repo
- */
-private static void wikiFromSource(MatrixAPI api,
-                                   string roomId,
-                                   JSONValue context,
-                                   string key,
-                                   bool function(MatrixAPI) callback)
-{
-    if (isSingleCommand(context, key))
-    {
-        string display = "failed";
-        if (callback(api))
-        {
-            display = "completed";
-        }
-
-        api.sendText(roomId, key ~ " update " ~ display);
-    }
-}
-
-/**
- * Generate a page from a source repo location
- */
-private static bool wikiFromSource(MatrixAPI api, string key, Conv mode)
-{
-    auto settings = getSettings(api);
-    auto opts = api.context[key].split(",");
-    return wikiDiffusion(settings,
-                         GenPageHeader,
-                         opts[0],
-                         opts[1],
-                         opts[2],
-                         opts[3],
-                         "master",
-                         mode);
-}
-
-/**
- * Generate a page
- */
-private static void genPage(MatrixAPI api,
-                            string contextKey,
-                            string[] function(MatrixAPI, Settings) callback)
-{
-    auto parts = api.context[contextKey].split(",");
-    auto slug = parts[0];
-    auto title = parts[1];
-    auto settings = getSettings(api);
-    auto res = callback(api, settings);
-    string[] objects;
-    objects ~= res[0];
-    objects ~= res[1];
-    foreach (obj; res[2..res.length].sort!("a < b"))
-    {
-        objects ~= obj;
-    }
-
-    auto page = GenPageHeader ~ "---\n\n" ~ join(objects, "\n");
-    auto phriction = construct!PhrictionAPI(settings);
-    phriction.edit(slug, title, page);
+    return settings;
 }

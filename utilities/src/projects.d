@@ -21,11 +21,12 @@ import std.json;
 import std.random;
 import std.string: endsWith, format, join, split, startsWith, strip, toLower;
 import std.typecons;
+import common;
 
 /**
  * Join projects
  */
-public static bool doJoinProjects(MatrixAPI api)
+private static void doJoinProjects(API api)
 {
     try
     {
@@ -56,18 +57,20 @@ public static bool doJoinProjects(MatrixAPI api)
 
         if (results.length > 0)
         {
-            api.sendText(api.context[DebugRoom],
-                         "not a member of these projects:\n" ~
-                         join(results, "\n"));
-            return assignToActive(getSettings(api), user);
-        }
-        else
-        {
-            return true;
+            auto assigned = assignToActive(getSettings(api), user);
+            onError("not a member of these projects:\n" ~ join(results, "\n"));
+            if (!assigned)
+            {
+                onError("unable to assign self to projects...");
+            }
         }
     }
     catch (Exception e)
     {
-        return false;
+        onError("unexepected exception joining projects");
     }
+}
+
+void main(string[] args)
+{
 }
