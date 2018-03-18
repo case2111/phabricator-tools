@@ -1,6 +1,6 @@
 SRC=src/
 MOD=$(shell find modules/ -name "*.d" | grep "src")
-APPS=$(shell ls $(SRC) | cut -d "." -f 1)
+APPS=$(shell ls $(SRC) | cut -d "." -f 1 | grep -v "common")
 OUTPUT=bin
 FLAGS := -inline -release -O -boundscheck=off
 
@@ -14,7 +14,7 @@ deps:
 build: clean $(APPS)
 
 $(APPS):
-	dmd $(FLAGS) $(SRC)$@.d $(MOD) -of$(OUTPUT)/phabricator-utils-$@
+	dmd $(FLAGS) $(SRC)/common.d $(SRC)$@.d $(MOD) -of$(OUTPUT)/phabricator-utils-$@
 
 clean:
 	mkdir -p $(OUTPUT)
