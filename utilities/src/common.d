@@ -30,8 +30,12 @@ private enum GenPageHeader = "
 \n";
 
 // NOTE: relic of coming from matrix-bot
-private enum PhabIndicator = "SYNAPSE_PHAB_";
+private enum SynapseLine = "SYNAPSE_";
 
+// Phabricator items
+private enum PhabIndicator = SynapseLine ~ "PHAB_";
+
+// URL for phab
 private enum PhabricatorURL = PhabIndicator ~ "URL";
 
 // phabricator api token
@@ -82,9 +86,9 @@ public static void onError(string message)
 }
 
 /**
- * Get settings
+ * Perform setup
  */
-Settings getSettings(string[] args)
+API setup(string[] args)
 {
     string env;
     auto opts = getopt(args,
@@ -92,5 +96,7 @@ Settings getSettings(string[] args)
                        "env",
                        &env);
 
-    return settings;
+    auto api = new API();
+    loadEnvironmentFile(api.context, env, SynapseLine);
+    return api;
 }
