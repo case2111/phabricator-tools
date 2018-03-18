@@ -1,5 +1,5 @@
 /**
- * Copyright 2017
+ * Copyright 2018
  * MIT License
  * Phabricator specific handling
  */
@@ -69,40 +69,6 @@ private static Settings getSettings(MatrixAPI api)
 }
 
 /**
- * Get help text
- */
-private static string getHelp(Option[] opts)
-{
-    string[] help;
-    ulong shortest = 0;
-    ulong longest = 0;
-    foreach (it; opts)
-    {
-        if (it.optLong !is null && it.optLong.length > longest)
-        {
-            longest = it.optLong.length;
-        }
-
-        if (it.optShort !is null && it.optShort.length > shortest)
-        {
-            shortest = it.optShort.length;
-        }
-    }
-
-    foreach (it; opts)
-    {
-        help ~= format("%*s %*s %s",
-                       shortest + 1,
-                       it.optShort,
-                       longest + 1,
-                       it.optLong,
-                       it.help);
-    }
-
-    return format(PreSegmentHTML, join(help, "<br />"));
-}
-
-/**
  * Check opts, report if needed
  */
 private static bool checkOpts(MatrixAPI api,
@@ -119,31 +85,6 @@ private static bool checkOpts(MatrixAPI api,
     {
         return true;
     }
-}
-
-/**
- * Indicates this command is NOT a match
- */
-private static bool noCommand(string bodyText, string cmd)
-{
-    return !isSingleCommand(bodyText, cmd) && !isCommand(bodyText, cmd);
-}
-
-/**
- * Parse the body, check the command, return the results
- * tuple (is valid?, raw, subselection)
- */
-private static Tuple!(bool, string[], string[]) parseBody(JSONValue context,
-                                                          string command)
-{
-    string bodyText = getBody(context);
-    if (noCommand(bodyText, command))
-    {
-        return tuple(false, [""], [""]);
-    }
-
-    auto raw = bodyText.split(" ");
-    return tuple(true, raw, raw[0..raw.length]);
 }
 
 /**
@@ -204,25 +145,9 @@ public static void upIndex(MatrixAPI api, string roomId, JSONValue context)
 }
 
 /**
- * Generate whois information
- */
-public static bool doWhoIs(MatrixAPI api)
-{
-    return fullWhoIs(api, true);
-}
-
-/**
- * Partial whois processing
- */
-private static bool partialWhoIs(MatrixAPI api)
-{
-    return fullWhoIs(api, false);
-}
-
-/**
  * Full whois processing
  */
-private static bool fullWhoIs(MatrixAPI api, bool scheduled)
+private static bool fullWhoIs(MatrixAPI api)
 {
     auto result = wikiFromSource(api, WhoIsOpts, Conv.nameAlias);
     if (result)
@@ -365,86 +290,6 @@ private static string[] doIndexList(MatrixAPI api, Settings settings)
     }
 
     return indexItems;
-}
-
-/**
- * Link a task
- */
-public static void linkTasks(MatrixAPI api, string roomId, JSONValue context)
-{
-    auto url = api.context[PhabricatorURL];
-    auto tasks = findStarts("T", context);
-    string[] tracked;
-    foreach (tsk; tasks)
-    {
-        try
-        {
-            string t = "";
-            if (tsk.length >= 2)
-            {
-                int positional = 0;
-                bool outNumbered = false;
-                bool invalidate = false;
-                foreach (c; tsk)
-                {
-                    if (positional > 0)
-                    {
-                        if (isWhite(c))
-                        {
-                            break;
-                        }
-
-                        if (isPunctuation(c))
-                        {
-                            outNumbered = true;
-                        }
-                        else
-                        {
-                            bool checked = false;
-                            if (!outNumbered)
-                            {
-                                if (isDigit(c))
-                                {
-                                    t ~= c;
-                                    checked = true;
-                                }
-                            }
-
-                            if (!checked)
-                            {
-                                invalidate = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    positional++;
-                }
-
-                if (invalidate)
-                {
-                    t = "";
-                }
-            }
-
-            if (t.length > 0)
-            {
-                t = t.strip();
-                auto i = to!int(t);
-                t = "T" ~ t;
-                if (!tracked.canFind(t)){
-                    tracked ~= t;
-                    auto task = format("<a href=\"%s%s\">%s</a>", url, t, t);
-                    api.sendHTML(roomId,
-                                 format(SegmentHTML, task));
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            continue;
-        }
-    }
 }
 
 /**
