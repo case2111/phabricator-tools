@@ -6,22 +6,9 @@
 module common;
 import phabricator.api;
 import phabricator.common;
-import phabricator.util.conv2wiki;
-import phabricator.util.diffusion;
-import phabricator.util.indexing;
-import phabricator.util.projects;
-import phabricator.util.tasks;
-import phabricator.util.wiki2dash;
-import std.algorithm: canFind, sort;
-import std.ascii: isDigit, isPunctuation, isWhite;
-import std.conv: to;
-import std.datetime;
 import std.getopt;
-import std.json;
-import std.random;
-import std.string: endsWith, format, join, split, startsWith, strip, toLower;
-import std.typecons;
-import std.getopt;
+import std.stdio: writeln;
+import std.string: format;
 
 // generic page header
 private enum GenPageHeader = "
@@ -81,8 +68,12 @@ public static Settings getSettings(API api)
     return settings;
 }
 
+/**
+ * Write messages on error
+ */
 public static void onError(string message)
 {
+    writeln(format("[ERROR] %s", message));
 }
 
 /**
