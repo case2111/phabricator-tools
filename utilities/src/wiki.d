@@ -3,7 +3,7 @@
  * MIT License
  * Phabricator specific handling
  */
-module matrixd.phabricator;
+module wiki;
 import common;
 import phabricator.api;
 import phabricator.common;

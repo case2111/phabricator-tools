@@ -3,17 +3,11 @@
  * MIT License
  * Phabricator specific handling
  */
-module matrixd.phabricator;
-import matrix.api;
-import matrixd.common;
+module tasks;
+import common;
 import phabricator.api;
 import phabricator.common;
-import phabricator.util.conv2wiki;
-import phabricator.util.diffusion;
-import phabricator.util.indexing;
-import phabricator.util.projects;
 import phabricator.util.tasks;
-import phabricator.util.wiki2dash;
 import std.algorithm: canFind, sort;
 import std.ascii: isDigit, isPunctuation, isWhite;
 import std.conv: to;
@@ -25,39 +19,9 @@ import std.string: endsWith, format, join, split, startsWith, strip, toLower;
 import std.typecons;
 
 /**
- * Find hidden tasks
- */
-public static void hiddenTasks(API api, string roomId, JSONValue context)
-{
-    auto parsed = parseBody(context, HiddenTasks);
-    if (!parsed[0])
-    {
-        return;
-    }
-
-    int start;
-    int page;
-    auto opts = getopt(parsed[2],
-                       "start",
-                       "starting task number",
-                       &start,
-                       "page",
-                       "paging range",
-                       &page);
-    if (checkOpts(api, roomId, parsed[1], opts))
-    {
-        hiddenTasks(api, roomId, start, page, true);
-    }
-}
-
-/**
  * Hidden task checking
  */
-private static int hiddenTasks(API api,
-                               string roomId,
-                               int start,
-                               int page,
-                               bool report)
+private static int hiddenTasks(API api, int start, int page)
 {
     auto show = "none found";
     int last = -1;
@@ -83,11 +47,6 @@ private static int hiddenTasks(API api,
         }
     }
 
-    if (report)
-    {
-        api.sendText(roomId, show);
-    }
-
     return last;
 }
 
@@ -109,7 +68,7 @@ public static bool doHiddenTasks(API api)
         auto text = attached.str.split("=");
         lastStart = to!int(text[1].strip());
 
-        auto result = hiddenTasks(api, room, lastStart, 500, false);
+        auto result = hiddenTasks(api, lastStart, 500);
         if (result != lastStart && result >= 0)
         {
             auto today = Clock.currTime().dayOfYear();
@@ -117,9 +76,7 @@ public static bool doHiddenTasks(API api)
         }
         else
         {
-            api.sendText(room,
-                         format("task visibility index unchanged: T%s",
-                                result));
+            onError(format("task visibility index unchanged: T%s", result));
         }
 
         return true;
