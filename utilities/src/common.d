@@ -14,7 +14,7 @@ import std.string: format;
 private enum SynapseLine = "SYNAPSE_";
 
 // Phabricator items
-private enum PhabIndicator = SynapseLine ~ "PHAB_";
+private enum PhabIndicator = "PHAB_";
 
 // URL for phab
 private enum PhabricatorURL = PhabIndicator ~ "URL";
@@ -90,6 +90,6 @@ API setup(string[] args)
                        &env);
 
     auto api = new API();
-    loadEnvironmentFile(api.context, env, SynapseLine);
+    api.context = loadEnvironmentFile(env, SynapseLine);
     return api;
 }
