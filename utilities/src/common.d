@@ -71,6 +71,14 @@ public static void onError(string message)
 }
 
 /**
+ * Report when completed
+ */
+public static void done(string name)
+{
+    writeln(format("[INFO] done -> %s", name));
+}
+
+/**
  * Perform setup
  */
 API setup(string[] args)

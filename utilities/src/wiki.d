@@ -243,6 +243,6 @@ void main(string[] args)
     upContacts(api);
     doIndex(api);
     wikiToDash(api);
-    // NOTE: need to do api shutdown
+    done("wiki");
 }
 
