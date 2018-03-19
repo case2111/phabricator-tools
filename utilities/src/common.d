@@ -67,13 +67,13 @@ public static Settings getSettings(API api)
  */
 public static void onError(string message)
 {
-    writeln(format("[ERROR] %s", message));
+    writeln(message);
 }
 
 /**
  * Report when completed
  */
-public static void done(string name)
+public static void info(string name)
 {
     writeln(format("[INFO] done -> %s", name));
 }

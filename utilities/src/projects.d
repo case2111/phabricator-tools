@@ -65,5 +65,5 @@ void main(string[] args)
 {
     auto api = setup(args);
     doJoinProjects(api);
-    done("projects");
+    info("projects");
 }

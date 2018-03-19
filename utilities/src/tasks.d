@@ -105,5 +105,5 @@ void main(string[] args)
     {
         onError("hidden tasks");
     }
-    done("tasks");
+    info("tasks");
 }

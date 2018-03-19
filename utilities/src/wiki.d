@@ -243,6 +243,6 @@ void main(string[] args)
     upContacts(api);
     doIndex(api);
     wikiToDash(api);
-    done("wiki");
+    info("wiki");
 }
 
