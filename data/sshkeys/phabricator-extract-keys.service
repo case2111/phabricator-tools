@@ -3,7 +3,7 @@ Description=Automatically extract ssh keys from phabricator
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/extract-sshkeys
+ExecStart=/usr/bin/phabricator-tools-extract-keys
 
 [Install]
 WantedBy=multi-user.target
