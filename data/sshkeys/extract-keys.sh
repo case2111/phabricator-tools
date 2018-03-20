@@ -47,7 +47,7 @@ for k in j['result']['data']:
 	fi
 	echo "found keys: $name"
 	path=$WORKDIR/$name
-	echo "$keys" > $path.keys
+	echo "$keys" > ${path}-keys
 done
 
 chmod 666 -R $WORKDIR
