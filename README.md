@@ -77,3 +77,7 @@ e.g.
 ```
 curl https://<phabricator>/api/auth.authorizedkeys  -d phids[0]=PHID-USER-xyz -d api.token=api-token | python -c "import sys, json; print('\n'.join(json.loads(sys.stdin.read())['result']['data']))"
 ```
+
+## utilities
+
+maintenance/utility scripts to maintain/cleanse phabricator data
