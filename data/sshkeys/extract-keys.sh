@@ -50,4 +50,5 @@ for k in j['result']['data']:
 	echo "$keys" > ${path}-keys
 done
 
-chmod 666 -R $WORKDIR
+chmod 755 $WORKDIR
+chmod 666 $WORKDIR/*
