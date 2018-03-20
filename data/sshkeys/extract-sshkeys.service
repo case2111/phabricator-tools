@@ -1,0 +1,9 @@
+[Unit]
+Description=Automatically extract ssh keys from phabricator
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/extract-sshkeys
+
+[Install]
+WantedBy=multi-user.target

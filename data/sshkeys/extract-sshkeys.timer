@@ -1,0 +1,9 @@
+[Unit]
+Description=Automatically extract phabricator ssh keys
+
+[Timer]
+OnCalendar=*-*-* 00:00:00 
+Unit=extract-sshkeys.service
+
+[Install]
+WantedBy=multi-user.target
