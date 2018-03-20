@@ -1,7 +1,7 @@
 #!/bin/bash
 WORKDIR="/opt/phab/sshkeys"
-rm -rf $WORKDIR
 mkdir -p $WORKDIR
+rm -f $WORKDIR/*
 
 source /etc/epiphyte.d/environment
 json=$(curl -s $PHAB_HOST/api/user.search \
