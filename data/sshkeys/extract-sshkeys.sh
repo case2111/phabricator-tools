@@ -18,7 +18,7 @@ for u in j['result']['data']:
 ")
 
 if [ $? -ne 0 ]; then
-	echo "unable to retrieve users"
+	echo "unable to retrieve users" | smirc
 	exit 1
 fi
 
@@ -38,7 +38,7 @@ for k in j['result']['data']:
 ")
     echo "user: $name ($phid)"
     if [ $? -ne 0 ]; then
-        echo "error getting keys"
+        echo "error getting keys" | smirc
         continue
     fi
 	if [ -z "$keys" ]; then
