@@ -50,5 +50,6 @@ for k in j['result']['data']:
 	echo "$keys" > ${path}-keys
 done
 
+echo "ssh keys extracted" | smirc --private
 chmod 755 $WORKDIR
 chmod 666 $WORKDIR/*
