@@ -28,13 +28,13 @@ public enum DashOpts = PhabIndicator ~ "TO_DASH";
 // Unmodified tasks (project, months, room)
 public enum UnmodifiedOpts = PhabIndicator ~ "UNMODIFIED";
 
-// index settings (slug, title)
+// index settings (name)
 public enum IndexOpts = PhabIndicator ~ "INDEX";
 
 // contact settings (slug, title, path, callsign)
 public enum ContactsOpts = PhabIndicator ~ "CONTACTS";
 
-// whois settings (slug, title, path, callsign)
+// whois settings (name, path, callsign)
 public enum WhoIsOpts = PhabIndicator ~ "WHOIS";
 
 // Synapse lookup resolution (Paste PHID)
