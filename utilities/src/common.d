@@ -46,6 +46,9 @@ public enum PhabricatorUser = PhabIndicator ~ "USER_PHID";
 // hidden tasks (paste phid, room)
 public enum HiddenOpts = PhabIndicator ~ "HIDDEN";
 
+// Where we place reports for phab to be uploaded
+public enum ReportInbox = PhabIndicator ~ "INBOX";
+
 public class API
 {
     @property public string[string] context;
