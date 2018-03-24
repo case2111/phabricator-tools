@@ -31,10 +31,10 @@ public enum UnmodifiedOpts = PhabIndicator ~ "UNMODIFIED";
 // index settings (name)
 public enum IndexOpts = PhabIndicator ~ "INDEX";
 
-// contact settings (slug, title, path, callsign)
+// contact settings (path, callsign)
 public enum ContactsOpts = PhabIndicator ~ "CONTACTS";
 
-// whois settings (name, path, callsign)
+// whois settings (path, callsign)
 public enum WhoIsOpts = PhabIndicator ~ "WHOIS";
 
 // Synapse lookup resolution (Paste PHID)
