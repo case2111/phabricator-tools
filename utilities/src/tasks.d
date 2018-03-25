@@ -48,7 +48,7 @@ private static int hiddenTasks(API api, int start, int page)
 /**
  * Scheduled hidden task checking
  */
-public static bool doHiddenTasks(API api)
+private static bool doHiddenTasks(API api)
 {
     try
     {
@@ -85,7 +85,7 @@ public static bool doHiddenTasks(API api)
 /**
  * Unmodified operations
  */
-public static bool tasksUnmodified(API api)
+private static bool tasksUnmodified(API api)
 {
     auto settings = getSettings(api);
     auto opts = api.context[UnmodifiedOpts].split(",");
@@ -124,7 +124,7 @@ private static string getId(JSONValue task)
 /**
  * Move all tasks from a query to a project
  */
-public static int queryToProject(Settings settings,
+private static int queryToProject(Settings settings,
                                    string query,
                                    string projectPHID)
 {
@@ -150,7 +150,7 @@ public static int queryToProject(Settings settings,
 /**
  * Unmodified task handling
  */
-public static bool unmodified(Settings settings,
+private static bool unmodified(Settings settings,
                                   string projectPHID,
                                   int months)
 {
@@ -199,7 +199,7 @@ public static bool unmodified(Settings settings,
 /**
  * Detects restricted tasks
  */
-public static string[] restricted(Settings settings, int start, int page)
+private static string[] restricted(Settings settings, int start, int page)
 {
     try
     {
@@ -257,7 +257,7 @@ public static string[] restricted(Settings settings, int start, int page)
 /**
  * Tasks for a project needing action
  */
-public static string[] actionNeeded(Settings settings,
+private static string[] actionNeeded(Settings settings,
                                     string projectPHID,
                                     string userPHID)
 {
