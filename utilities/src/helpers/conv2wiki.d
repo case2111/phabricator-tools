@@ -235,31 +235,6 @@ public enum Conv
 }
 
 /**
- * Convert diffusion artifact to object
- */
-public static bool wikiDiffusion(Settings settings,
-                                 string header,
-                                 string slug,
-                                 string title,
-                                 string path,
-                                 string callsign,
-                                 string branch,
-                                 Conv method)
-{
-    try
-    {
-        auto text = wikiDiffusion(settings, path, callsign, branch, method);
-        auto phriction = construct!PhrictionAPI(settings);
-        phriction.edit(slug, title, header ~ text);
-        return true;
-    }
-    catch (Exception e)
-    {
-        return false;
-    }
-}
-
-/**
  * Get diffusion converted to wiki text
  */
 public static string wikiDiffusion(Settings settings,
