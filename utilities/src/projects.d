@@ -7,7 +7,6 @@ module projects;
 import common;
 import phabricator.api;
 import phabricator.common;
-import phabricator.util.projects;
 import std.string: join;
 
 /**
@@ -66,4 +65,33 @@ void main(string[] args)
     auto api = setup(args);
     doJoinProjects(api);
     info("projects");
+}
+
+/**
+ * Assign a user to all active projects
+ */
+private static bool assignToActive(Settings settings, string userPHID)
+{
+    try
+    {
+        auto proj = construct!ProjectAPI(settings);
+        auto actives = proj.active()[ResultKey][DataKey].array;
+        foreach (active; actives)
+        {
+            try
+            {
+                proj.addMember(active["phid"].str, userPHID);
+            }
+            catch (PhabricatorAPIException e)
+            {
+                // Ignore phabricator API exceptions
+            }
+        }
+
+        return true;
+    }
+    catch (Exception e)
+    {
+        return false;
+    }
 }

@@ -3,10 +3,10 @@
  * MIT License
  * Convert objects to a wiki page
  */
-module phabricator.util.conv2wiki;
+module helpers.conv2wiki;
 import phabricator.api;
 import phabricator.common;
-import phabricator.util.diffusion;
+import helpers.diffusion;
 import std.algorithm: sort;
 import std.csv;
 import std.stdio: writeln;

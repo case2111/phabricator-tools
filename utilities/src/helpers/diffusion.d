@@ -3,7 +3,7 @@
  * MIT License
  * diffusion utilities
  */
-module phabricator.util.diffusion;
+module helpers.diffusion;
 import phabricator.api;
 import phabricator.common;
 import std.base64;

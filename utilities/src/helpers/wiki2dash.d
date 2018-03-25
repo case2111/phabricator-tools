@@ -3,7 +3,7 @@
  * MIT License
  * Convert phriction page to dashboard panel
  */
-module phabricator.util.wiki2dash;
+module helpers.wiki2dash;
 import phabricator.api;
 import phabricator.common;
 
