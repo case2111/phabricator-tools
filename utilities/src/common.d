@@ -66,14 +66,6 @@ public static Settings getSettings(API api)
 }
 
 /**
- * Write messages on error
- */
-public static void onError(string message)
-{
-    writeln(message);
-}
-
-/**
  * Report when completed
  */
 public static void info(string name)

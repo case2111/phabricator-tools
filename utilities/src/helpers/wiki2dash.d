@@ -6,6 +6,7 @@
 module helpers.wiki2dash;
 import phabricator.api;
 import phabricator.common;
+import std.stdio: writeln;
 
 /**
  * Convert a phid (wiki) to a dashboard widget
@@ -25,6 +26,7 @@ public static bool convertToDashboard(Settings settings,
     }
     catch (Exception e)
     {
+        writeln(e);
         return false;
     }
 }

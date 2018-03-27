@@ -15,7 +15,7 @@ import std.algorithm: canFind, sort;
 import std.conv: to;
 import std.json;
 import std.path: baseName, buildPath, stripExtension;
-import std.stdio: File;
+import std.stdio: File, writeln;
 import std.string: format, join, split, startsWith, strip;
 
 /**
@@ -95,6 +95,7 @@ private static bool fullWhoIs(API api)
         }
         catch (Exception e)
         {
+            writeln(e);
             result = false;
         }
     }
@@ -119,7 +120,7 @@ private static void wikiFromSource(API api,
 {
     if (!callback(api))
     {
-        onError(key ~ " wiki update");
+        writeln(key ~ " wiki update");
     }
 }
 
@@ -144,6 +145,7 @@ private static bool wikiFromSource(API api, string key, Conv mode)
     }
     catch (Exception e)
     {
+        writeln(e);
         return false;
     }
 }
@@ -206,7 +208,7 @@ private static string[] doIndexList(API api, Settings settings)
         auto clean = item.strip();
         if (tracked.canFind(clean))
         {
-            onError("duplicate index found");
+            writeln("duplicate index found");
         }
 
         tracked ~= clean;
@@ -226,7 +228,8 @@ private static void doIndex(API api)
     }
     catch (Exception e)
     {
-        onError("unable to generate index page");
+        writeln("unable to generate index page");
+        writeln(e);
     }
 }
 
@@ -242,7 +245,7 @@ private static void wikiToDash(API api)
                                       dashOpts[0]);
     if (!result)
     {
-        onError("unable to update dashboard");
+        writeln("unable to update dashboard");
     }
 }
 

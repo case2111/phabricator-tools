@@ -8,6 +8,7 @@ import common;
 import phabricator.api;
 import phabricator.common;
 import std.string: join;
+import std.stdio: writeln;
 
 /**
  * Join projects
@@ -44,16 +45,17 @@ private static void doJoinProjects(API api)
         if (results.length > 0)
         {
             auto assigned = assignToActive(getSettings(api), user);
-            onError("not a member of these projects:\n" ~ join(results, "\n"));
+            writeln("not a member of these projects:\n" ~ join(results, "\n"));
             if (!assigned)
             {
-                onError("unable to assign self to projects...");
+                writeln("unable to assign self to projects...");
             }
         }
     }
     catch (Exception e)
     {
-        onError("unexepected exception joining projects");
+        writeln("unexepected exception joining projects");
+        writeln(e);
     }
 }
 
@@ -92,6 +94,7 @@ private static bool assignToActive(Settings settings, string userPHID)
     }
     catch (Exception e)
     {
+        writeln(e);
         return false;
     }
 }

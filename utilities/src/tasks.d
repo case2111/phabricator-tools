@@ -12,6 +12,7 @@ import std.conv: to;
 import std.datetime;
 import std.json;
 import std.string: format, join, split, strip;
+import std.stdio: writeln;
 
 /**
  * Hidden task checking
@@ -71,13 +72,14 @@ private static bool doHiddenTasks(API api)
         }
         else
         {
-            onError(format("task visibility index unchanged: T%s", result));
+            writeln(format("task visibility index unchanged: T%s", result));
         }
 
         return true;
     }
     catch (Exception e)
     {
+        writeln(e);
         return false;
     }
 }
@@ -101,11 +103,11 @@ void main(string[] args)
     auto api = setup(args);
     if (!tasksUnmodified(api))
     {
-        onError("unmod tasks");
+        writeln("unmod tasks");
     }
     if (!doHiddenTasks(api))
     {
-        onError("hidden tasks");
+        writeln("hidden tasks");
     }
     info("tasks");
 }
@@ -192,6 +194,7 @@ private static bool unmodified(Settings settings,
     }
     catch (Exception e)
     {
+        writeln(e);
         return false;
     }
 }
@@ -243,44 +246,6 @@ private static string[] restricted(Settings settings, int start, int page)
             if (!matched[match])
             {
                 results ~= to!string(match);
-            }
-        }
-
-        return results;
-    }
-    catch (Exception e)
-    {
-        return [];
-    }
-}
-
-/**
- * Tasks for a project needing action
- */
-private static string[] actionNeeded(Settings settings,
-                                    string projectPHID,
-                                    string userPHID)
-{
-    try
-    {
-        auto users = construct!UserAPI(settings);
-        auto maniphest = construct!ManiphestAPI(settings);
-        auto raw = maniphest.openSubscribedProject(projectPHID, userPHID);
-        auto all = raw[ResultKey][DataKey];
-        string[] results;
-        foreach (task; all.array)
-        {
-            if (FieldsKey in task)
-            {
-                auto fields = task[FieldsKey];
-                if (StatusKey in fields)
-                {
-                    auto status = fields[StatusKey];
-                    if (status["value"].str == "actionneeded")
-                    {
-                        results ~= getId(task);
-                    }
-                }
             }
         }
 
