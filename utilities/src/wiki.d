@@ -120,7 +120,7 @@ private static void wikiFromSource(API api,
 {
     if (!callback(api))
     {
-        writeln(key ~ " wiki update");
+        writeln(key ~ " wiki update failed");
     }
 }
 
