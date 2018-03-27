@@ -54,7 +54,7 @@ private static bool fullWhoIs(API api)
         {
             auto settings = getSettings(api);
             auto opts = api.context[WhoIsOpts].split(",");
-            auto raw = getDiffusion(settings, opts[2], opts[3], "master");
+            auto raw = getDiffusion(settings, opts[0], opts[1], "master");
             auto lines = raw.split("\n");
             auto users = construct!UserAPI(settings).activeUsers();
             string[string] lookups;
