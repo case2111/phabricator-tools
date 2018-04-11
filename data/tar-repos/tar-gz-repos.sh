@@ -7,9 +7,7 @@ HTML='
 <html lang="en-US">
     <head>
         <meta charset="UTF-8">
-        <script type="text/javascript">
-            window.location.href = "FILENAME"
-        </script>
+        <meta http-equiv="refresh" contents="5;url=FILENAME" />
         <title>nightly build of FILENAME</title>
     </head>
     <body>
