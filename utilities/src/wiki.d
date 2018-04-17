@@ -38,36 +38,34 @@ private static string generateColumns(string[] args)
 /**
  * Update whois
  */
-private static void updateWhoIs(API api)
+private static void updateWhoIs(WikiCtx ctx)
 {
-    wikiFromSource(api, "whois", &fullWhoIs);
+    wikiFromSource(ctx, "whois", &fullWhoIs);
 }
 
 /**
  * Update contacts
  */
-private static void upContacts(API api)
+private static void upContacts(WikiCtx ctx)
 {
-    wikiFromSource(api, "contacts", &doContacts);
+    wikiFromSource(ctx, "contacts", &doContacts);
 }
 
 /**
  * Full whois processing
  */
-private static bool fullWhoIs(API api)
+private static bool fullWhoIs(WikiCtx ctx)
 {
-    auto result = wikiFromSource(api, WhoIsOpts, Conv.nameAlias);
+    auto result = wikiFromSource(ctx, WhoIsOpts, Conv.nameAlias);
     if (result)
     {
         try
         {
-            auto settings = getSettings(api);
-            auto opts = api.context[WhoIsOpts].split(",");
-            auto raw = getDiffusion(settings, opts[0], opts[1], "master");
+            auto opts = ctx.api.context[WhoIsOpts].split(",");
+            auto raw = getDiffusion(ctx.settings, opts[0], opts[1], "master");
             auto lines = raw.split("\n");
-            auto users = construct!UserAPI(settings).activeUsers();
             string[string] lookups;
-            foreach (user; users[ResultKey][DataKey].array)
+            foreach (user; ctx.users[ResultKey][DataKey].array)
             {
                 auto rawName = user[FieldsKey]["username"].str;
                 auto userName = "@" ~ rawName;
@@ -100,7 +98,7 @@ private static bool fullWhoIs(API api)
 
             auto obj = JSONValue(lookups);
             auto json = toJSON(obj);
-            construct!PasteAPI(settings).editText(api.context[LookupsPHID], json);
+            construct!PasteAPI(ctx.settings).editText(ctx.api.context[LookupsPHID], json);
         }
         catch (Exception e)
         {
@@ -115,19 +113,19 @@ private static bool fullWhoIs(API api)
 /**
  * Process contacts
  */
-private static bool doContacts(API api)
+private static bool doContacts(WikiCtx ctx)
 {
-    return wikiFromSource(api, ContactsOpts, Conv.catsub);
+    return wikiFromSource(ctx, ContactsOpts, Conv.catsub);
 }
 
 /**
  * Wiki generation from a source input
  */
-private static void wikiFromSource(API api,
+private static void wikiFromSource(WikiCtx ctx,
                                    string key,
-                                   bool function(API) callback)
+                                   bool function(WikiCtx) callback)
 {
-    if (!callback(api))
+    if (!callback(ctx))
     {
         writeln(key ~ " wiki update failed");
     }
@@ -136,20 +134,19 @@ private static void wikiFromSource(API api,
 /**
  * Generate a page from a source repo location
  */
-private static bool wikiFromSource(API api, string key, Conv mode)
+private static bool wikiFromSource(WikiCtx ctx, string key, Conv mode)
 {
     try
     {
-        auto settings = getSettings(api);
-        auto opts = api.context[key].split(",");
+        auto opts = ctx.api.context[key].split(",");
         auto src = opts[0];
-        auto text = wikiDiffusion(settings,
+        auto text = wikiDiffusion(ctx.settings,
                                   src,
                                   opts[1],
                                   "master",
                                   mode);
         auto name = baseName(stripExtension(src));
-        writeReport(api, name, text);
+        writeReport(ctx, name, text);
         return true;
     }
     catch (Exception e)
@@ -162,9 +159,9 @@ private static bool wikiFromSource(API api, string key, Conv mode)
 /**
  * Write a report to disk for later upload
  */
-private static void writeReport(API api, string name, string data)
+private static void writeReport(WikiCtx ctx, string name, string data)
 {
-    auto inbox = api.context[ReportInbox];
+    auto inbox = ctx.api.context[ReportInbox];
     auto filePath = buildPath(inbox, name ~ ".md");
     auto f = File(filePath, "w");
     f.write(data);
@@ -173,15 +170,15 @@ private static void writeReport(API api, string name, string data)
 /**
  * Generate a page
  */
-private static void genPage(API api,
+private static void genPage(WikiCtx ctx,
                             string contextKey,
-                            string[] function(API, Settings) callback,
+                            string[] function(WikiCtx, Settings) callback,
                             bool reverse)
 {
-    auto parts = api.context[contextKey].split(",");
+    auto parts = ctx.api.context[contextKey].split(",");
     auto name = parts[0];
-    auto settings = getSettings(api);
-    auto res = callback(api, settings);
+    auto settings = ctx.settings;
+    auto res = callback(ctx, settings);
     string[] objects;
     objects ~= res[0];
     objects ~= res[1];
@@ -195,13 +192,13 @@ private static void genPage(API api,
     }
 
     auto page = join(objects, "\n");
-    writeReport(api, name, page);
+    writeReport(ctx, name, page);
 }
 
 /**
  * Build the index list
  */
-private static string[] doIndexList(API api, Settings settings)
+private static string[] doIndexList(WikiCtx ctx, Settings settings)
 {
     string[] indexItems;
     indexItems ~= generateColumns(["index", "count"]);
@@ -234,11 +231,11 @@ private static string[] doIndexList(API api, Settings settings)
 /**
  * Do index processing
  */
-private static void doIndex(API api)
+private static void doIndex(WikiCtx ctx)
 {
     try
     {
-        genPage(api, IndexOpts, &doIndexList, false);
+        genPage(ctx, IndexOpts, &doIndexList, false);
     }
     catch (Exception e)
     {
@@ -250,11 +247,10 @@ private static void doIndex(API api)
 /**
  * Convert wiki to dashboard
  */
-private static void wikiToDash(API api)
+private static void wikiToDash(WikiCtx ctx)
 {
-    auto settings = getSettings(api);
-    auto dashOpts = api.context[DashOpts].split(",");
-    auto result =  convertToDashboard(settings,
+    auto dashOpts = ctx.api.context[DashOpts].split(",");
+    auto result =  convertToDashboard(ctx.settings,
                                       dashOpts[1],
                                       dashOpts[0]);
     if (!result)
@@ -263,12 +259,11 @@ private static void wikiToDash(API api)
     }
 }
 
-private static string[] getActivity(API api, Settings settings)
+private static string[] getActivity(WikiCtx ctx, Settings settings)
 {
-    auto users = construct!UserAPI(settings).activeUsers();
     auto feed = construct!FeedAPI(settings);
     string[string] lookups;
-    foreach (user; users[ResultKey][DataKey].array)
+    foreach (user; ctx.users[ResultKey][DataKey].array)
     {
         auto rawName = user[FieldsKey]["username"].str;
         auto userName = "@" ~ rawName;
@@ -307,16 +302,23 @@ private static string[] getActivity(API api, Settings settings)
 /**
  * Generate last user activity
  */
-private static void activity(API api)
+private static void activity(WikiCtx ctx)
 {
     try
     {
-        genPage(api, ActivityOpts, &getActivity, true);
+        genPage(ctx, ActivityOpts, &getActivity, true);
     }
     catch (Exception e)
     {
         writeln(e);
     }
+}
+
+private class WikiCtx
+{
+    @property public API api;
+    @property public Settings settings;
+    @property public JSONValue users;
 }
 
 /**
@@ -325,10 +327,14 @@ private static void activity(API api)
 void main(string[] args)
 {
     auto api = setup(args);
-    updateWhoIs(api);
-    upContacts(api);
-    doIndex(api);
-    activity(api);
-    wikiToDash(api);
+    auto ctx = new WikiCtx();
+    ctx.api = api;
+    ctx.settings = getSettings(api);
+    ctx.users = construct!UserAPI(ctx.settings).activeUsers();
+    updateWhoIs(ctx);
+    upContacts(ctx);
+    doIndex(ctx);
+    activity(ctx);
+    wikiToDash(ctx);
     info("wiki");
 }
