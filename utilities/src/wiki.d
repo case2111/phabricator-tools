@@ -174,12 +174,10 @@ private static void writeReport(API api, string name, string data)
  * Generate a page
  */
 private static void genPage(API api,
-                            string contextKey,
+                            string name,
                             string[] function(API, Settings) callback,
                             bool reverse)
 {
-    auto parts = api.context[contextKey].split(",");
-    auto name = parts[0];
     auto settings = getSettings(api);
     auto res = callback(api, settings);
     string[] objects;
