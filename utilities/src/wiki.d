@@ -19,6 +19,14 @@ import std.path: baseName, buildPath, stripExtension;
 import std.stdio: File, writeln;
 import std.string: format, join, split, startsWith, strip;
 
+// This is irritagin to get dynamic sorting via mixins
+const string SortTemplateStart = "foreach (obj; res[2..res.length].sort!(\"";
+const string SortTemplateEnd = "\"))
+{
+    objects ~= obj;
+}
+";
+
 /**
  * Generate primitive markdown columns/tables
  */
@@ -167,7 +175,8 @@ private static void writeReport(API api, string name, string data)
  */
 private static void genPage(API api,
                             string contextKey,
-                            string[] function(API, Settings) callback)
+                            string[] function(API, Settings) callback,
+                            bool reverse)
 {
     auto parts = api.context[contextKey].split(",");
     auto name = parts[0];
@@ -176,9 +185,13 @@ private static void genPage(API api,
     string[] objects;
     objects ~= res[0];
     objects ~= res[1];
-    foreach (obj; res[2..res.length].sort!("a < b"))
+    if (reverse)
     {
-        objects ~= obj;
+        mixin(SortTemplateStart ~ "b < a" ~ SortTemplateEnd);
+    }
+    else
+    {
+        mixin(SortTemplateStart ~ "a < b" ~ SortTemplateEnd);
     }
 
     auto page = join(objects, "\n");
@@ -225,7 +238,7 @@ private static void doIndex(API api)
 {
     try
     {
-        genPage(api, IndexOpts, &doIndexList);
+        genPage(api, "indexing", &doIndexList, false);
     }
     catch (Exception e)
     {
@@ -250,6 +263,47 @@ private static void wikiToDash(API api)
     }
 }
 
+private static string[] getActivity(API api, Settings settings)
+{
+    auto users = construct!UserAPI(settings).activeUsers();
+    auto feed = construct!FeedAPI(settings);
+    string[string] lookups;
+    foreach (user; users[ResultKey][DataKey].array)
+    {
+        auto rawName = user[FieldsKey]["username"].str;
+        auto userName = "@" ~ rawName;
+        auto feeds = feed.getFeed(user["phid"].str, 1);
+        lookups[userName] = " **unknown** ";
+        try
+        {
+            auto objs = feeds[ResultKey].object;
+            foreach (obj; objs)
+            {
+                auto epoch = obj["epoch"].integer;
+                auto time = SysTime(unixTimeToStdTime(epoch));
+                auto fmt = time.toISOExtString().split("T")[0];
+                lookups[userName] = fmt;
+                break;
+            }
+        }
+        catch (JSONException e)
+        {
+            if (e.message != "JSONValue is not an object")
+            {
+                throw e;
+            }
+        }
+    }
+    string[] actions;
+    actions ~= generateColumns(["date", "user"]);
+    actions ~= generateColumns(["---", "---"]);
+    foreach (key; lookups.keys)
+    {
+        actions ~= generateColumns([lookups[key], key]);
+    }
+    return actions;
+}
+
 /**
  * Generate last user activity
  */
@@ -257,50 +311,7 @@ private static void activity(API api)
 {
     try
     {
-        auto settings = getSettings(api);
-        auto users = construct!UserAPI(settings).activeUsers();
-        auto feed = construct!FeedAPI(settings);
-        string[string] lookups;
-        foreach (user; users[ResultKey][DataKey].array)
-        {
-            auto rawName = user[FieldsKey]["username"].str;
-            auto userName = "@" ~ rawName;
-            auto feeds = feed.getFeed(user["phid"].str, 1);
-            lookups[userName] = " **unknown** ";
-            try
-            {
-                auto objs = feeds[ResultKey].object;
-                foreach (obj; objs)
-                {
-                    auto epoch = obj["epoch"].integer;
-                    auto time = SysTime(unixTimeToStdTime(epoch));
-                    auto fmt = time.toISOExtString().split("T")[0];
-                    lookups[userName] = fmt;
-                    break;
-                }
-            }
-            catch (JSONException e)
-            {
-                if (e.message != "JSONValue is not an object")
-                {
-                    throw e;
-                }
-            }
-        }
-        string[] userActivity;
-        foreach (key; lookups.keys)
-        {
-            userActivity ~= generateColumns([lookups[key], key]);
-        }
-        string[] actions;
-        actions ~= generateColumns(["date", "user"]);
-        actions ~= generateColumns(["---", "---"]);
-        foreach (act; userActivity.sort!("b < a"))
-        {
-            actions ~= act;
-        }
-        auto page = join(actions, "\n");
-        writeReport(api, "activity", page);
+        genPage(api, "activity", &getActivity, true);
     }
     catch (Exception e)
     {
