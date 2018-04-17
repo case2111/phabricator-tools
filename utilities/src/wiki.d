@@ -266,16 +266,27 @@ private static void activity(API api)
             auto rawName = user[FieldsKey]["username"].str;
             auto userName = "@" ~ rawName;
             auto feeds = feed.getFeed(user["phid"].str, 1);
-            auto objs = feeds[ResultKey].object;
-            foreach (obj; objs)
+            try
             {
-                auto epoch = obj["epoch"].integer;
-                auto time = SysTime(unixTimeToStdTime(epoch));
-                writeln(userName);
-                writeln(time);
-                break;
+                auto objs = feeds[ResultKey].object;
+                foreach (obj; objs)
+                {
+                    auto epoch = obj["epoch"].integer;
+                    auto time = SysTime(unixTimeToStdTime(epoch));
+                    auto fmt = time.toISOExtString().split("T")[0];
+                    lookups[userName] = fmt;
+                    break;
+                }
+            }
+            catch (JSONException e)
+            {
+                if (e.message != "JSONValue is not an object")
+                {
+                    throw e;
+                }
             }
         }
+        writeln(lookups);
     }
     catch (Exception e)
     {
@@ -289,11 +300,11 @@ private static void activity(API api)
 void main(string[] args)
 {
     auto api = setup(args);
-    updateWhoIs(api);
-    upContacts(api);
-    doIndex(api);
+    //updateWhoIs(api);
+    //upContacts(api);
+    //doIndex(api);
     activity(api);
-    wikiToDash(api);
-    info("wiki");
+    //wikiToDash(api);
+    //info("wiki");
 }
 
