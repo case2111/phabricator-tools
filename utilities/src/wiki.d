@@ -154,12 +154,12 @@ private static bool wikiFromSource(API api, string key, Conv mode)
 /**
  * Write a report to disk for later upload
  */
-private static void writeReport(API api, string name, string page)
+private static void writeReport(API api, string name, string data)
 {
     auto inbox = api.context[ReportInbox];
     auto filePath = buildPath(inbox, name ~ ".md");
     auto f = File(filePath, "w");
-    f.write(page);
+    f.write(data);
 }
 
 /**
@@ -266,6 +266,7 @@ private static void activity(API api)
             auto rawName = user[FieldsKey]["username"].str;
             auto userName = "@" ~ rawName;
             auto feeds = feed.getFeed(user["phid"].str, 1);
+            lookups[userName] = " **unknown** ";
             try
             {
                 auto objs = feeds[ResultKey].object;
@@ -286,7 +287,20 @@ private static void activity(API api)
                 }
             }
         }
-        writeln(lookups);
+        string[] userActivity;
+        foreach (key; lookups.keys)
+        {
+            userActivity ~= generateColumns([lookups[key], key]);
+        }
+        string[] actions;
+        actions ~= generateColumns(["date", "user"]);
+        actions ~= generateColumns(["---", "---"]);
+        foreach (act; userActivity.sort!("b < a"))
+        {
+            actions ~= act;
+        }
+        auto page = join(actions, "\n");
+        writeReport(api, "activity", page);
     }
     catch (Exception e)
     {
@@ -300,11 +314,10 @@ private static void activity(API api)
 void main(string[] args)
 {
     auto api = setup(args);
-    //updateWhoIs(api);
-    //upContacts(api);
-    //doIndex(api);
+    updateWhoIs(api);
+    upContacts(api);
+    doIndex(api);
     activity(api);
-    //wikiToDash(api);
-    //info("wiki");
+    wikiToDash(api);
+    info("wiki");
 }
-
