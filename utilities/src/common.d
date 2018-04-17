@@ -28,6 +28,12 @@ public enum DashOpts = PhabIndicator ~ "TO_DASH";
 // Unmodified tasks (project, months, room)
 public enum UnmodifiedOpts = PhabIndicator ~ "UNMODIFIED";
 
+// index settings (name)
+public enum IndexOpts = PhabIndicator ~ "INDEX";
+
+// activity settings (name)
+public enum ActivityOpts = PhabIndicator ~ "ACTIVITY";
+
 // contact settings (path, callsign)
 public enum ContactsOpts = PhabIndicator ~ "CONTACTS";
 

@@ -174,10 +174,12 @@ private static void writeReport(API api, string name, string data)
  * Generate a page
  */
 private static void genPage(API api,
-                            string name,
+                            string contextKey,
                             string[] function(API, Settings) callback,
                             bool reverse)
 {
+    auto parts = api.context[contextKey].split(",");
+    auto name = parts[0];
     auto settings = getSettings(api);
     auto res = callback(api, settings);
     string[] objects;
@@ -236,7 +238,7 @@ private static void doIndex(API api)
 {
     try
     {
-        genPage(api, "indexing", &doIndexList, false);
+        genPage(api, IndexOpts, &doIndexList, false);
     }
     catch (Exception e)
     {
@@ -309,7 +311,7 @@ private static void activity(API api)
 {
     try
     {
-        genPage(api, "activity", &getActivity, true);
+        genPage(api, ActivityOpts, &getActivity, true);
     }
     catch (Exception e)
     {
