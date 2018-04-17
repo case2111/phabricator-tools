@@ -17,7 +17,7 @@ import std.stdio: writeln;
 /**
  * Hidden task checking
  */
-private static int hiddenTasks(API api, int start, int page)
+private static int hiddenTasks(TaskCtx ctx, int start, int page)
 {
     auto show = "none found";
     int last = -1;
@@ -27,8 +27,7 @@ private static int hiddenTasks(API api, int start, int page)
     }
     else
     {
-        auto settings = getSettings(api);
-        auto results = restricted(settings, start, page);
+        auto results = restricted(ctx.settings, start, page);
         if (results.length > 0)
         {
             show = "T" ~ join(results, ", T");
@@ -49,22 +48,20 @@ private static int hiddenTasks(API api, int start, int page)
 /**
  * Scheduled hidden task checking
  */
-private static bool doHiddenTasks(API api)
+private static bool doHiddenTasks(TaskCtx ctx)
 {
     try
     {
         auto lastStart = 1;
-        auto opts = api.context[HiddenOpts].split(",");
+        auto opts = ctx.api.context[HiddenOpts].split(",");
         auto phid = opts[0];
         auto room = opts[1];
-        auto settings = getSettings(api);
-        auto paste = construct!PasteAPI(settings);
+        auto paste = construct!PasteAPI(ctx.settings);
         auto contents = paste.activeByPHID(phid, true)[ResultKey][DataKey];
         auto attached = contents.array[0]["attachments"]["content"]["content"];
         auto text = attached.str.split("=");
         lastStart = to!int(text[1].strip());
-
-        auto result = hiddenTasks(api, lastStart, 500);
+        auto result = hiddenTasks(ctx, lastStart, 500);
         if (result != lastStart && result >= 0)
         {
             auto today = Clock.currTime().dayOfYear();
@@ -87,12 +84,17 @@ private static bool doHiddenTasks(API api)
 /**
  * Unmodified operations
  */
-private static bool tasksUnmodified(API api)
+private static bool tasksUnmodified(TaskCtx ctx)
 {
-    auto settings = getSettings(api);
-    auto opts = api.context[UnmodifiedOpts].split(",");
-    auto result = unmodified(settings, opts[0], to!int(opts[1]));
+    auto opts = ctx.api.context[UnmodifiedOpts].split(",");
+    auto result = unmodified(ctx.settings, opts[0], to!int(opts[1]));
     return result;
+}
+
+private class TaskCtx
+{
+    @property public API api;
+    @property public Settings settings;
 }
 
 /**
@@ -101,11 +103,14 @@ private static bool tasksUnmodified(API api)
 void main(string[] args)
 {
     auto api = setup(args);
-    if (!tasksUnmodified(api))
+    auto ctx = new TaskCtx();
+    ctx.api = api;
+    ctx.settings = getSettings(api);
+    if (!tasksUnmodified(ctx))
     {
         writeln("unmod tasks");
     }
-    if (!doHiddenTasks(api))
+    if (!doHiddenTasks(ctx))
     {
         writeln("hidden tasks");
     }
