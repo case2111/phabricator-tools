@@ -250,6 +250,30 @@ private static void wikiToDash(API api)
 }
 
 /**
+ * Generate last user activity
+ */
+private static void activity(API api)
+{
+    try
+    {
+        auto settings = getSettings(api);
+        auto users = construct!UserAPI(settings).activeUsers();
+        auto feed = construct!FeedAPI(settings);
+        string[string] lookups;
+        foreach (user; users[ResultKey][DataKey].array)
+        {
+            auto rawName = user[FieldsKey]["username"].str;
+            auto userName = "@" ~ rawName;
+            auto feeds = feed.getFeed(user["phid"].str, limit=1);
+        }
+    }
+    catch (Exception e)
+    {
+        writeln(e);
+    }
+}
+
+/**
  * Entry point
  */
 void main(string[] args)
@@ -258,6 +282,7 @@ void main(string[] args)
     updateWhoIs(api);
     upContacts(api);
     doIndex(api);
+    activity(api);
     wikiToDash(api);
     info("wiki");
 }
