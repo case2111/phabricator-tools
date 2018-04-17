@@ -13,6 +13,7 @@ import helpers.indexing;
 import helpers.wiki2dash;
 import std.algorithm: canFind, sort;
 import std.conv: to;
+import std.datetime.systime;
 import std.json;
 import std.path: baseName, buildPath, stripExtension;
 import std.stdio: File, writeln;
@@ -264,7 +265,16 @@ private static void activity(API api)
         {
             auto rawName = user[FieldsKey]["username"].str;
             auto userName = "@" ~ rawName;
-            auto feeds = feed.getFeed(user["phid"].str, limit=1);
+            auto feeds = feed.getFeed(user["phid"].str, 1);
+            auto objs = feeds[ResultKey].object;
+            foreach (obj; objs)
+            {
+                auto epoch = obj["epoch"].integer;
+                auto time = SysTime(unixTimeToStdTime(epoch));
+                writeln(userName);
+                writeln(time);
+                break;
+            }
         }
     }
     catch (Exception e)
