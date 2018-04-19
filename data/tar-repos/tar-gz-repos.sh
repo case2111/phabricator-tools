@@ -11,7 +11,7 @@ HTML='
         <title>nightly build of FILENAME</title>
     </head>
     <body>
-    	you should be automatically redirected shortly...
+    you should be automatically redirected shortly...(or click <a href="FILENAME">here</a>)
 	</body>
 </html>
 '
