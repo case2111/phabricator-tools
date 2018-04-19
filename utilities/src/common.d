@@ -14,40 +14,40 @@ import std.string: format;
 private enum PhabIndicator = "PHAB_";
 
 // URL for phab
-private enum PhabricatorURL = PhabIndicator ~ "HOST";
+private enum PhabricatorURL = "HOST";
 
 // phabricator api token
-private enum PhabricatorToken = PhabIndicator ~ "TOKEN";
+private enum PhabricatorToken = "TOKEN";
 
 // dashboard (to update, wiki phid)
-public enum DashOpts = PhabIndicator ~ "TO_DASH";
+public enum DashOpts = "TO_DASH";
 
 // Unmodified tasks (project, months, room)
-public enum UnmodifiedOpts = PhabIndicator ~ "UNMODIFIED";
+public enum UnmodifiedOpts = "UNMODIFIED";
 
 // index settings (name)
-public enum IndexOpts = PhabIndicator ~ "INDEX";
+public enum IndexOpts = "INDEX";
 
 // activity settings (name)
-public enum ActivityOpts = PhabIndicator ~ "ACTIVITY";
+public enum ActivityOpts = "ACTIVITY";
 
 // contact settings (path, callsign)
-public enum ContactsOpts = PhabIndicator ~ "CONTACTS";
+public enum ContactsOpts = "CONTACTS";
 
 // whois settings (path, callsign)
-public enum WhoIsOpts = PhabIndicator ~ "WHOIS";
+public enum WhoIsOpts = "WHOIS";
 
 // Synapse lookup resolution (Paste PHID)
 public enum LookupsPHID = "LOOKUP_PHID";
 
 // User PHID
-public enum PhabricatorUser = PhabIndicator ~ "USER_PHID";
+public enum PhabricatorUser = "USER_PHID";
 
 // hidden tasks (paste phid, room)
-public enum HiddenOpts = PhabIndicator ~ "HIDDEN";
+public enum HiddenOpts = "HIDDEN";
 
 // Where we place reports for phab to be uploaded
-public enum ReportInbox = PhabIndicator ~ "INBOX";
+public enum ReportInbox = "INBOX";
 
 public class API
 {
