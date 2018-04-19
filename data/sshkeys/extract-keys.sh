@@ -5,7 +5,7 @@ rm -f $WORKDIR/*
 
 source /etc/epiphyte.d/environment
 json=$(curl -s $PHAB_HOST/api/user.search \
-       -d api.token=$SYNAPSE_PHAB_TOKEN \
+       -d api.token=$PHAB_TOKEN \
        -d queryKey=active)
 users=$(echo "$json" | python -c "
 import sys
@@ -26,7 +26,7 @@ for u in $(echo $users); do
 	name=$(echo $u | cut -d ":" -f 2)
 	phid=$(echo $u | cut -d ":" -f 1)
 	p=$(curl -s $PHAB_HOST/api/auth.authorizedkeys \
-	         -d api.token=$SYNAPSE_PHAB_TOKEN \
+	         -d api.token=$PHAB_TOKEN \
 	         -d phids[0]=$phid)
 	keys=$(echo $p | python -c "
 import sys

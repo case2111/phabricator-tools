@@ -10,14 +10,11 @@ import std.getopt;
 import std.stdio: writeln;
 import std.string: format;
 
-// NOTE: relic of coming from matrix-bot
-private enum SynapseLine = "SYNAPSE_";
-
 // Phabricator items
 private enum PhabIndicator = "PHAB_";
 
 // URL for phab
-private enum PhabricatorURL = PhabIndicator ~ "URL";
+private enum PhabricatorURL = PhabIndicator ~ "HOST";
 
 // phabricator api token
 private enum PhabricatorToken = PhabIndicator ~ "TOKEN";
@@ -88,6 +85,6 @@ API setup(string[] args)
                        &env);
 
     auto api = new API();
-    api.context = loadEnvironmentFile(env, SynapseLine);
+    api.context = loadEnvironmentFile(env, PhabIndicator);
     return api;
 }

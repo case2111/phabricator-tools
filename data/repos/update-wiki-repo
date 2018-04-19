@@ -18,7 +18,7 @@ git clone repo workingdir
 | name | link |
 | ---- | ---- |'
 
-res=$(curl -s $PHAB_HOST/api/diffusion.repository.search -d api.token=$SYNAPSE_PHAB_TOKEN -d queryKey=active)
+res=$(curl -s $PHAB_HOST/api/diffusion.repository.search -d api.token=$PHAB_TOKEN -d queryKey=active)
 _py="
 import sys
 import json
@@ -64,7 +64,7 @@ fi
 
 content=$(echo "$_page" | python -c "import sys, urllib.parse; print(urllib.parse.quote(sys.stdin.read()))")
 curl -s $PHAB_HOST/api/phriction.edit \
-    -d api.token=$SYNAPSE_PHAB_TOKEN \
+    -d api.token=$PHAB_TOKEN \
     -d slug="meta/phab/repos/" \
     -d title="Repos" \
     -d content=$content >/dev/null
