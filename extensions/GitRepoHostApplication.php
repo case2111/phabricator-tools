@@ -21,7 +21,7 @@ final class GitRepoHostApplication extends PhabricatorApplication {
     }
 
     public function isUnlisted() {
-        return true;
+        return false;
     }
 
     public function isLaunchabled() {
