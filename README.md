@@ -60,6 +60,10 @@ systemctl enable phabricator-repo-wiki.timer
 
 * Supports utilizing a diffusion repo (local) clone to perform repo-configured redirects
 
+### Git
+
+Provides a reverse proxy to a locally running version of gitweb
+
 ## logs
 
 Handles log rotation as necessary for phd and aphlict
