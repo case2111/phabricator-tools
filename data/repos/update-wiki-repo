@@ -1,6 +1,7 @@
 #!/bin/bash
 source /etc/environment
 REPOS=/opt/phacility/git/
+GITWEB=/opt/gitweb/
 _page='
 > **Downloading these bundles uses bandwidth and some of them are large!!!**
 > this page is edited by a bot
@@ -41,6 +42,8 @@ for item in $(echo $res | python -c "$_py"); do
     _page="$_page
 "$(echo "| r$call | [download](/zip/$num) |")
     echo "r$call" > $REPOS$num/description
+    rm -f $GITWEB/$call
+    ln -s $REPOS/$num $GITWEB/$call
 done
 
 if [ $has -eq 0 ]; then
