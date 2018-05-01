@@ -42,8 +42,10 @@ for item in $(echo $res | python -c "$_py"); do
     _page="$_page
 "$(echo "| r$call | [download](/zip/$num) |")
     echo "r$call" > $REPOS$num/description
-    rm -f $GITWEB/$call
-    ln -s $REPOS/$num $GITWEB/$call
+    linked=$GITWEB/$call
+    if [ ! -e $linked ]; then
+        ln -s $REPOS/$num $linked
+    fi
 done
 
 if [ $has -eq 0 ]; then
