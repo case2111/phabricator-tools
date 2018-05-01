@@ -25,6 +25,9 @@ final class GitRepoController extends PhabricatorController {
         if ($this->endsWith($path, '.css')) {
             $resp->setMimeType('text/css');
         }
+        if (strstr($querystring, 'blob_plain')) {
+            $resp->setMimeType('text/plain');
+        }
         $resp->setCanCDN(false);
         $resp->setContent($ret);
     	return $resp;
