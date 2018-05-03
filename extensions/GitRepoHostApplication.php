@@ -15,8 +15,7 @@ final class GitRepoHostApplication extends PhabricatorApplication {
 
     public function getRoutes() {
         return array(
-          '/gitweb/' => 'GitRepoController',
-          '/gitweb/static/(.+)' => 'GitRepoController'
+          '/gitweb/(.*)' => 'GitRepoController'
         );
     }
 
