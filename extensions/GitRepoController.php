@@ -1,5 +1,5 @@
 <?php
-final class GitRepoController extends PhabricatorController {
+final class GitWebController extends PhabricatorController {
     private function endsWith($str, $search)
     {
         $length = strlen($search);

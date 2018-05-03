@@ -1,6 +1,6 @@
 <?php
 
-final class GitRepoHostApplication extends PhabricatorApplication {
+final class GitWebApplication extends PhabricatorApplication {
     public function getName() {
         return pht('Git Repository Browser');
     }
