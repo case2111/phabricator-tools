@@ -1,6 +1,6 @@
 <?php
 
-final class TaskRedirHostApplication extends PhabricatorApplication {
+final class TaskRedirApplication extends PhabricatorApplication {
 
     public function getName() {
         return pht('Task Redirection Hosting');
