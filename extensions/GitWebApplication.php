@@ -18,7 +18,9 @@ final class GitWebApplication extends PhabricatorApplication {
           '/gitweb/(.*)' => 'GitWebController'
         );
     }
-
+    public function getIcon() {
+        return 'fa-code';
+    }
     public function isUnlisted() {
         return false;
     }
