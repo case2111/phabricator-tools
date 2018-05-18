@@ -44,5 +44,5 @@ cd $UPLOADED && tar -zcf $WRITE_TO/uploaded.tar.gz *
 cd $WRITE_TO && tar -zcf $BACKUP/$TODAY.tar.gz *
 
 #cleanup
-find $BACKUP/* -mtime +10 -type f -exec rm {} \;
+find $BACKUP/* -mtime +5 -type f -exec rm {} \;
 find $BACKUP -empty -type d -delete
