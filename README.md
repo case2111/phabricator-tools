@@ -46,11 +46,6 @@ systemctl enable phabricator-repo-wiki.timer
 * Currently supports pdf, html, and gzip downloads
 * Copy the php files into the phabricator extensions folder
 
-### Zip (diffusion)
-
-* Current/live zips of diffusion repositories
-* Supports "package" download with requiring `git`
-
 ### Logout (conduit)
 
 * Logout users by passing a list of PHIDs
