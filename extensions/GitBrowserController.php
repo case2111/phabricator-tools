@@ -22,6 +22,12 @@ final class GitBrowserController extends PhabricatorController {
         if ($this->endsWith($path, '.js')) {
             $resp->setMimeType('text/javascript');
         }
+        if ($this->endsWith($path, '.tar.gz')) {
+            $resp->setMimeType('applization/gzip');
+        }
+        if ($this->endsWith($path, '.zip')) {
+            $resp->setMimeType('application/zip');
+        }
         if ($this->endsWith($path, '.css')) {
             $resp->setMimeType('text/css');
         }
