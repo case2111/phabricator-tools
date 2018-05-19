@@ -1,5 +1,5 @@
 <?php
-final class GitWebController extends PhabricatorController {
+final class GitBrowserController extends PhabricatorController {
     private function endsWith($str, $search)
     {
         $length = strlen($search);

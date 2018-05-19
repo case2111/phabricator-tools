@@ -1,6 +1,6 @@
 <?php
 
-final class GitWebApplication extends PhabricatorApplication {
+final class GitBrowserApplication extends PhabricatorApplication {
     public function getName() {
         return pht('Git Repository Browser');
     }
@@ -10,12 +10,12 @@ final class GitWebApplication extends PhabricatorApplication {
     }
 
     public function getBaseURI() {
-        return '/gitweb/';
+        return '/cgit/';
     }
 
     public function getRoutes() {
         return array(
-          '/gitweb/(.*)' => 'GitWebController'
+          '/cgit/(.*)' => 'GitBrowserController'
         );
     }
     public function getIcon() {
