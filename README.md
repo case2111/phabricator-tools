@@ -17,25 +17,22 @@ Tools for dealing with data in phabricator on the host. These include general da
 ### tar/nightly repo
 
 tar/bundle repositories into gunzip files
-```
-systemctl enable phabricator-tar-repos.timer
-```
 
 ### backup
 
 nightly backup/snapshot of phabricator content for restoration/migration/backup purposes
 
-```
-systemctl enable phabricator-backup.timer
-```
-
 ### repos
 
-update a wiki/phriction page with current repository (diffusion) download links
+manage the links to active repos served by a proxied app (cgit)
 
-```
-systemctl enable phabricator-repo-wiki.timer
-```
+### sshkeys
+
+extract (for remote usage) user ssh keys for other location deployments
+
+### reports
+
+load reports (using a common header) into phabricator from an inbox
 
 ## extensions
 
@@ -57,7 +54,7 @@ systemctl enable phabricator-repo-wiki.timer
 
 ### Git
 
-Provides a reverse proxy to a locally running version of gitweb
+Provides a reverse proxy to a locally running version of cgit
 
 ## logs
 
