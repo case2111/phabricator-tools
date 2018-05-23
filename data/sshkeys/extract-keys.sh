@@ -1,7 +1,9 @@
 #!/bin/bash
 WORKDIR="/opt/phab/sshkeys"
 mkdir -p $WORKDIR
-rm -f $WORKDIR/*
+for f in $(find $WORKDIR/ -type f -mtime +3 -print); do
+	rm -f $f
+done
 
 source /etc/epiphyte.d/environment
 json=$(curl -s $PHAB_HOST/api/user.search \
