@@ -1,0 +1,6 @@
+[Unit]
+Description=Load inbox reports into phabricator
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/phabricator-load-reports

@@ -1,0 +1,9 @@
+[Unit]
+Description=Load reports from inbox to phabricator
+
+[Timer]
+Unit=load-reports.service
+OnCalendar=*:0/15
+
+[Install]
+WantedBy=timers.target
