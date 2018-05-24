@@ -9,7 +9,7 @@ final class GitBrowserController extends PhabricatorController {
     public function handleRequest(AphrontRequest $request) {
         $querystring = parse_url($request->getRequestURI(), PHP_URL_QUERY);
         if (isset($querystring) && trim($querystring) != '') {
-            $querystring = htmlspecialchars(sprintf('?%s', $querystring));
+            $querystring = sprintf('?%s', $querystring);
         }
         $path = explode('?', join('/', array_slice(explode('/', $request->getRequestURI()), 1)))[0];
         $url = sprintf('http://localhost:19999/%s%s', $path, urldecode($querystring));
@@ -31,7 +31,7 @@ final class GitBrowserController extends PhabricatorController {
         if ($this->endsWith($path, '.css')) {
             $resp->setMimeType('text/css');
         }
-        if (strstr($querystring, 'blob_plain')) {
+        if (strstr($path, '/plain/')) {
             $resp->setMimeType('text/plain');
         }
         $resp->setCanCDN(false);
