@@ -1,11 +1,11 @@
-SRC=src/
-FILES=$(shell find src/helpers -type f -name "*.d")
-MOD=$(shell find modules/ -name "*.d" | grep "src")
-APPS=$(shell ls $(SRC) | grep "\.d$$" | cut -d "." -f 1 | grep -v "common")
-OUTPUT=bin
-FLAGS := -inline -release -O -boundscheck=off
-
-.PHONY: all
+SRC    := src/
+FILES  := $(shell find src/helpers -type f -name "*.d")
+MODDIR := $(shell find modules/ -type d -name "src")
+MOD    := $(shell find $(MODDIR) -type f -name "*.d")
+APPS   := projects tasks wiki
+OUTPUT := bin
+FLAGS  := -inline -release -O -boundscheck=off
+DMD    := dmd
 
 all: build
 
@@ -15,7 +15,7 @@ deps:
 build: clean $(APPS)
 
 $(APPS):
-	dmd $(FLAGS) $(SRC)/common.d $(SRC)$@.d $(MOD) $(FILES) -of$(OUTPUT)/phab-utilities-$@
+	$(DMD) $(FLAGS) $(SRC)common.d $(SRC)$@.d $(MOD) $(FILES) -of$(OUTPUT)/phab-utilities-$@
 
 clean:
 	mkdir -p $(OUTPUT)
