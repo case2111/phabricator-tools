@@ -1,7 +1,7 @@
 #!/bin/bash
 source /etc/environment
 REPOS=/opt/phacility/git/
-GITWEB=/opt/gitweb/
+CGIT=/opt/cgit/active
 
 res=$(curl -s $PHAB_HOST/api/diffusion.repository.search -d api.token=$PHAB_TOKEN -d queryKey=active)
 _py="
@@ -23,7 +23,7 @@ for item in $(echo $res | python -c "$_py"); do
     _page="$_page
 "$(echo "| r$call | [download](/zip/$num) |")
     echo "r$call" > $REPOS$num/description
-    linked=$GITWEB/$call
+    linked=$CGIT/$call
     if [ ! -e $linked ]; then
         ln -s $REPOS/$num $linked
     fi
