@@ -1,7 +1,9 @@
 #!/bin/bash
 source /etc/environment
 REPOS=/opt/phacility/git/
-CGIT=/opt/cgit/active
+GIT=/opt/cgit/
+CGIT=${GIT}active
+DEPR=${GIT}deprecated
 
 res=$(curl -s $PHAB_HOST/api/diffusion.repository.search -d api.token=$PHAB_TOKEN -d queryKey=active)
 _py="
@@ -25,6 +27,8 @@ for item in $(echo $res | python -c "$_py"); do
     echo "r$call" > $REPOS$num/description
     linked=$CGIT/$call
     if [ ! -e $linked ]; then
-        ln -s $REPOS/$num $linked
+        if [ ! -e "$DEPR/$call" ]; then
+            ln -s $REPOS/$num $linked
+        fi
     fi
 done
