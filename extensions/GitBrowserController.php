@@ -32,8 +32,10 @@ final class GitBrowserController extends PhabricatorController {
         if ($this->endsWith($path, '.css')) {
             $resp->setMimeType('text/css');
         }
-        if (strstr($parts[4], 'plain')) {
-            $resp->setMimeType('text/plain');
+        if (sizeof($parts) >= 4) {
+            if (strstr($parts[4], 'plain')) {
+                $resp->setMimeType('text/plain');
+            }
         }
         $resp->setCanCDN(false);
         $resp->setContent($ret);
