@@ -1,6 +1,0 @@
-[Unit]
-Description=Nightly tar build of phabricator repos
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/phabricator-tools-tar-gz-repos
