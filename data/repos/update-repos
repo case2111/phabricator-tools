@@ -25,10 +25,10 @@ for item in $(echo $res | python -c "$_py"); do
     num=$(echo $item | cut -d "." -f 2)
     _page="$_page
 "$(echo "| r$call | [download](/zip/$num) |")
-    echo "r$call" > $REPOS$num/description
     linked=$CGIT/$call
     if [ ! -e $linked ]; then
         if [ ! -e "$DEPR/$call" ]; then
+            echo "r$call" > $REPOS$num/description
             ln -s $REPOS/$num $linked
         fi
     fi
