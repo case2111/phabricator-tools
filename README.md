@@ -36,13 +36,6 @@ load reports (using a common header) into phabricator from an inbox
 
 ## extensions
 
-### Static File Host (sfh)
-
-* Provides an endpoint "/sfh/" within phabricator to place and download/view files
-* Requires naming of format [0-9]+.[extension]
-* Currently supports pdf, html, and gzip downloads
-* Copy the php files into the phabricator extensions folder
-
 ### Logout (conduit)
 
 * Logout users by passing a list of PHIDs
