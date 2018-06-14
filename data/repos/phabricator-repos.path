@@ -1,0 +1,8 @@
+[Unit]
+Description=Auto-update phabricator repos in cgit
+
+[Path]
+PathChanged=/opt/phacility/git/
+
+[Install]
+WantedBy=default.target
