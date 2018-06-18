@@ -78,5 +78,9 @@ except:
     fi
 }
 
+_getrepodata() {
+    git -C /opt/phacility/git/$1/ show master:$2
+}
+
 _activity
 _wikitodash
