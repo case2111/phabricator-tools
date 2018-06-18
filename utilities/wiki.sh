@@ -1,5 +1,6 @@
 #!/bin/bash
 source /etc/epiphyte.d/environment
+source /usr/share/phabricator-tools/functions
 DASH=$(echo "$PHAB_TO_DASH" | cut -d "," -f 1)
 WIKI=$(echo "$PHAB_TO_DASH" | cut -d "," -f 2)
 results=$(curl -s $PHAB_HOST/api/phriction.document.search \
@@ -11,15 +12,6 @@ if [ -z "$results" ]; then
     exit 1
 fi
 
-function _encode() {
-    _py="
-import sys
-import urllib.parse
-
-print(urllib.parse.quote(sys.stdin.read()))"
-    echo "$@" | python -c "$_py"
-}
-
 _segment="
 import sys
 import json
@@ -30,4 +22,4 @@ curl -s $PHAB_HOST/api/dashboard.panel.edit \
         -d api.token=$PHAB_TOKEN \
         -d objectIdentifier=$DASH \
         -d transactions[0][type]="custom.text" \
-        -d transactions[0][value]=$(_encode "$results")
+        -d transactions[0][value]=$(phabricator_encode "$results")
