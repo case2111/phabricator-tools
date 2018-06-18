@@ -244,21 +244,6 @@ private static void doIndex(WikiCtx ctx)
     }
 }
 
-/**
- * Convert wiki to dashboard
- */
-private static void wikiToDash(WikiCtx ctx)
-{
-    auto dashOpts = ctx.api.context[DashOpts].split(",");
-    auto result =  convertToDashboard(ctx.settings,
-                                      dashOpts[1],
-                                      dashOpts[0]);
-    if (!result)
-    {
-        writeln("unable to update dashboard");
-    }
-}
-
 private static string[] getActivity(WikiCtx ctx, Settings settings)
 {
     auto feed = construct!FeedAPI(settings);
@@ -335,6 +320,5 @@ void main(string[] args)
     upContacts(ctx);
     doIndex(ctx);
     activity(ctx);
-    wikiToDash(ctx);
     info("wiki");
 }
