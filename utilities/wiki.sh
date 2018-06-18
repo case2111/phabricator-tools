@@ -2,6 +2,7 @@
 source /etc/epiphyte.d/environment
 source /usr/share/phabricator-tools/functions.sh
 _wikitodash() {
+    info_mode "converting wiki to dash"
     DASH=$(echo "$PHAB_TO_DASH" | cut -d "," -f 1)
     WIKI=$(echo "$PHAB_TO_DASH" | cut -d "," -f 2)
     results=$(curl -s $PHAB_HOST/api/phriction.document.search \

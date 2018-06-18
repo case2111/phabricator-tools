@@ -1,7 +1,8 @@
 #!/bin/bash
 source /etc/epiphyte.d/environment
-
+source /usr/share/phabricator-tools/function.sh
 _notassigned() {
+    info_mode "making sure monitoring user is assigned"
     results=$(curl -s $PHAB_HOST/api/project.search \
                 -d api.token=$PHAB_TOKEN \
                 -d queryKey=active \
