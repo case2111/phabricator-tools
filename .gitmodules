@@ -1,3 +1,0 @@
-[submodule "utilities/modules/phabricator-d-api"]
-	path = utilities/modules/phabricator-d-api
-	url = https://github.com/epiphyte/phabricator-d-api
