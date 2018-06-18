@@ -8,7 +8,7 @@ if [ $dayofweek -eq 7 ]; then
     cmds="$cmds tasks"
 fi
 for e in $(echo "$cmds"); do
-    $BIN$e --env /etc/epiphyte.d/environment 2>&1 | grep -v "INFO" | smirc
+    $BIN$e | smirc
 done
 curl $SYNAPSE_LOCAL_URL/shutdown
 echo "done: "$(echo $cmds | sed "s/ /,/g") | smirc --report
