@@ -9,9 +9,8 @@ _notassigned() {
                 -d attachments[members]=1)
     if [ -z "$results" ]; then
         echo "unable to get projects"
-        exit 1
-    fi
-    _py="
+    else
+        _py="
 import sys
 import json
 
@@ -29,7 +28,8 @@ for p in j['result']['data']:
 if count == 0:
     print('no projects found?')"
 
-    echo "$results" | python -c "$_py"
+        echo "$results" | python -c "$_py"
+    fi
 }
 
 _notassigned
