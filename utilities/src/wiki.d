@@ -244,61 +244,6 @@ private static void doIndex(WikiCtx ctx)
     }
 }
 
-private static string[] getActivity(WikiCtx ctx, Settings settings)
-{
-    auto feed = construct!FeedAPI(settings);
-    string[string] lookups;
-    foreach (user; ctx.users[ResultKey][DataKey].array)
-    {
-        auto rawName = user[FieldsKey]["username"].str;
-        auto userName = "@" ~ rawName;
-        auto feeds = feed.getFeed(user["phid"].str, 1);
-        lookups[userName] = " **unknown** ";
-        try
-        {
-            auto objs = feeds[ResultKey].object;
-            foreach (obj; objs)
-            {
-                auto epoch = obj["epoch"].integer;
-                auto time = SysTime(unixTimeToStdTime(epoch));
-                auto fmt = time.toISOExtString().split("T")[0];
-                lookups[userName] = fmt;
-                break;
-            }
-        }
-        catch (JSONException e)
-        {
-            if (e.message != "JSONValue is not an object")
-            {
-                throw e;
-            }
-        }
-    }
-    string[] actions;
-    actions ~= generateColumns(["date", "user"]);
-    actions ~= generateColumns(["---", "---"]);
-    foreach (key; lookups.keys)
-    {
-        actions ~= generateColumns([lookups[key], key]);
-    }
-    return actions;
-}
-
-/**
- * Generate last user activity
- */
-private static void activity(WikiCtx ctx)
-{
-    try
-    {
-        genPage(ctx, ActivityOpts, &getActivity, true);
-    }
-    catch (Exception e)
-    {
-        writeln(e);
-    }
-}
-
 private class WikiCtx
 {
     @property public API api;
@@ -319,6 +264,5 @@ void main(string[] args)
     updateWhoIs(ctx);
     upContacts(ctx);
     doIndex(ctx);
-    activity(ctx);
     info("wiki");
 }
