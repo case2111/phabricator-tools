@@ -1,14 +1,16 @@
 #!/bin/bash
 source /etc/epiphyte.d/environment
-results=$(curl -s $PHAB_HOST/api/project.search \
-            -d api.token=$PHAB_TOKEN \
-            -d queryKey=active \
-            -d attachments[members]=1)
-if [ -z "$results" ]; then
-    echo "unable to get projects"
-    exit 1
-fi
-_py="
+
+_notassigned() {
+    results=$(curl -s $PHAB_HOST/api/project.search \
+                -d api.token=$PHAB_TOKEN \
+                -d queryKey=active \
+                -d attachments[members]=1)
+    if [ -z "$results" ]; then
+        echo "unable to get projects"
+        exit 1
+    fi
+    _py="
 import sys
 import json
 
@@ -24,7 +26,9 @@ for p in j['result']['data']:
     if not found:
         print('missing user assignment: {}'.format(p['fields']['name']))
 if count == 0:
-    print('no projects found?')
-"
+    print('no projects found?')"
 
-echo "$results" | python -c "$_py"
+    echo "$results" | python -c "$_py"
+}
+
+_notassigned
