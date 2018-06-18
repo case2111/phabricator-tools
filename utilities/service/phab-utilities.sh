@@ -9,7 +9,7 @@ if [ $dayofweek -eq 7 ]; then
     cmds="$cmds tasks"
 fi
 for e in $(echo "$cmds"); do
-    $BIN$e | grep -v "$INFO_MODE" | smirc
+    $BIN$e 2>&1 | grep -v "$INFO_MODE" | smirc
 done
 curl $SYNAPSE_LOCAL_URL/shutdown
 echo "done: "$(echo $cmds | sed "s/ /,/g") | smirc --report

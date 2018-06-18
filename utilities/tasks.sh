@@ -63,7 +63,7 @@ print('{},{}'.format(o['fields']['dateModified'],o['phid']))"
                         -d transactions[0][type]="comment" \
                         -d transactions[0][value]=$COMMENT \
                         -d transactions[1][type]="projects.add" \
-                        -d transactions[1][value]=$PROJECTID
+                        -d transactions[1][value][]=$PROJECTID
                 fi
             fi
         fi
