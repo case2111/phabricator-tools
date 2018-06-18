@@ -9,7 +9,6 @@ import phabricator.api;
 import phabricator.common;
 import helpers.conv2wiki;
 import helpers.diffusion;
-import helpers.indexing;
 import std.algorithm: canFind, sort;
 import std.conv: to;
 import std.datetime.systime;
@@ -194,55 +193,6 @@ private static void genPage(WikiCtx ctx,
     writeReport(ctx, name, page);
 }
 
-/**
- * Build the index list
- */
-private static string[] doIndexList(WikiCtx ctx, Settings settings)
-{
-    string[] indexItems;
-    indexItems ~= generateColumns(["index", "count"]);
-    indexItems ~= generateColumns(["---", "---"]);
-    auto vals = getIndexItems(settings);
-    string[] tracked;
-    string[] traced;
-    foreach (item; vals.keys.sort!("a < b"))
-    {
-        auto tasks = vals[item].tasks;
-        auto count = tasks.length;
-        indexItems ~= generateColumns([item, to!string(count)]);
-        foreach (phid; tasks)
-        {
-            traced ~= format("%s -> %s", item, phid);
-        }
-
-        auto clean = item.strip();
-        if (tracked.canFind(clean))
-        {
-            writeln("duplicate index found");
-        }
-
-        tracked ~= clean;
-    }
-
-    return indexItems;
-}
-
-/**
- * Do index processing
- */
-private static void doIndex(WikiCtx ctx)
-{
-    try
-    {
-        genPage(ctx, IndexOpts, &doIndexList, false);
-    }
-    catch (Exception e)
-    {
-        writeln("unable to generate index page");
-        writeln(e);
-    }
-}
-
 private class WikiCtx
 {
     @property public API api;
@@ -262,6 +212,5 @@ void main(string[] args)
     ctx.users = construct!UserAPI(ctx.settings).activeUsers();
     updateWhoIs(ctx);
     upContacts(ctx);
-    doIndex(ctx);
     info("wiki");
 }
