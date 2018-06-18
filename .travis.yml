@@ -1,9 +1,0 @@
-language: d
-
-script: 
-    - cd utilities && make 
-
-notifications:
-    email:
-        on_success: change
-        on_failure: change
