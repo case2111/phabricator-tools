@@ -2,7 +2,7 @@ SRC    := src/
 FILES  := $(shell find src/helpers -type f -name "*.d")
 MODDIR := $(shell find modules/ -type d -name "src")
 MOD    := $(shell find $(MODDIR) -type f -name "*.d")
-APPS   := projects tasks wiki
+APPS   := tasks wiki
 OUTPUT := bin
 FLAGS  := -inline -release -O -boundscheck=off
 DMD    := dmd
