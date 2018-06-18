@@ -1,5 +1,7 @@
 #!/bin/bash
 INFO_MODE="[INFO]"
+CACHE="/var/cache/phabricator-tools/"
+
 function phabricator_encode() {
     _py="
 import sys

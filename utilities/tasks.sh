@@ -3,7 +3,7 @@ source /etc/epiphyte.d/environment
 source /usr/share/phabricator-tools/functions.sh
 _hiddentasks() {
     info_mode "tracking hidden tasks"
-    file=/tmp/hiddenttasks
+    file=${CACHE}hiddenttasks
     if [ ! -e "$file" ]; then
         echo "1000" > $file
     fi
