@@ -88,8 +88,21 @@ _unmodified() {
     done
 }
 
+_index() {
+    t=$(mktemp)
+    m=$(cat $TMP_FILE | cut -d "," -f 6 | grep -v "^None$")
+    for i in $(echo "$m" | sort -u); do
+        echo "| $i | $(echo "$m" | grep "^$i$" | wc -l) |" >> $t
+    done
+    file=${PHAB_INBOX}indexing.md
+    echo "| index | count |" > $file
+    echo "| --- | --- |" >> $file
+    cat $t | sort >> $file
+}
+
 info_mode "$TMP_FILE"
 rm -f $TMP_FILE
 _recalc
 _hiddentask
 _unmodified
+_index
