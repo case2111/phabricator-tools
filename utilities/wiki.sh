@@ -27,6 +27,7 @@ print(json.loads(sys.stdin.read())['result']['data'][0]['attachments']['content'
 }
 
 _activity() {
+    info_mode "building activity"
     results=$(curl -s $PHAB_HOST/api/user.search \
                 -d api.token=$PHAB_TOKEN \
                 -d queryKey=active \
