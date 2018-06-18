@@ -10,7 +10,6 @@ import phabricator.common;
 import helpers.conv2wiki;
 import helpers.diffusion;
 import helpers.indexing;
-import helpers.wiki2dash;
 import std.algorithm: canFind, sort;
 import std.conv: to;
 import std.datetime.systime;
