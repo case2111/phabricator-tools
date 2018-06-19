@@ -93,7 +93,7 @@ for o in objs:
     i = None
     if 'custom.custom:index' in f:
         i = f['custom.custom:index']
-    print('${IDX}{},{},{},{},{},{}'.format(o['id'],f['dateModified'],o['phid'],f['ownerPHID'], i, f['status']['value']))"
+    print('${IDX}{},{}'.format(o['id'], i))"
     count=0
     cmds=""
     current=""
@@ -126,31 +126,37 @@ for o in objs:
 _unmodified() {
     COMMENT=$(phabricator_encode "task updated due to inactivity")
     PROJECTID=$(echo "$PHAB_UNMODIFIED" | cut -d "," -f 1)
-    MONTHS=$(echo "$PHAB_UNMODIFIED" | cut -d "," -f 2)
-    old=$(date -d "$MONTHS months ago" +%s)
-    for r in $(cat $TMP_FILE | grep -E "(open|actionneeded)$"); do
-        mod=$(echo "$r" | cut -d "," -f 3)
-        id=$(echo "$r" | cut -d "," -f 4)
-        user=$(echo "$r" | cut -d "," -f 5)
-        echo "$user" | grep -q "PHID-USER"
-        if [ $? -ne 0 ]; then
-            continue
-        fi
-        if [ $mod -lt $old ]; then
+    QUERY=$(echo "$PHAB_UNMODIFIED" | cut -d "," -f 2)
+    QUERY="GsQCYeRJlFk5"
+    results=$(curl -s $PHAB_HOST/api/maniphest.search \
+                -d api.token=$PHAB_TOKEN \
+                -d queryKey=$QUERY )
+    _pymod="
+import sys
+import json
+
+r = json.loads(sys.stdin.read())
+for o in r['result']['data']:
+    print(o['phid'])"
+    if [ -z "$results" ]; then
+        echo "no results"
+    else
+        results=$(echo "$results" | python -c "$_pymod")
+        for r in $(echo "$results"); do
             curl -s $PHAB_HOST/api/maniphest.edit \
                 -d api.token=$PHAB_TOKEN \
-                -d objectIdentifier=$id \
+                -d objectIdentifier=$r \
                 -d transactions[0][type]="comment" \
                 -d transactions[0][value]=$COMMENT \
                 -d transactions[1][type]="projects.add" \
                 -d transactions[1][value][]=$PROJECTID
-        fi
-    done
+        done
+    fi
 }
 
 _index() {
     t=$(mktemp)
-    m=$(cat $TMP_FILE | cut -d "," -f 6 | grep -v "^None$")
+    m=$(cat $TMP_FILE | cut -d "," -f 3 | grep -v "^None$")
     for i in $(echo "$m" | sort -u); do
         echo "| $i | $(echo "$m" | grep "^$i$" | wc -l) |" >> $t
     done
