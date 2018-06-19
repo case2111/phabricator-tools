@@ -223,28 +223,36 @@ except:
     fi
 }
 
-info_mode "$TMP_FILE"
-rm -f $TMP_FILE
+_projects() {
+    _notassigned
+}
 
-_recalc
-_hiddentask
-_unmodified
-_index
-_notassigned
-_activity
-_wikitodash
+_wiki() {
+    _activity
+    _wikitodash
+}
 
-BIN=/usr/bin/phab-utilities-
-source /etc/epiphyte.d/environment
-source /usr/share/phabricator-tools/functions.sh
-cmds="projects wiki"
-dayofweek=$(date +%u)
-if [ $dayofweek -eq 7 ]; then
-    echo "weekly tasks..."
-    cmds="$cmds tasks"
-fi
-for e in $(echo "$cmds"); do
-    $BIN$e 2>&1 | grep -v "$INFO_MODE" | smirc
-done
-curl $SYNAPSE_LOCAL_URL/shutdown
-echo "done: "$(echo $cmds | sed "s/ /,/g") | smirc --report
+_tasks() {
+    info_mode "$TMP_FILE"
+    rm -f $TMP_FILE
+    _recalc
+    _hiddentask
+    _unmodified
+    _index
+}
+
+_run() {
+    rpt="wiki projects"
+    _projects
+    _wiki
+    dayofweek=$(date +%u)
+    if [ $dayofweek -eq 7 ]; then
+        info_mode "weekly tasks..."
+        rpt="$rpt tasks"
+        _tasks
+    fi
+    curl -s $SYNAPSE_LOCAL_URL/shutdown
+    echo "done: $rpt" | smirc --report
+}
+
+_run 2>&1 | grep -v "$INFO_MODE" | smirc
