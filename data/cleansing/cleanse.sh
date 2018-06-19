@@ -89,8 +89,8 @@ import json
 r = json.loads(sys.stdin.read())
 objs = r['result']['data']
 for o in objs:
-	f = o['fields']
-	i = None
+    f = o['fields']
+    i = None
     if 'custom.custom:index' in f:
         i = f['custom.custom:index']
     print('${IDX}{},{},{},{},{},{}'.format(o['id'],f['dateModified'],o['phid'],f['ownerPHID'], i, f['status']['value']))"
@@ -268,6 +268,6 @@ _run() {
     echo "done: $rpt" | smirc --report
 }
 
-_run 2>&1 > $LOG
+_run > $LOG 2>&1
 cat $LOG | grep -v "INFO" | smirc
 curl -s $SYNAPSE_LOCAL_URL/shutdown
