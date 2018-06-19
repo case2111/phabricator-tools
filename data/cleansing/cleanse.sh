@@ -127,7 +127,6 @@ _unmodified() {
     COMMENT=$(phabricator_encode "task updated due to inactivity")
     PROJECTID=$(echo "$PHAB_UNMODIFIED" | cut -d "," -f 1)
     QUERY=$(echo "$PHAB_UNMODIFIED" | cut -d "," -f 2)
-    QUERY="GsQCYeRJlFk5"
     results=$(curl -s $PHAB_HOST/api/maniphest.search \
                 -d api.token=$PHAB_TOKEN \
                 -d queryKey=$QUERY )
