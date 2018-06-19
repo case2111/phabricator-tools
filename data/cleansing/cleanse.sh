@@ -236,8 +236,8 @@ _wiki() {
 _tasks() {
     info_mode "$TMP_FILE"
     rm -f $TMP_FILE
-    _recalc
     _hiddentasks
+    _recalc
     _unmodified
     _index
 }
