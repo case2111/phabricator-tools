@@ -3,4 +3,4 @@ Description=Run phabricator cleanse processes
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/phab-cleanse
+ExecStart=/usr/bin/phabricator-tools-cleanse
