@@ -6,6 +6,7 @@ CACHE="/var/cache/phabricator-tools/"
 HIDDEN_TASKS=${CACHE}hiddentasks
 TMP_FILE=${CACHE}taskcache
 IDX="index,"
+LOG=/var/log/phabricator-cleansing.log
 
 function phabricator_encode() {
     _py="
@@ -167,7 +168,7 @@ print(json.loads(sys.stdin.read())['result']['data'][0]['attachments']['content'
                 -d api.token=$PHAB_TOKEN \
                 -d objectIdentifier=$DASH \
                 -d transactions[0][type]="custom.text" \
-                -d transactions[0][value]=$(phabricator_encode "$results")
+                -d transactions[0][value]=$(phabricator_encode "$results") > /dev/null
     fi
 }
 
@@ -236,7 +237,7 @@ _tasks() {
     info_mode "$TMP_FILE"
     rm -f $TMP_FILE
     _recalc
-    _hiddentask
+    _hiddentasks
     _unmodified
     _index
 }
@@ -254,5 +255,6 @@ _run() {
     echo "done: $rpt" | smirc --report
 }
 
-_run 2>&1 | grep -v "$INFO_MODE" | smirc
+_run 2>&1 > $LOG
+cat $LOG | grep -v "INFO" #| smirc
 curl -s $SYNAPSE_LOCAL_URL/shutdown
