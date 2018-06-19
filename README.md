@@ -34,6 +34,10 @@ extract (for remote usage) user ssh keys for other location deployments
 
 load reports (using a common header) into phabricator from an inbox
 
+### cleansing
+
+cleansing/maintenance scripts to monitor state of tasks/projects/wiki
+
 ## extensions
 
 ### Logout (conduit)
