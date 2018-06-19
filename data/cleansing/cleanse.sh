@@ -87,24 +87,37 @@ _recalc() {
 import sys
 import json
 r = json.loads(sys.stdin.read())
-o = r['result']['data'][0]
-f = o['fields']
-i = None
-c = o['fields']
-if 'custom.custom:index' in c:
-    i = c['custom.custom:index']
-print('{},{},{},{},{}'.format(f['dateModified'],o['phid'],f['ownerPHID'], i, f['status']['value']))"
+objs = r['result']['data']
+for o in objs:
+	f = o['fields']
+	i = None
+    if 'custom.custom:index' in f:
+        i = f['custom.custom:index']
+    print('${IDX}{},{},{},{},{},{}'.format(o['id'],f['dateModified'],o['phid'],f['ownerPHID'], i, f['status']['value']))"
+    count=0
+    cmds=""
+    current=""
     for s in $(seq 0 $max); do
+        count=$((count+1))
+        current="$s,$current"
+        if [ $count -eq 50 ]; then
+            cmds="$current $cmds"
+            current=""
+            count=0
+        fi
+    done
+    if [ ! -z "$current" ]; then
+        cmds="$current $cmds"
+    fi
+    for s in $(echo "$cmds"); do
+        ids=$(echo "$s" | sed 's/^,//g;s/,$//g' | sed "s/,/ /g" | tr ' ' '\n' | sort | awk '{print "-d constraints[ids][" NR-1 "]=" $1}')
         result=$(curl -s $PHAB_HOST/api/maniphest.search \
                     -d api.token=$PHAB_TOKEN \
-                    -d queryKey=all \
-                    -d constraints[ids][0]=$s)
+                    -d queryKey=all $ids)
         if [ ! -z "$result" ]; then
             echo "$result" | grep -q "PHID-TASK"
             if [ $? -eq 0 ]; then
-                item=$(echo "$result" | python -c "$_pymod")
-                item="$IDX$s,$item"
-                echo "$item" >> $TMP_FILE
+                echo "$result" | python -c "$_pymod" >> $TMP_FILE
             fi
         fi
     done
