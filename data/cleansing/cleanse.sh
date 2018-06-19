@@ -251,8 +251,8 @@ _run() {
         rpt="$rpt tasks"
         _tasks
     fi
-    curl -s $SYNAPSE_LOCAL_URL/shutdown
     echo "done: $rpt" | smirc --report
 }
 
 _run 2>&1 | grep -v "$INFO_MODE" | smirc
+curl -s $SYNAPSE_LOCAL_URL/shutdown
