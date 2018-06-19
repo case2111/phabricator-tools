@@ -256,5 +256,5 @@ _run() {
 }
 
 _run 2>&1 > $LOG
-cat $LOG | grep -v "INFO" #| smirc
+cat $LOG | grep -v "INFO" | smirc
 curl -s $SYNAPSE_LOCAL_URL/shutdown
