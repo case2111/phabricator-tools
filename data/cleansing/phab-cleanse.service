@@ -1,0 +1,6 @@
+[Unit]
+Description=Run phabricator cleanse processes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/phab-cleanse

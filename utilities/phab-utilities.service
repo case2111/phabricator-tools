@@ -1,6 +1,0 @@
-[Unit]
-Description=Run phabricator utility processes
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/phab-utilities
