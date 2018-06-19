@@ -132,8 +132,8 @@ _unmodified() {
         mod=$(echo "$r" | cut -d "," -f 3)
         id=$(echo "$r" | cut -d "," -f 4)
         user=$(echo "$r" | cut -d "," -f 5)
-        echo "$user" | grep -q "PHID-USER";
-        if [ $? -eq 0 ]; then
+        echo "$user" | grep -q "PHID-USER"
+        if [ $? -ne 0 ]; then
             continue
         fi
         if [ $mod -lt $old ]; then
