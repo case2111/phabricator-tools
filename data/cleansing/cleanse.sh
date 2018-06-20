@@ -271,8 +271,9 @@ _run() {
         _tasks
     fi
     echo "done: $rpt" | smirc --report
+    curl -s $SYNAPSE_LOCAL_URL/shutdown
 }
 
 _run > $LOG 2>&1
 cat $LOG | grep -v "INFO" | smirc
-curl -s $SYNAPSE_LOCAL_URL/shutdown
+exit 0
