@@ -28,7 +28,8 @@ manage the links to active repos served by a proxied app (cgit)
 
 ### sshkeys
 
-extract (for remote usage) user ssh keys for other location deployments
+* extract (for remote usage) user ssh keys for other location deployments
+* retrieve ssh keys from a remote location
 
 ### reports
 
