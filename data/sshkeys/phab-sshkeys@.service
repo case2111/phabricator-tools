@@ -3,7 +3,7 @@ Description=Automatically update ssh keys from phabricator
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/phab-sshkeys %i
+ExecStart=/usr/bin/phabricator-tools-import-keys %i
 
 [Install]
 WantedBy=multi-user.target
