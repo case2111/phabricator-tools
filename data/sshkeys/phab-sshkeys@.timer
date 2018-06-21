@@ -1,0 +1,9 @@
+[Unit]
+Description=Automatically update phabricator ssh keys to a local user
+
+[Timer]
+OnCalendar=*-*-* 01:00:00 
+Unit=phab-sshkeys@.service
+
+[Install]
+WantedBy=multi-user.target

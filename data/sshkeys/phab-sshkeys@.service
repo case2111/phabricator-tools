@@ -1,0 +1,9 @@
+[Unit]
+Description=Automatically update ssh keys from phabricator
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/phab-sshkeys %i
+
+[Install]
+WantedBy=multi-user.target
