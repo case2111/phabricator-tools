@@ -234,7 +234,6 @@ except:
             echo "| $dated | $(echo $user | cut -d "," -f2) |" >> $tmpfile
         done
         inbox=${PHAB_INBOX}activity.md
-        inbox=/tmp/activity.md
         echo "| date | user |" > $inbox
         echo "| ---  | --- |" >> $inbox
         cat $tmpfile | grep -v "$unknown" | sort -r >> $inbox
