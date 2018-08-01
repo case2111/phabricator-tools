@@ -14,13 +14,17 @@ pacman -S phabricator-tools
 ## data
 Tools for dealing with data in phabricator on the host. These include general data management from phabricator within the phabricator machine instance. Including the ability to produce nightly backups (following the data to backup from the phabricator guide) and nightly snapshot bundles of repositories
 
-### tar/nightly repo
+### cleansing
 
-tar/bundle repositories into gunzip files
+cleansing/maintenance scripts to monitor state of tasks/projects/wiki
 
 ### backup
 
 nightly backup/snapshot of phabricator content for restoration/migration/backup purposes
+
+### reports
+
+load reports (using a common header) into phabricator from an inbox
 
 ### repos
 
@@ -31,20 +35,7 @@ manage the links to active repos served by a proxied app (cgit)
 * extract (for remote usage) user ssh keys for other location deployments
 * retrieve ssh keys from a remote location
 
-### reports
-
-load reports (using a common header) into phabricator from an inbox
-
-### cleansing
-
-cleansing/maintenance scripts to monitor state of tasks/projects/wiki
-
 ## extensions
-
-### Logout (conduit)
-
-* Logout users by passing a list of PHIDs
-* Adminstrator only
 
 ### Task Redirection
 
@@ -54,11 +45,7 @@ cleansing/maintenance scripts to monitor state of tasks/projects/wiki
 
 Provides a reverse proxy to a locally running version of cgit
 
-## logs
-
-Handles log rotation as necessary for phd and aphlict
-
-## Authorized Keys (conduit)
+### Authorized Keys (conduit)
 
 * Take a set of phids (users) and produce a data array output for use in authorized keys
 
@@ -66,6 +53,10 @@ e.g.
 ```
 curl https://<phabricator>/api/auth.authorizedkeys  -d phids[0]=PHID-USER-xyz -d api.token=api-token | python -c "import sys, json; print('\n'.join(json.loads(sys.stdin.read())['result']['data']))"
 ```
+
+## logs
+
+Handles log rotation as necessary for phd and aphlict
 
 ## utilities
 
