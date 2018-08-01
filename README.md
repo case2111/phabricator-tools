@@ -57,7 +57,3 @@ curl https://<phabricator>/api/auth.authorizedkeys  -d phids[0]=PHID-USER-xyz -d
 ## logs
 
 Handles log rotation as necessary for phd and aphlict
-
-## utilities
-
-maintenance/utility scripts to maintain/cleanse phabricator data
