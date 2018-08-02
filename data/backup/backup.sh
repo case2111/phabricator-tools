@@ -40,9 +40,6 @@ cd $PHAB && tar -zcf $WRITE_TO/config.tar.gz $CONF_FILES
 #uploaded
 cd $UPLOADED && tar -zcf $WRITE_TO/uploaded.tar.gz *
 
-#bundle
-cd $WRITE_TO && tar -zcf $BACKUP/$TODAY.tar.gz *
-
 #cleanup
 find $BACKUP/* -mtime +5 -type f -exec rm {} \;
 find $BACKUP -empty -type d -delete
