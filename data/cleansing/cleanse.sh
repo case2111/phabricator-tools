@@ -8,7 +8,7 @@ TMP_FILE=${CACHE}taskcache
 IDX="index,"
 LOG=/var/log/phabricator-cleansing.log
 
-function phabricator_encode() {
+phabricator_encode() {
     _py="
 import sys
 import urllib.parse
@@ -17,7 +17,7 @@ print(urllib.parse.quote(sys.stdin.read()))"
     echo "$@" | python -c "$_py"
 }
 
-function info_mode() {
+info_mode() {
     echo "$INFO_MODE $@"
 }
 
