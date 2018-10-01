@@ -1,8 +1,0 @@
-[Unit]
-Description=Auto-update phab reports
-
-[Path]
-PathChanged=/opt/phab/reports/
-
-[Install]
-WantedBy=default.target
