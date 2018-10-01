@@ -29,12 +29,6 @@ final class GitBrowserController extends PhabricatorController {
         if ($this->endsWith($path, '.zip')) {
             $resp->setMimeType('application/zip');
         }
-        if ($this->endsWith($path, '.png')) {
-            $resp->setMimeType('image/png');
-        }
-        if ($this->endsWith($path, '.jpg')) {
-            $resp->setMimeType('image/jpeg');
-        }
         if ($this->endsWith($path, '.css')) {
             $resp->setMimeType('text/css');
         }
@@ -42,6 +36,12 @@ final class GitBrowserController extends PhabricatorController {
             if (strstr($parts[4], 'plain')) {
                 $resp->setMimeType('text/plain');
             }
+        }
+        if ($this->endsWith($path, '.png')) {
+            $resp->setMimeType('image/png');
+        }
+        if ($this->endsWith($path, '.jpg')) {
+            $resp->setMimeType('image/jpeg');
         }
         $resp->setCanCDN(false);
         $resp->setContent($ret);
