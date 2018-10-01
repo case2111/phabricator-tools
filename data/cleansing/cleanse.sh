@@ -92,48 +92,6 @@ for o in objs:
     done
 }
 
-_unmodified() {
-    COMMENT=$(phabricator_encode "task updated due to inactivity")
-    PROJECTID=$(echo "$PHAB_UNMODIFIED" | cut -d "," -f 1)
-    QUERY=$(echo "$PHAB_UNMODIFIED" | cut -d "," -f 2)
-    results=$(curl -s $PHAB_HOST/api/maniphest.search \
-                -d api.token=$PHAB_TOKEN \
-                -d queryKey=$QUERY )
-    _pymod="
-import sys
-import json
-
-r = json.loads(sys.stdin.read())
-for o in r['result']['data']:
-    print(o['phid'])"
-    if [ -z "$results" ]; then
-        echo "no results"
-    else
-        results=$(echo "$results" | python -c "$_pymod")
-        for r in $(echo "$results"); do
-            curl -s $PHAB_HOST/api/maniphest.edit \
-                -d api.token=$PHAB_TOKEN \
-                -d objectIdentifier=$r \
-                -d transactions[0][type]="comment" \
-                -d transactions[0][value]=$COMMENT \
-                -d transactions[1][type]="projects.add" \
-                -d transactions[1][value][]=$PROJECTID > /dev/null
-        done
-    fi
-}
-
-_index() {
-    t=$(mktemp)
-    m=$(cat $TMP_FILE | cut -d "," -f 3 | grep -v "^None$")
-    for i in $(echo "$m" | sort -u); do
-        echo "| $i | $(echo "$m" | grep "^$i$" | wc -l) |" >> $t
-    done
-    file=${PHAB_INBOX}indexing.md
-    echo "| index | count |" > $file
-    echo "| --- | --- |" >> $file
-    cat $t | sort >> $file
-}
-
 _wikitodash() {
     info_mode "converting wiki to dash"
     DASH=$(echo "$PHAB_TO_DASH" | cut -d "," -f 1)
@@ -159,74 +117,16 @@ print(json.loads(sys.stdin.read())['result']['data'][0]['attachments']['content'
     fi
 }
 
-_activity() {
-    info_mode "building activity"
-    results=$(curl -s $PHAB_HOST/api/user.search \
-                -d api.token=$PHAB_TOKEN \
-                -d queryKey=active \
-                -d constraints[isBot]=0)
-    if [ -z "$results" ]; then
-        echo "found no users"
-    else
-        _userpy="
-import sys
-import json
-
-r = json.loads(sys.stdin.read())['result']['data']
-for u in r:
-    print('{},{}'.format(u['phid'], u['fields']['username']))"
-        _feedpy="
-import sys
-import json
-r = json.loads(sys.stdin.read())['result']
-try:
-    print(r[next(iter(r))]['epoch'])
-except:
-    pass"
-        users=$(echo "$results" | python -c "$_userpy")
-        tmpfile=$(mktemp)
-        unknown="unknown"
-        for user in $(echo "$users"); do
-            u=$(echo "$user" | cut -d "," -f 1)
-            feed=$(curl -s $PHAB_HOST/api/feed.query \
-                        -d api.token=$PHAB_TOKEN \
-                        -d filterPHIDs[0]=$u \
-                        -d limit=1)
-            dated="$unknown"
-            if [ ! -z "$feed" ]; then
-                d=$(echo "$feed" | python -c "$_feedpy")
-                d=$(date -d @$d +%Y-%m-%d 2>/dev/null)
-                if [ ! -z "$d" ]; then
-                    dated=$d
-                fi
-            fi
-            echo "| $dated | $(echo $user | cut -d "," -f2) |" >> $tmpfile
-        done
-        inbox=${PHAB_INBOX}activity.md
-        echo "| date | user |" > $inbox
-        echo "| ---  | --- |" >> $inbox
-        cat $tmpfile | grep -v "$unknown" | sort -r >> $inbox
-        cat $tmpfile | grep "$unknown" | sort -r >> $inbox
-    fi
-}
-
-_wiki() {
-    _activity
-    _wikitodash
-}
-
 _tasks() {
     info_mode "$TMP_FILE"
     rm -f $TMP_FILE
     _hiddentasks
     _recalc
-    _unmodified
-    _index
 }
 
 _run() {
-    rpt="wiki"
-    _wiki
+    rpt="dashboard"
+    _wikitodash
     dayofweek=$(date +%u)
     if [ $dayofweek -eq 7 ]; then
         info_mode "weekly tasks..."
